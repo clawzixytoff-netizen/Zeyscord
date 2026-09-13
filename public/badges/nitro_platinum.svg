@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="128" height="128">
+  <defs>
+    <linearGradient id="bg_platinum" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e88e5"/>
+      <stop offset="45%" stop-color="#42a5f5"/>
+      <stop offset="100%" stop-color="#7ec8ff"/>
+    </linearGradient>
+    <linearGradient id="shine_platinum" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Main body: rounded comet / disc -->
+  <path fill="url(#bg_platinum)" d="M22 30
+    C22 18 32 10 46 10
+    C70 10 90 28 90 52
+    C90 76 72 90 50 90
+    C32 90 18 78 18 60
+    L18 48
+    C18 40 18 34 22 30
+    Z"/>
+  <!-- Left cutout notch -->
+  <path fill="#0d0d0f" d="M8 28 h20 v22 H14 c-3 0-6-3-6-7 V28z"/>
+  <path fill="url(#bg_platinum)" d="M18 28 h12 v18 H22 c-2 0-4-2-4-5 V28z"/>
+  <!-- Center hole -->
+  <circle cx="58" cy="52" r="20" fill="#0d0d0f"/>
+  <!-- Inner ring facets -->
+  <circle cx="58" cy="52" r="14" fill="none" stroke="#42a5f5" stroke-width="5"/>
+  <circle cx="58" cy="52" r="7" fill="#1e88e5"/>
+  <!-- Shine overlay -->
+  <path fill="url(#shine_platinum)" d="M22 30 C22 18 32 10 46 10 C60 10 74 16 82 28 C70 22 55 20 42 26 C32 30 26 36 22 42 Z"/>
+</svg>

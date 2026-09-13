@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeyscord</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div id="login-screen" class="login-screen">
+    <div class="login-box">
+      <div class="login-logo">
+        <svg width="130" height="36" viewBox="0 0 71 55" fill="none"><path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6715 0.41542C45.5603 0.39451 45.4492 0.44718 45.3926 0.54718C44.852 1.55918 44.2065 2.86318 43.754 3.88918C38.3105 3.05718 32.908 3.05718 27.508 3.88918C27.0555 2.84118 26.3905 1.55918 25.8465 0.54718C25.7899 0.45018 25.6788 0.39751 25.5676 0.41542C20.5156 1.2916 15.6629 2.8214 11.1346 4.8978C11.0871 4.9178 11.0464 4.95418 11.0224 5.00218C3.58464 16.5332 1.48764 27.7752 2.50664 38.8752C2.51214 38.9352 2.54364 38.9912 2.58864 39.0272C8.57214 43.4772 14.3486 46.1972 19.9921 47.9772C20.1041 48.0112 20.2241 47.9712 20.2951 47.8772C21.5481 46.1272 22.6661 44.2772 23.6281 42.3472C23.7041 42.1912 23.6311 42.0052 23.4751 41.9412C21.6521 41.2212 19.9241 40.3212 18.3081 39.2912C18.1321 39.1812 18.1201 38.9252 18.2841 38.7992C18.6281 38.5112 18.9721 38.2092 19.3001 37.9012C19.3761 37.8292 19.4841 37.8132 19.5761 37.8612C29.7551 42.5712 40.8041 42.5712 50.8591 37.8612C50.9511 37.8092 51.0591 37.8252 51.1391 37.8972C51.4671 38.2052 51.8111 38.5112 52.1591 38.7992C52.3231 38.9252 52.3151 39.1852 52.1391 39.2912C50.5191 40.3352 48.7871 41.2252 46.9601 41.9452C46.8041 42.0092 46.7351 42.1992 46.8151 42.3512C47.7931 44.2772 48.9111 46.1272 50.1481 47.8732C50.2151 47.9712 50.3391 48.0112 50.4511 47.9732C56.1191 46.1932 61.9191 43.4732 67.9101 39.0232C67.9591 38.9872 67.9906 38.9312 67.9961 38.8712C69.2121 26.0212 66.0391 14.8812 60.2241 5.00618C60.2021 4.95418 60.1611 4.9178 60.1045 4.8978ZM23.7251 31.8752C20.9231 31.8752 18.6231 29.2752 18.6231 26.0752C18.6231 22.8752 20.8731 20.2752 23.7251 20.2752C26.5931 20.2752 28.8771 22.8912 28.8271 26.0752C28.8271 29.2752 26.5771 31.8752 23.7251 31.8752ZM47.7141 31.8752C44.9121 31.8752 42.6121 29.2752 42.6121 26.0752C42.6121 22.8752 44.8621 20.2752 47.7141 20.2752C50.5821 20.2752 52.8661 22.8912 52.8161 26.0752C52.8161 29.2752 50.5821 31.8752 47.7141 31.8752Z" fill="#5865F2"/></svg>
+      </div>
+      <h1>Bienvenue sur Zeyscord !</h1>
+      <p class="login-subtitle">Connecte-toi pour discuter.</p>
+      <form id="login-form">
+        <label for="username">NOM D'UTILISATEUR</label>
+        <input type="text" id="username" placeholder="Entre ton pseudo..." maxlength="32" required autocomplete="off">
+        <button type="submit">Se connecter</button>
+      </form>
+      <p class="login-footer">Besoin d'un compte ? <a href="#">S'inscrire</a></p>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+    <div class="servers-sidebar">
+      <div class="server-icon home active" id="home-btn" title="Accueil">
+        <svg width="28" height="20" viewBox="0 0 28 20"><path fill="currentColor" d="M23.0212 1.67671C21.3107 0.885573 19.5079 0.318731 17.6584 0C17.4062 0.461619 17.112 1.08455 16.9086 1.57887C14.9551 1.28252 13.0211 1.28252 11.088 1.57887C10.8847 1.08455 10.5838 0.461619 10.3289 0C8.47667 0.318731 6.67108 0.885573 4.96059 1.67943C1.89798 6.38533 0.997085 11.0461 1.44732 15.6481C3.64442 17.3228 5.77735 18.3734 7.86257 19.0631C8.40001 18.3085 8.88256 17.5077 9.30297 16.668C8.48278 16.3555 7.70275 15.9558 6.96995 15.4808C7.16478 15.3323 7.355 15.1767 7.538 15.014C11.0682 16.6815 14.955 16.6815 18.4477 15.014C18.6335 15.1767 18.8237 15.3323 19.0158 15.4808C18.2803 15.9558 17.4976 16.3582 16.6774 16.6707C17.0979 17.5077 17.5777 18.3112 18.1179 19.0658C20.2058 18.3761 22.3415 17.3255 24.5386 15.6481C25.0735 10.3016 23.6117 5.68348 20.0212 1.67671ZM9.68041 12.8008C8.39742 12.8008 7.34087 11.5805 7.34087 10.1019C7.34087 8.62329 8.37228 7.40301 9.68041 7.40301C10.9885 7.40301 12.0451 8.62329 12.021 10.1019C12.0237 11.5805 10.9885 12.8008 9.68041 12.8008ZM16.3192 12.8008C15.0362 12.8008 13.9797 11.5805 13.9797 10.1019C13.9797 8.62329 15.0111 7.40301 16.3192 7.40301C17.6274 7.40301 18.6839 8.62329 18.6598 10.1019C18.6598 11.5805 17.6274 12.8008 16.3192 12.8008Z"/></svg>
+      </div>
+      <div class="server-icon" id="shop-btn" title="Boutique" style="background:#5865f2;margin-top:8px">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M5 6h14l-1 12H6L5 6zm2-3h10l1 2H6l1-2z"/></svg>
+      </div>
+      <div class="server-separator"></div>
+      <div id="servers-list"></div>
+      <div class="server-icon add" id="create-server-btn" title="Créer un serveur">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20 11.1111H12.8889V4H11.1111V11.1111H4V12.8889H11.1111V20H12.8889V12.8889H20V11.1111Z"/></svg>
+      </div>
+    </div>
+
+    <div class="channels-sidebar">
+      <!-- HOME VIEW (Amis + MP) -->
+      <div id="home-view" class="sidebar-view">
+        <div class="home-search">
+          <input type="text" id="home-search-input" placeholder="Recherche ou lance une conversation" readonly>
+        </div>
+        <div class="home-nav">
+          <div class="home-nav-item active" id="nav-friends" data-home-tab="friends">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 10.9c1.5 0 2.7-1.2 2.7-2.7S13.5 5.5 12 5.5 9.3 6.7 9.3 8.2s1.2 2.7 2.7 2.7zm0 1.4c-2.1 0-6.4 1.1-6.4 3.2V17h12.7v-1.5c0-2.1-4.3-3.2-6.3-3.2z"/></svg>
+            <span>Amis</span>
+          </div>
+          <div class="home-nav-item" id="nav-nitro" data-home-tab="nitro">
+            <img src="/badges/nitro.png" width="20" height="20" alt="">
+            <span>Ton Nitro</span>
+          </div>
+          <div class="home-nav-item" id="nav-shop" data-home-tab="shop">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M5 6h14l-1 12H6L5 6zm2-3h10l1 2H6l1-2z"/></svg>
+            <span>Boutique</span>
+          </div>
+        </div>
+        <div class="channels-section" id="home-friends-panel">
+          <div class="channels-header"><span>MESSAGES DIRECTS</span></div>
+          <div id="dm-list" class="channels-list"></div>
+          <div class="channels-header" style="margin-top:12px"><span>AMIS</span></div>
+          <div id="friends-list" class="channels-list"></div>
+          <div style="padding:8px">
+            <input id="add-friend-input" type="text" placeholder="Ajouter un ami (pseudo)..." style="width:100%;padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px;outline:none">
+            <button id="add-friend-btn" style="width:100%;margin-top:6px;padding:8px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px">Envoyer une demande</button>
+          </div>
+          <div id="friend-requests-list"></div>
+        </div>
+      </div>
+
+      <!-- SERVER VIEW (Salons) -->
+      <div id="server-view" class="sidebar-view hidden">
+        <div class="server-header">
+          <div id="server-settings-btn" title="Paramètres du serveur" style="cursor:pointer;display:flex;align-items:center;gap:4px;flex:1;min-width:0">
+            <h2 id="server-header-name">Zeyscord</h2>
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10L12 15L17 10H7Z"/></svg>
+          </div>
+          <button id="boost-server-btn" title="Booster ce serveur" style="background:none;border:none;cursor:pointer;color:#f47fff;font-size:13px;font-weight:600;padding:4px 8px;border-radius:4px;white-space:nowrap">🚀 <span id="server-boost-count">0</span></button>
+        </div>
+        <div class="channels-section">
+          <div class="channels-header">
+            <svg width="12" height="12" viewBox="0 0 12 12"><path fill="currentColor" d="M6.5 8.5L9 5.5H4L6.5 8.5Z"/></svg>
+            <span>SALONS TEXTUELS</span>
+          </div>
+          <div id="channels-list" class="channels-list"></div>
+        </div>
+      </div>
+
+      <div class="user-panel">
+        <div class="user-info">
+          <div id="user-avatar" class="user-avatar"></div>
+          <div class="user-details">
+            <span id="user-name" class="user-name"></span>
+            <span class="user-status">En ligne</span>
+          </div>
+        </div>
+        <div class="user-controls">
+          <button title="Mute"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/></svg></button>
+          <button title="Paramètres"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="channel-info">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M5.88657 21C5.43619 21 5.05291 20.6919 4.96847 20.2497L3.10921 10.3679C3.05097 10.0575 3.16278 9.7413 3.4014 9.54224C3.64003 9.34317 3.97164 9.29167 4.25966 9.40967L7.5 10.75V6.5C7.5 5.67157 8.17157 5 9 5H15C15.8284 5 16.5 5.67157 16.5 6.5V10.75L19.7403 9.40967C20.0284 9.29167 20.36 9.34317 20.5986 9.54224C20.8372 9.7413 20.949 10.0575 20.8908 10.3679L19.0315 20.2497C18.9471 20.6919 18.5638 21 18.1134 21H5.88657ZM9 7V12.25L5.5 10.8L6.88657 19H17.1134L18.5 10.8L15 12.25V7H9Z"/></svg>
+          <span id="current-channel-name">général</span>
+        </div>
+        <div class="chat-actions">
+          <button title="Membres"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></button>
+        </div>
+      </div>
+
+           <!-- NITRO PANEL (main content overlay style) -->
+      <div id="nitro-panel" class="nitro-panel hidden">
+        <div class="nitro-panel-inner">
+          <h1>DÉCOUVRE LES NOUVEAUTÉS</h1>
+          <div class="nitro-card" id="nitro-card">
+            <div class="nitro-card-badge">RÉCOMPENSE</div>
+            <img id="nitro-card-img" src="/badges/nitro_gold.png" alt="Nitro">
+            <div class="nitro-card-info">
+              <div class="nitro-card-date" id="nitro-card-date">Abonné Nitro</div>
+              <div class="nitro-card-tier" id="nitro-card-tier">Nitro</div>
+              <div class="nitro-card-next" id="nitro-card-next">Obtiens Nitro dans la boutique</div>
+              <div class="nitro-progress"><div class="nitro-progress-bar" id="nitro-progress-bar"></div></div>
+            </div>
+          </div>
+          <button class="nitro-shop-btn" id="nitro-open-shop">Voir la boutique Nitro</button>
+        </div>
+      </div>
+
+
+       <div id="messages-container" class="messages-container">
+        <div class="welcome-message">
+          <div class="welcome-icon">#</div>
+          <h3>Bienvenue dans #<span id="welcome-channel">général</span> !</h3>
+          <p>C'est le début du salon <strong id="welcome-channel-2">général</strong>.</p>
+        </div>
+        <div id="messages-list"></div>
+      </div>
+
+      <div class="message-input-area">
+        <div id="typing-indicator" class="typing-indicator hidden"></div>
+        <form id="message-form" class="message-form">
+          <div class="input-wrapper">
+            <button type="button" class="attach-btn" title="Envoyer un fichier">
+              <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+            </button>
+            <input type="text" id="message-input" placeholder="Envoyer un message dans #général" autocomplete="off" maxlength="2000">
+            <button type="button" class="emoji-btn" title="Emoji">😀</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="members-sidebar">
+      <div class="members-header">
+        <span>MEMBRES — <span id="members-count">0</span></span>
+      </div>
+      <div id="members-list" class="members-list"></div>
+    </div>
+  </div>
+
+  <!-- Profile Popup Zeyscord (style Discord) -->
+  <div id="profile-modal" class="profile-modal hidden">
+    <div class="profile-overlay" id="profile-overlay"></div>
+    <div class="profile-card">
+      <div class="profile-banner" id="profile-banner"></div>
+      <div class="profile-avatar-wrapper">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div class="profile-status-dot" id="profile-status-dot"></div>
+      </div>
+      <div class="profile-content">
+        <div class="profile-name-row">
+          <h2 id="profile-username"></h2>
+        </div>
+        <div class="profile-handle" id="profile-handle"></div>
+        <div id="profile-badges" class="profile-badges"></div>
+        <div class="profile-status" id="profile-status"></div>
+        <div class="profile-section">
+          <h3>À PROPOS DE MOI</h3>
+          <p id="profile-about">Aucune bio pour le moment.</p>
+        </div>
+        <div class="profile-section" id="profile-member-since-section">
+          <h3>MEMBRE DEPUIS</h3>
+          <p id="profile-member-since">—</p>
+          <div id="profile-created-edit" class="hidden" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+            <input type="date" id="profile-created-input" style="padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px">
+            <button type="button" id="profile-created-save" style="padding:8px 12px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px;font-weight:500">Changer la date</button>
+          </div>
+        </div>
+        <div class="profile-actions" id="profile-actions"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal d'édition de profil -->
+  <div id="edit-profile-modal" class="edit-modal hidden">
+    <div class="edit-overlay" id="edit-overlay"></div>
+    <div class="edit-card">
+      <h2>Modifier le profil</h2>
+      <label>Avatar (importer une image / GIF)</label>
+      <div class="upload-row">
+        <div id="edit-avatar-preview" class="upload-preview avatar-preview"></div>
+        <div>
+          <input type="file" id="edit-avatar-file" accept="image/*,.gif" style="display:none">
+          <button type="button" class="upload-btn" id="edit-avatar-btn">Choisir une image</button>
+          <button type="button" class="upload-clear" id="edit-avatar-clear">Supprimer</button>
+        </div>
+      </div>
+      <label>Bannière (importer une image / GIF)</label>
+      <div class="upload-row">
+        <div id="edit-banner-preview" class="upload-preview banner-preview"></div>
+        <div>
+          <input type="file" id="edit-banner-file" accept="image/*,.gif" style="display:none">
+          <button type="button" class="upload-btn" id="edit-banner-btn">Choisir une image</button>
+          <button type="button" class="upload-clear" id="edit-banner-clear">Supprimer</button>
+        </div>
+      </div>
+      <label>Bio / Statut personnalisé</label>
+      <input type="text" id="edit-status" placeholder="ex: En train de coder..." maxlength="128">
+      <div class="edit-buttons">
+        <button id="edit-cancel">Annuler</button>
+        <button id="edit-save" class="primary">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal gestion badges (Owner only) -->
+  <div id="badges-modal" class="edit-modal hidden">
+    <div class="edit-overlay" id="badges-overlay"></div>
+    <div class="edit-card">
+      <h2>Gérer les badges de <span id="badges-target-name"></span></h2>
+      <div id="badges-checkboxes" class="badges-grid"></div>
+      <div class="edit-buttons">
+        <button id="badges-cancel">Annuler</button>
+        <button id="badges-save" class="primary">Appliquer</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- SETTINGS PANEL -->
+  <div id="settings-modal" class="settings-modal hidden">
+    <div class="settings-overlay" id="settings-overlay"></div>
+    <div class="settings-panel">
+      <div class="settings-nav">
+        <div class="settings-nav-title">PARAMÈTRES UTILISATEUR</div>
+        <div class="settings-nav-item active" data-tab="account">Mon compte</div>
+        <div class="settings-nav-item" data-tab="profile">Profil</div>
+        <div class="settings-nav-item" data-tab="appearance">Apparence</div>
+        <div class="settings-nav-item" data-tab="notifications">Notifications</div>
+        <div class="settings-nav-item" data-tab="privacy">Confidentialité</div>
+        <div class="settings-nav-separator"></div>
+        <div class="settings-nav-item danger" id="settings-logout">Se déconnecter</div>
+      </div>
+      <div class="settings-content">
+        <button class="settings-close" id="settings-close">✕</button>
+
+        <div class="settings-tab active" id="tab-account">
+          <h2>Mon compte</h2>
+          <div class="settings-card">
+            <label>Nom d'utilisateur</label>
+            <input type="text" id="settings-username" maxlength="32">
+            <label>Email (affichage)</label>
+            <input type="email" id="settings-email" placeholder="toi@email.com">
+            <button class="settings-save-btn" id="save-account">Enregistrer</button>
+          </div>
+        </div>
+
+        <div class="settings-tab" id="tab-profile">
+          <h2>Profil</h2>
+          <div class="settings-card">
+            <label>Avatar (importer une image / GIF)</label>
+            <div class="upload-row">
+              <div id="settings-avatar-preview" class="upload-preview avatar-preview"></div>
+              <div>
+                <input type="file" id="settings-avatar-file" accept="image/*,.gif" style="display:none">
+                <button type="button" class="upload-btn" id="settings-avatar-btn">Choisir une image</button>
+                <button type="button" class="upload-clear" id="settings-avatar-clear">Supprimer</button>
+              </div>
+            </div>
+            <label>Bannière (importer une image / GIF)</label>
+            <div class="upload-row">
+              <div id="settings-banner-preview" class="upload-preview banner-preview"></div>
+              <div>
+                <input type="file" id="settings-banner-file" accept="image/*,.gif" style="display:none">
+                <button type="button" class="upload-btn" id="settings-banner-btn">Choisir une image</button>
+                <button type="button" class="upload-clear" id="settings-banner-clear">Supprimer</button>
+              </div>
+            </div>
+            <label>Bio / Statut</label>
+            <textarea id="settings-bio" rows="3" maxlength="190" placeholder="Parle de toi..."></textarea>
+
+            <label style="margin-top:20px">Décoration d'avatar (Discord)</label>
+            <div class="deco-grid" id="avatar-deco-grid">
+              <div class="deco-option active" data-deco="none" title="Aucune"><div class="deco-preview none"></div></div>
+              <div class="deco-option" data-deco="angry" title="En colère"><img class="deco-img" src="/decos/angry.png" alt="Angry"></div>
+              <div class="deco-option" data-deco="ki" title="Le Ki"><img class="deco-img" src="/decos/ki.png" alt="Ki"></div>
+              <div class="deco-option" data-deco="rage" title="Rage"><img class="deco-img" src="/decos/rage.png" alt="Rage"></div>
+              <div class="deco-option" data-deco="phoenix" title="Phoenix"><img class="deco-img" src="/decos/phoenix.png" alt="Phoenix"></div>
+              <div class="deco-option" data-deco="lotus" title="Lotus"><img class="deco-img" src="/decos/lotus.png" alt="Lotus"></div>
+            </div>
+
+            <label style="margin-top:20px">Effet de profil (Discord)</label>
+            <div class="effect-grid" id="profile-effect-grid">
+              <div class="effect-option active" data-effect="none">Aucun</div>
+              <div class="effect-option" data-effect="earthquake">Séisme</div>
+              <div class="effect-option" data-effect="sakura">Sakura</div>
+              <div class="effect-option" data-effect="cyberpunk">Cyberpunk</div>
+              <div class="effect-option" data-effect="mastery">Mastery</div>
+              <div class="effect-option" data-effect="vortex">Vortex</div>
+            </div>
+
+            <button class="settings-save-btn" id="save-profile">Enregistrer le profil</button>
+          </div>
+        </div>
+
+        <div class="settings-tab" id="tab-appearance">
+          <h2>Apparence</h2>
+          <div class="settings-card">
+            <label>Thème</label>
+            <select id="settings-theme">
+              <option value="dark">Sombre</option>
+              <option value="darker">Sombre +</option>
+              <option value="blue">Bleu Discord</option>
+            </select>
+            <label style="margin-top:16px">Taille des messages</label>
+            <select id="settings-font-size">
+              <option value="14">Petite</option>
+              <option value="16" selected>Normale</option>
+              <option value="18">Grande</option>
+            </select>
+            <button class="settings-save-btn" id="save-appearance">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="settings-tab" id="tab-notifications">
+          <h2>Notifications</h2>
+          <div class="settings-card">
+            <label class="toggle-row"><input type="checkbox" id="notif-messages" checked> Messages</label>
+            <label class="toggle-row"><input type="checkbox" id="notif-friends" checked> Demandes d'ami</label>
+            <label class="toggle-row"><input type="checkbox" id="notif-sounds" checked> Sons</label>
+            <button class="settings-save-btn" id="save-notifications">Enregistrer</button>
+          </div>
+        </div>
+
+        <div class="settings-tab" id="tab-privacy">
+          <h2>Confidentialité</h2>
+          <div class="settings-card">
+            <label class="toggle-row"><input type="checkbox" id="privacy-dm" checked> Autoriser les MP de tout le monde</label>
+            <label class="toggle-row"><input type="checkbox" id="privacy-online" checked> Afficher mon statut en ligne</label>
+            <label class="toggle-row"><input type="checkbox" id="privacy-requests" checked> Recevoir des demandes d'ami</label>
+            <button class="settings-save-btn" id="save-privacy">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- SHOP -->
+  <div id="shop-modal" class="shop-modal hidden">
+    <div class="shop-overlay" id="shop-overlay"></div>
+    <div class="shop-panel">
+      <div class="shop-header">
+        <h2>Boutique Zeyscord</h2>
+        <button id="shop-close" class="settings-close">✕</button>
+      </div>
+      <p class="shop-subtitle">Décorations & effets de profil — gratuits pour le moment</p>
+      <div class="shop-grid" id="shop-grid"></div>
+    </div>
+  </div>
+
+  
+  <!-- CREATE SERVER -->
+  <div id="create-server-modal" class="settings-modal hidden">
+    <div class="settings-overlay" id="create-server-overlay"></div>
+    <div class="create-server-panel">
+      <h2>Créer un serveur</h2>
+      <p style="color:#b5bac1;font-size:14px;margin-bottom:16px">Personnalise ton serveur. Tu pourras toujours le modifier plus tard.</p>
+      <label style="color:#b5bac1;font-size:12px;font-weight:700;text-transform:uppercase">Nom du serveur</label>
+      <input type="text" id="create-server-name" maxlength="32" placeholder="Mon super serveur" style="width:100%;padding:10px;margin:8px 0 16px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:14px">
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button id="create-server-cancel" style="padding:10px 16px;background:transparent;border:none;color:#dbdee1;cursor:pointer">Annuler</button>
+        <button id="create-server-confirm" style="padding:10px 16px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-weight:500">Créer</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- SERVER SETTINGS -->
+  <div id="server-settings-modal" class="settings-modal hidden">
+    <div class="settings-overlay" id="server-settings-overlay"></div>
+    <div class="settings-panel" style="max-width:900px">
+      <div class="settings-nav">
+        <div class="settings-nav-title">PARAMÈTRES SERVEUR</div>
+        <div class="settings-nav-item active" data-stab="overview">Aperçu</div>
+        <div class="settings-nav-item" data-stab="channels">Salons</div>
+        <div class="settings-nav-item" data-stab="roles">Rôles</div>
+        <div class="settings-nav-separator"></div>
+        <div class="settings-nav-item" id="server-settings-close-nav">Fermer</div>
+      </div>
+      <div class="settings-content">
+        <button class="settings-close" id="server-settings-close">✕</button>
+        <div class="settings-tab active" id="stab-overview">
+          <h2>Aperçu du serveur</h2>
+          <div class="settings-card">
+            <label>Nom du serveur</label>
+            <input type="text" id="ss-name" maxlength="32">
+            <label>Icône (1-2 lettres)</label>
+            <input type="text" id="ss-icon" maxlength="2">
+            <button class="settings-save-btn" id="ss-save-overview">Enregistrer</button>
+          </div>
+        </div>
+        <div class="settings-tab" id="stab-channels">
+          <h2>Salons & catégories</h2>
+          <div class="settings-card">
+            <label>Nouvelle catégorie</label>
+            <div style="display:flex;gap:8px;margin-bottom:16px">
+              <input type="text" id="ss-cat-name" placeholder="Nom de la catégorie" style="flex:1">
+              <button class="settings-save-btn" id="ss-add-cat" style="margin-top:0">Créer</button>
+            </div>
+            <label>Nouveau salon</label>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <input type="text" id="ss-ch-name" placeholder="😀 général" style="flex:1">
+              <select id="ss-ch-cat" style="background:#1e1f22;color:#dbdee1;border:none;border-radius:4px;padding:8px"></select>
+              <button class="settings-save-btn" id="ss-add-ch" style="margin-top:0">Créer</button>
+            </div>
+            <div id="ss-channels-list" style="margin-top:16px;color:#dbdee1;font-size:14px"></div>
+          </div>
+        </div>
+        <div class="settings-tab" id="stab-roles">
+          <h2>Rôles</h2>
+          <div class="settings-card">
+            <label>Nouveau rôle</label>
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+              <input type="text" id="ss-role-name" placeholder="Nom du rôle" style="flex:1">
+              <input type="color" id="ss-role-color" value="#99aab5" style="width:48px;height:38px;border:none;background:transparent;cursor:pointer">
+              <button class="settings-save-btn" id="ss-add-role" style="margin-top:0">Créer</button>
+            </div>
+            <div id="ss-roles-list" style="color:#dbdee1;font-size:14px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
