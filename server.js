@@ -126,7 +126,7 @@ app.post('/api/create-checkout', async (req, res) => {
         username: String(username || ''),
         email: String(email || '')
       },
-      success_url: origin + '/?paid=1&item=' + encodeURIComponent(itemId) + '&type=' + encodeURIComponent(itemType || ''),
+      success_url: origin + '/?paid=1&session_id={CHECKOUT_SESSION_ID}&item=' + encodeURIComponent(itemId) + '&type=' + encodeURIComponent(itemType || ''),
       cancel_url: origin + '/?paid=0'
     });
 
@@ -137,7 +137,47 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
-// Vérifier un paiement (fallback si webhook pas encore arrivé)
+// Confirmer un paiement via session Stripe (sans webhook)
+app.get('/api/confirm-session', async (req, res) => {
+  const sessionId = req.query.session_id;
+  if (!sessionId) return res.status(400).json({ paid: false, error: 'session_id manquant' });
+  if (!stripe) return res.status(503).json({ paid: false, error: 'Stripe non configure' });
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status !== 'paid' && session.status !== 'complete') {
+      return res.json({ paid: false, error: 'Paiement non complete' });
+    }
+    const meta = session.metadata || {};
+    const pFile = path.join(__dirname, 'purchases.json');
+    let purchases = {};
+    try { if (fs.existsSync(pFile)) purchases = JSON.parse(fs.readFileSync(pFile, 'utf8')); } catch (e) {}
+    const key = (meta.email || meta.username || 'unknown') + '|' + meta.itemId;
+    purchases[key] = {
+      itemId: meta.itemId,
+      itemType: meta.itemType,
+      itemName: meta.itemName,
+      username: meta.username,
+      email: meta.email,
+      paidAt: new Date().toISOString(),
+      sessionId: session.id,
+      amount: session.amount_total
+    };
+    try { fs.writeFileSync(pFile, JSON.stringify(purchases, null, 2)); } catch (e) {}
+    res.json({
+      paid: true,
+      itemId: meta.itemId,
+      itemType: meta.itemType,
+      itemName: meta.itemName,
+      username: meta.username,
+      email: meta.email
+    });
+  } catch (e) {
+    console.error('[Stripe] confirm-session:', e.message);
+    res.status(500).json({ paid: false, error: e.message });
+  }
+});
+
+// Vérifier un paiement (fichier local)
 app.get('/api/check-purchase', (req, res) => {
   const { email, username, itemId } = req.query;
   const pFile = path.join(__dirname, 'purchases.json');
