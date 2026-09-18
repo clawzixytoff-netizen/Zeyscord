@@ -2292,11 +2292,11 @@ const SHOP_EFFECTS = [
   { id: 'discord_os', name: 'Discord Os', img: '/effects/discord_os.gif', price: 2.75, type: 'effect' },
   { id: 'dreamy', name: 'Dreamy', img: '/effects/dreamy.gif', price: 2.75, type: 'effect' },
   { id: 'fall_foliage', name: 'Fall Foliage', img: '/effects/fall_foliage.gif', price: 2.75, type: 'effect' },
-  { id: 'feelin_90s', name: 'Feelin\' 90s', img: '/effects/feelin_90s.gif', price: 0, type: 'effect' },
-  { id: 'feelin_mischievous', name: 'Feelin\' Mischievous', img: '/effects/feelin_mischievous.gif', price: 0, type: 'effect' },
+  { id: 'feelin_90s', name: 'Feelin\' 90s', img: '/effects/feelin_90s.gif', price: 2.75, type: 'effect' },
+  { id: 'feelin_mischievous', name: 'Feelin\' Mischievous', img: '/effects/feelin_mischievous.gif', price: 2.75, type: 'effect' },
   { id: 'ghoulish_graffiti', name: 'Ghoulish Graffiti', img: '/effects/ghoulish_graffiti.gif', price: 2.75, type: 'effect' },
   { id: 'goozilla', name: 'Goozilla', img: '/effects/goozilla.gif', price: 2.75, type: 'effect' },
-  { id: 'haunted_man_o_war', name: 'Haunted Man O\' War', img: '/effects/haunted_man_o_war.gif', price: 0, type: 'effect' },
+  { id: 'haunted_man_o_war', name: 'Haunted Man O\' War', img: '/effects/haunted_man_o_war.gif', price: 2.75, type: 'effect' },
   { id: 'heartzilla', name: 'Heartzilla', img: '/effects/heartzilla.gif', price: 2.75, type: 'effect' },
   { id: 'hydro_blast', name: 'Hydro Blast', img: '/effects/hydro_blast.gif', price: 2.75, type: 'effect' },
   { id: 'ki_detonate', name: 'Ki Detonate', img: '/effects/ki_detonate.gif', price: 2.75, type: 'effect' },
@@ -2679,7 +2679,6 @@ function openShop() {
 
     const buy = () => {
       if (isOwned) return;
-      // Owner = tout gratuit
       if (currentUser && currentUser.isOwner) {
         if (item.type === 'deco') ownDeco(item.id);
         else if (item.type === 'effect') ownEffect(item.id);
@@ -2687,7 +2686,6 @@ function openShop() {
         openShop();
         return;
       }
-      // Sinon → modal de paiement
       openPaymentModal(item);
     };
 
@@ -2737,9 +2735,9 @@ function showShopDetail(item, isOwned) {
       </div>
       <h3 class="shop-detail-title">${escapeHtml(item.name)}</h3>
       <p class="shop-detail-desc">${item.type === 'deco' ? 'Donne un nouveau look à ton avatar.' : item.type === 'effect' ? 'Anime ton profil avec un effet.' : (item.desc || 'Avantages Nitro')}</p>
-      <div class="shop-detail-price">${isOwned ? 'Possédé' : (currentUser && currentUser.isOwner ? 'Gratuit (Owner)' : (item.price === 0 ? 'Gratuit' : item.price + ' €'))}</div>
+      <div class="shop-detail-price">${item.price === 0 ? 'Gratuit' : item.price + ' €'}</div>
       <button type="button" class="shop-detail-buy" id="shop-detail-buy-btn">
-        ${isOwned ? 'Possédé ✓' : (currentUser && currentUser.isOwner ? 'Obtenir gratuitement' : (item.price === 0 ? 'Obtenir' : 'Acheter pour ' + item.price + ' €'))}
+        ${isOwned ? 'Possédé ✓' : (item.price === 0 ? 'Obtenir' : 'Acheter pour ' + item.price + ' €')}
       </button>
     </div>
   `;
@@ -2759,9 +2757,6 @@ function showShopDetail(item, isOwned) {
   }
 }
 
-// ===== PAIEMENT (Carte / PayPal / LTC) =====
-// Configure tes infos de paiement ici :
-// ===== PAIEMENT STRIPE (vérification automatique) =====
 function openPaymentModal(item) {
   let modal = document.getElementById('payment-modal');
   if (!modal) {
@@ -2777,35 +2772,29 @@ function openPaymentModal(item) {
     <div class="picker-panel" style="max-width:420px;">
       <div class="picker-header">
         <div>
-          <h2>Paiement sécurisé</h2>
+          <h2>Paiement securise</h2>
           <p class="picker-sub">${escapeHtml(item.name)} — <strong>${price}</strong></p>
         </div>
         <button type="button" class="picker-x" data-close-pay="1">×</button>
       </div>
       <div class="picker-body" style="display:block;padding:16px;">
         <p style="color:#b5bac1;font-size:14px;margin-bottom:16px;">
-          Paiement par <strong>carte bancaire</strong> via Stripe.<br>
-          L'article se débloque <strong>automatiquement</strong> après le paiement.
+          Paiement par carte via Stripe. Debloquage automatique apres paiement.
         </p>
         <button type="button" class="btn-primary" id="pay-stripe" style="width:100%;padding:14px;font-size:15px;">
-          💳 Payer ${price} avec Stripe
+          Payer ${price} avec Stripe
         </button>
         <p id="pay-status" style="color:#ed4245;font-size:13px;margin-top:12px;display:none;"></p>
-        <p style="color:#72767d;font-size:12px;margin-top:14px;text-align:center;">
-          Aucun bouton « j'ai payé » — impossible de bypasser.
-        </p>
       </div>
     </div>`;
-
   modal.querySelectorAll('[data-close-pay]').forEach(el => {
     el.onclick = () => modal.classList.add('hidden');
   });
-
   document.getElementById('pay-stripe').onclick = async () => {
     const btn = document.getElementById('pay-stripe');
     const status = document.getElementById('pay-status');
     btn.disabled = true;
-    btn.textContent = 'Redirection…';
+    btn.textContent = 'Redirection...';
     status.style.display = 'none';
     try {
       const res = await fetch('/api/create-checkout', {
@@ -2816,38 +2805,33 @@ function openPaymentModal(item) {
           itemName: item.name,
           itemType: item.type,
           price: item.price,
-          username: currentUser?.username,
-          email: currentUser?.email
+          username: currentUser && currentUser.username,
+          email: currentUser && currentUser.email
         })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur Stripe');
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error('Pas d\\'URL de paiement');
-      }
+      if (data.url) window.location.href = data.url;
+      else throw new Error('Pas URL de paiement');
     } catch (e) {
       status.style.display = 'block';
-      status.textContent = e.message || 'Erreur. Stripe n\\'est peut-être pas encore configuré.';
+      status.textContent = e.message || 'Erreur Stripe';
       btn.disabled = false;
-      btn.textContent = '💳 Payer ' + price + ' avec Stripe';
+      btn.textContent = 'Payer ' + price + ' avec Stripe';
     }
   };
 }
 
-// Après retour de Stripe (?paid=1&item=...) — vérifie côté serveur
 (function handleStripeReturn() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('paid') === '1' && params.get('item')) {
     const itemId = params.get('item');
     const itemType = params.get('type') || 'deco';
-    try { history.replaceState({}, '', window.location.pathname); } catch (_) {}
-
+    try { history.replaceState({}, '', window.location.pathname); } catch (e) {}
     async function tryUnlock(attempt) {
       try {
-        const email = currentUser?.email || localStorage.getItem('zeyscord_email') || '';
-        const username = currentUser?.username || '';
+        const email = (currentUser && currentUser.email) || localStorage.getItem('zeyscord_email') || '';
+        const username = (currentUser && currentUser.username) || '';
         const res = await fetch('/api/check-purchase?email=' + encodeURIComponent(email) + '&username=' + encodeURIComponent(username) + '&itemId=' + encodeURIComponent(itemId));
         const data = await res.json();
         if (data.paid) {
@@ -2855,19 +2839,18 @@ function openPaymentModal(item) {
           else if (itemType === 'effect') ownEffect(itemId);
           else if (itemType === 'nitro') ownNitro();
           if (typeof openShop === 'function') openShop();
-          alert('Paiement réussi ! Article débloqué.');
+          alert('Paiement reussi ! Article debloque.');
           return;
         }
-      } catch (_) {}
-      if (attempt < 8) setTimeout(() => tryUnlock(attempt + 1), 1500);
-      else alert('Paiement reçu. Si l\'article n\'apparaît pas, reconnecte-toi dans 1 minute.');
+      } catch (e) {}
+      if (attempt < 8) setTimeout(function() { tryUnlock(attempt + 1); }, 1500);
+      else alert('Paiement recu. Reconnecte-toi dans 1 minute si besoin.');
     }
-    // Attendre que currentUser soit prêt
-    setTimeout(() => tryUnlock(0), 1000);
+    setTimeout(function() { tryUnlock(0); }, 1000);
   }
 })();
 
-socket.on('purchaseUnlocked', (data) => {
+socket.on('purchaseUnlocked', function(data) {
   if (!data || !data.itemId) return;
   if (data.itemType === 'deco') ownDeco(data.itemId);
   else if (data.itemType === 'effect') ownEffect(data.itemId);
@@ -2876,7 +2859,6 @@ socket.on('purchaseUnlocked', (data) => {
 });
 
 function closeShop() {
- {
   document.getElementById('shop-modal').classList.add('hidden');
 }
 document.getElementById('shop-overlay')?.addEventListener('click', closeShop);
