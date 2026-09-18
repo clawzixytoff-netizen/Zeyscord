@@ -3442,11 +3442,15 @@ img.profile-effect-overlay {
 .member-avatar .avatar-deco-overlay,
 .user-avatar-wrap .avatar-deco-overlay,
 .member-avatar-wrap .avatar-deco-overlay {
-  width: 44px !important;
-  height: 44px !important;
-  max-width: 44px !important;
-  max-height: 44px !important;
+  width: 160% !important;
+  height: 160% !important;
+  max-width: none !important;
+  max-height: none !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
   z-index: 4 !important;
+  object-fit: contain !important;
 }
 
 /* Profile / large avatars: 100px deco centered on 92px avatar */
@@ -3468,10 +3472,10 @@ img.profile-effect-overlay {
 .zpc-avatar-wrap > .avatar-deco-overlay,
 .profile-avatar-wrapper > .avatar-deco-overlay,
 .zpc-body > .avatar-deco-overlay {
-  width: 128px !important;
-  height: 128px !important;
-  max-width: 128px !important;
-  max-height: 128px !important;
+  width: 160% !important;
+  height: 160% !important;
+  max-width: none !important;
+  max-height: none !important;
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
@@ -7605,4 +7609,41 @@ img.profile-effect-overlay {
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
+}
+
+
+/* ===== FINAL DECO ALIGNMENT (priorite max) ===== */
+img.avatar-deco-overlay {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  width: 160% !important;
+  height: 160% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+.user-avatar-wrap,
+.member-avatar-wrap,
+.zpc-avatar-wrap,
+.profile-avatar-wrapper,
+.uam-avatar-wrap {
+  position: relative !important;
+  overflow: visible !important;
+}
+.user-avatar,
+.member-avatar,
+.zpc-avatar,
+.profile-avatar,
+.uam-avatar {
+  overflow: hidden !important; /* photo ronde */
+  position: relative !important;
 }

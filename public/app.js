@@ -353,15 +353,17 @@ function applyAvatarDeco(el, deco) {
 function applyProfileEffect(card, effect) {
   if (!card) return;
   const next = (!effect || effect === 'none' || !EFFECT_URLS[effect]) ? 'none' : effect;
-  const existing = card.querySelector('.profile-effect-overlay');
-  // Ne pas relancer l'animation si c'est le meme effet
-  if (existing && existing.dataset.effectId === next) return;
-  if (next === 'none' && !existing) return;
+  // Garde-fou fort : ne jamais recreer le meme effet
+  if (card.dataset.appliedEffect === next) {
+    const existing = card.querySelector('.profile-effect-overlay');
+    if (next === 'none' || existing) return;
+  }
 
   Array.from(card.classList).forEach(c => {
     if (c.startsWith('effect-')) card.classList.remove(c);
   });
   card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
+  card.dataset.appliedEffect = next;
   if (next === 'none') return;
   card.classList.add('effect-' + next);
 
@@ -788,8 +790,11 @@ function updateUserPanel() {
   applyAvatarDeco(userAvatar, currentUser.avatarDeco);
   const st = currentUser.presenceStatus || 'online';
   setStatusDot(document.getElementById('user-status-dot'), st);
-  // keep account menu in sync if open
-  populateAccountMenu();
+  // Ne rafraichir le menu QUE s'il est ouvert (evite relancer l'effet)
+  const menu = document.getElementById('user-account-menu');
+  if (menu && !menu.classList.contains('hidden')) {
+    populateAccountMenu();
+  }
 }
 
 function getRecentAccounts() {
@@ -953,7 +958,7 @@ function populateAccountMenu() {
     menuEl.style.position = 'absolute';
     menuEl.style.overflow = 'visible';
     menuEl.style.background = 'transparent';
-    // Ne pas toucher à la position de l'avatar (gérée par CSS)
+    // Appliquer l'effet seulement si change (applyProfileEffect a un garde-fou)
     applyProfileEffect(menuEl, currentUser.profileEffect || 'none');
   }
 
