@@ -237,7 +237,7 @@ function applyAvatarDeco(el, deco) {
     el.closest('.member-avatar-wrap') ||
     el.parentElement;
 
-  let existing = (wrap && wrap.querySelector(':scope > .avatar-deco-overlay')) ||
+  const existing = (wrap && wrap.querySelector(':scope > .avatar-deco-overlay')) ||
     el.querySelector(':scope > .avatar-deco-overlay');
   if (next === 'none') {
     if (existing) existing.remove();
@@ -250,17 +250,25 @@ function applyAvatarDeco(el, deco) {
   el.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
   el.classList.add('has-deco');
 
-  let sizePx = 52;
-  if (wrap && (wrap.classList.contains('zpc-avatar-wrap') || wrap.classList.contains('profile-avatar-wrapper'))) sizePx = 128;
-  else if (wrap && wrap.classList.contains('uam-avatar-wrap')) sizePx = 108;
-  else if (el.id === 'profile-avatar' || el.id === 'edit-preview-avatar') sizePx = 128;
-  else if (el.id === 'uam-avatar') sizePx = 108;
-
   const host = wrap || el;
-  host.style.setProperty('position', 'relative', 'important');
+  host.style.setProperty('position', host.classList && host.classList.contains('uam-avatar-wrap') ? 'absolute' : 'relative', 'important');
   host.style.setProperty('overflow', 'visible', 'important');
-  el.style.setProperty('overflow', 'hidden', 'important');
+
+  // Centrer l'avatar dans le wrap
   el.style.setProperty('position', 'relative', 'important');
+  el.style.setProperty('overflow', 'hidden', 'important');
+  el.style.setProperty('margin', '0 auto', 'important');
+
+  // Taille deco = 1.55 x taille du host (mesure reelle)
+  const rect = host.getBoundingClientRect();
+  let base = Math.max(rect.width, rect.height) || 40;
+  if (base < 20) {
+    // fallback si pas encore rendu
+    if (host.classList && host.classList.contains('uam-avatar-wrap')) base = 80;
+    else if (host.classList && (host.classList.contains('zpc-avatar-wrap') || host.classList.contains('profile-avatar-wrapper'))) base = 92;
+    else base = 32;
+  }
+  const sizePx = Math.round(base * 1.55);
 
   const img = document.createElement('img');
   img.className = 'avatar-deco-overlay';
@@ -292,7 +300,6 @@ function applyProfileEffect(card, effect) {
   if (!card) return;
   const next = (!effect || effect === 'none' || !EFFECT_URLS[effect]) ? 'none' : effect;
 
-  // Garde fort : meme effet + overlay present = zero touch
   if (card.dataset.appliedEffect === next) {
     const still = card.querySelector(':scope > .profile-effect-overlay');
     if (next === 'none' || still) return;
@@ -301,16 +308,7 @@ function applyProfileEffect(card, effect) {
   card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
   Array.from(card.classList).forEach(c => { if (c.startsWith('effect-')) card.classList.remove(c); });
   card.dataset.appliedEffect = next;
-
-  // Fond body : opaque si pas d'effet, legerement transparent si effet (pour voir l'anim)
-  const body = card.querySelector('.uam-profile-body, .zpc-body, .profile-content, #profile-content, #edit-preview-content');
-  if (next === 'none') {
-    if (body && body.dataset.fxBg) {
-      // restore handled by theme code elsewhere
-      delete body.dataset.fxBg;
-    }
-    return;
-  }
+  if (next === 'none') return;
 
   card.classList.add('effect-' + next);
   card.style.setProperty('position', 'relative', 'important');
@@ -319,50 +317,39 @@ function applyProfileEffect(card, effect) {
   const overlay = document.createElement('img');
   overlay.className = 'profile-effect-overlay';
   overlay.dataset.effectId = next;
-  // Cache-bust UNIQUE une seule fois a la creation (pas a chaque appel)
   overlay.src = EFFECT_URLS[next];
   overlay.alt = '';
   overlay.draggable = false;
   overlay.decoding = 'async';
+  // Couvre TOUTE la carte, au-dessus du fond, sous le texte
   overlay.style.setProperty('position', 'absolute', 'important');
-  overlay.style.setProperty('left', '0', 'important');
-  overlay.style.setProperty('top', '0', 'important');
+  overlay.style.setProperty('inset', '0', 'important');
   overlay.style.setProperty('width', '100%', 'important');
   overlay.style.setProperty('height', '100%', 'important');
   overlay.style.setProperty('object-fit', 'cover', 'important');
-  overlay.style.setProperty('object-position', 'center top', 'important');
+  overlay.style.setProperty('object-position', 'center center', 'important');
   overlay.style.setProperty('pointer-events', 'none', 'important');
-  overlay.style.setProperty('z-index', '3', 'important');
-  overlay.style.setProperty('border-radius', 'inherit', 'important');
+  overlay.style.setProperty('z-index', '2', 'important');
+  overlay.style.setProperty('border-radius', '8px', 'important');
   overlay.style.setProperty('opacity', '1', 'important');
   overlay.style.setProperty('mix-blend-mode', 'normal', 'important');
+  card.appendChild(overlay); // append = au-dessus du fond CSS
 
-  card.insertBefore(overlay, card.firstChild);
-
-  // Contenu AU-DESSUS de l'effet, fonds semi-transparents pour laisser voir l'effet
-  if (body) {
-    body.dataset.fxBg = '1';
-    body.style.setProperty('position', 'relative', 'important');
-    body.style.setProperty('z-index', '6', 'important');
-    // si pas de theme custom, laisser un voile leger
-    const bg = body.style.background || '';
-    if (!bg || bg === '#111214' || bg.includes('rgb(17')) {
-      body.style.setProperty('background', 'rgba(17,18,20,0.55)', 'important');
-    }
-  }
-  card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .zpc-info, .uam-name, .uam-handle').forEach(el => {
+  // Banniere + body + texte AU-DESSUS de l'effet, fonds transparents
+  card.querySelectorAll('.uam-header-block, .uam-banner, .uam-profile-body, .zpc-banner, .zpc-body, .profile-banner, .profile-content').forEach(el => {
     el.style.setProperty('position', 'relative', 'important');
-    el.style.setProperty('z-index', '8', 'important');
+    el.style.setProperty('z-index', '5', 'important');
+    if (el.classList.contains('uam-profile-body') || el.classList.contains('zpc-body') || el.classList.contains('profile-content')) {
+      el.style.setProperty('background', 'transparent', 'important');
+    }
+  });
+  card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-name, .uam-handle, .uam-badges, .uam-item').forEach(el => {
+    el.style.setProperty('position', 'relative', 'important');
+    el.style.setProperty('z-index', '6', 'important');
   });
   const avw = card.querySelector('.uam-avatar-wrap, .zpc-avatar-wrap, .profile-avatar-wrapper');
   if (avw) {
-    avw.style.setProperty('z-index', '40', 'important');
-    avw.style.setProperty('position', avw.classList.contains('uam-avatar-wrap') ? 'absolute' : 'relative', 'important');
-  }
-  const banner = card.querySelector('.uam-banner, .zpc-banner, .profile-banner, #uam-banner');
-  if (banner) {
-    banner.style.setProperty('position', 'relative', 'important');
-    banner.style.setProperty('z-index', '4', 'important');
+    avw.style.setProperty('z-index', '50', 'important');
   }
 }
 
@@ -877,18 +864,18 @@ function populateAccountMenu() {
   const p = currentUser.primaryColor || '#111214';
   const s = currentUser.secondaryColor || p;
 
-  if (bodyEl) {
+  if (menuEl) {
     const hasFx = !!(currentUser.profileEffect && currentUser.profileEffect !== 'none');
+    // Couleur de theme SUR LA CARTE (derriere l'effet)
     if (hasTheme) {
-      if (hasFx) {
-        // Laisse l'effet visible a travers un voile
-        bodyEl.style.setProperty('background', 'linear-gradient(180deg, ' + p + 'cc 0%, ' + s + 'cc 100%)', 'important');
-      } else {
-        bodyEl.style.setProperty('background', 'linear-gradient(180deg, ' + p + ' 0%, ' + s + ' 100%)', 'important');
-      }
+      menuEl.style.setProperty('background', 'linear-gradient(180deg, ' + p + ' 0%, ' + s + ' 100%)', 'important');
     } else {
-      bodyEl.style.setProperty('background', hasFx ? 'rgba(17,18,20,0.6)' : '#111214', 'important');
+      menuEl.style.setProperty('background', '#111214', 'important');
     }
+  }
+  if (bodyEl) {
+    // Body TOUJOURS transparent pour laisser voir l'effet sur tout le profil
+    bodyEl.style.setProperty('background', 'transparent', 'important');
   }
   // Banner color if no image
   if (banner && !currentUser.bannerUrl) {
