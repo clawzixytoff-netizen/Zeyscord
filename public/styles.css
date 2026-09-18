@@ -7586,11 +7586,23 @@ img.profile-effect-overlay {
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 140% !important;
-  height: 140% !important;
+  width: 160% !important;
+  height: 160% !important;
   max-width: none !important;
   max-height: none !important;
   object-fit: contain !important;
   pointer-events: none !important;
   z-index: 20 !important;
+}
+.user-avatar-wrap .avatar-deco-overlay,
+.member-avatar-wrap .avatar-deco-overlay,
+.user-avatar .avatar-deco-overlay,
+.member-avatar .avatar-deco-overlay {
+  width: 160% !important;
+  height: 160% !important;
+  max-width: none !important;
+  max-height: none !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
 }

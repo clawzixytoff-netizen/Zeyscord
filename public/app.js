@@ -229,21 +229,31 @@ const EFFECT_URLS = {
 function applyAvatarDeco(el, deco) {
   if (!el) return;
   const wrap = el.parentElement;
-  const card = el.closest('.zpc') || el.closest('.profile-card');
+  const card = el.closest('.zpc') || el.closest('.profile-card') || el.closest('#user-account-menu');
   const body = card ? (card.querySelector('.zpc-body') || card.querySelector('#edit-preview-content') || card.querySelector('#profile-content')) : null;
+  const next = (!deco || deco === 'none' || !DECO_URLS[deco]) ? 'none' : deco;
+
+  // Deja la bonne deco → ne pas recreer (evite flash)
+  const existingDeco =
+    (wrap && wrap.querySelector('.avatar-deco-overlay')) ||
+    el.querySelector('.avatar-deco-overlay');
+  if (existingDeco && existingDeco.dataset.decoId === next && next !== 'none') return;
+  if (next === 'none' && !existingDeco) return;
 
   el.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
   if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
   if (body) body.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
   if (card) card.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
   el.classList.remove('has-deco');
-  if (!deco || deco === 'none' || !DECO_URLS[deco]) return;
+  if (next === 'none') return;
+  deco = next;
 
   const isProfile = !!(el.id === 'profile-avatar' || el.id === 'edit-preview-avatar' ||
     (wrap && wrap.classList.contains('zpc-avatar-wrap')));
 
   const img = document.createElement('img');
   img.className = 'avatar-deco-overlay';
+  img.dataset.decoId = deco;
   img.src = DECO_URLS[deco];
   img.alt = '';
   img.draggable = false;
@@ -274,18 +284,18 @@ function applyAvatarDeco(el, deco) {
     img.style.left = '50%';
     img.style.top = '50%';
     img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '140%';
-    img.style.height = '140%';
+    img.style.width = '160%';
+    img.style.height = '160%';
     img.style.maxWidth = 'none';
     img.style.maxHeight = 'none';
     img.style.margin = '0';
     img.style.padding = '0';
     img.style.border = '0';
-    img.style.transform = 'none';
     img.style.objectFit = 'contain';
     img.style.pointerEvents = 'none';
     img.style.zIndex = '100';
     img.style.display = 'block';
+    // garder translate(-50%, -50%) pour centrer
 
     wrap.appendChild(img);
   } else if (wrap && wrap.classList.contains('uam-avatar-wrap')) {
@@ -300,8 +310,8 @@ function applyAvatarDeco(el, deco) {
     img.style.left = '50%';
     img.style.top = '50%';
     img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '140%';
-    img.style.height = '140%';
+    img.style.width = '160%';
+    img.style.height = '160%';
     img.style.maxWidth = 'none';
     img.style.maxHeight = 'none';
     img.style.objectFit = 'contain';
@@ -326,10 +336,10 @@ function applyAvatarDeco(el, deco) {
     img.style.left = '50%';
     img.style.top = '50%';
     img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '44px';
-    img.style.height = '44px';
-    img.style.maxWidth = '44px';
-    img.style.maxHeight = '44px';
+    img.style.width = '160%';
+    img.style.height = '160%';
+    img.style.maxWidth = 'none';
+    img.style.maxHeight = 'none';
     img.style.objectFit = 'contain';
     img.style.pointerEvents = 'none';
     img.style.zIndex = '4';
@@ -342,17 +352,24 @@ function applyAvatarDeco(el, deco) {
 
 function applyProfileEffect(card, effect) {
   if (!card) return;
+  const next = (!effect || effect === 'none' || !EFFECT_URLS[effect]) ? 'none' : effect;
+  const existing = card.querySelector('.profile-effect-overlay');
+  // Ne pas relancer l'animation si c'est le meme effet
+  if (existing && existing.dataset.effectId === next) return;
+  if (next === 'none' && !existing) return;
+
   Array.from(card.classList).forEach(c => {
     if (c.startsWith('effect-')) card.classList.remove(c);
   });
   card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
-  if (!effect || effect === 'none' || !EFFECT_URLS[effect]) return;
-  card.classList.add('effect-' + effect);
+  if (next === 'none') return;
+  card.classList.add('effect-' + next);
 
   const isUam = card.id === 'user-account-menu' || card.classList.contains('user-account-menu');
   const overlay = document.createElement('img');
   overlay.className = 'profile-effect-overlay';
-  overlay.src = EFFECT_URLS[effect];
+  overlay.dataset.effectId = next;
+  overlay.src = EFFECT_URLS[next];
   overlay.alt = '';
   overlay.draggable = false;
   overlay.decoding = 'async';
