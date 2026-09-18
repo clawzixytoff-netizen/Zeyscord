@@ -7647,3 +7647,28 @@ img.avatar-deco-overlay {
   overflow: hidden !important; /* photo ronde */
   position: relative !important;
 }
+
+
+/* DECO FIX 20260918 */
+img.avatar-deco-overlay {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+.member-avatar-wrap,
+.user-avatar-wrap,
+.uam-avatar-wrap,
+.zpc-avatar-wrap,
+.profile-avatar-wrapper {
+  position: relative !important;
+  overflow: visible !important;
+}

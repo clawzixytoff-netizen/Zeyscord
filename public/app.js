@@ -228,146 +228,97 @@ const EFFECT_URLS = {
 
 function applyAvatarDeco(el, deco) {
   if (!el) return;
-  const wrap = el.parentElement;
-  const card = el.closest('.zpc') || el.closest('.profile-card') || el.closest('#user-account-menu');
-  const body = card ? (card.querySelector('.zpc-body') || card.querySelector('#edit-preview-content') || card.querySelector('#profile-content')) : null;
   const next = (!deco || deco === 'none' || !DECO_URLS[deco]) ? 'none' : deco;
+  const wrap =
+    el.closest('.uam-avatar-wrap') ||
+    el.closest('.zpc-avatar-wrap') ||
+    el.closest('.profile-avatar-wrapper') ||
+    el.closest('.user-avatar-wrap') ||
+    el.closest('.member-avatar-wrap') ||
+    el.parentElement;
 
-  // Deja la bonne deco → ne pas recreer (evite flash)
-  const existingDeco =
-    (wrap && wrap.querySelector('.avatar-deco-overlay')) ||
-    el.querySelector('.avatar-deco-overlay');
-  if (existingDeco && existingDeco.dataset.decoId === next && next !== 'none') return;
-  if (next === 'none' && !existingDeco) return;
+  // Chercher deco existante sur wrap ou el
+  let existing = (wrap && wrap.querySelector(':scope > .avatar-deco-overlay')) || el.querySelector(':scope > .avatar-deco-overlay');
+  if (next === 'none') {
+    if (existing) existing.remove();
+    el.classList.remove('has-deco');
+    return;
+  }
+  // Meme deco deja en place → ne rien faire
+  if (existing && existing.dataset.decoId === next) return;
 
-  el.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
-  if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
-  if (body) body.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
-  if (card) card.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
-  el.classList.remove('has-deco');
-  if (next === 'none') return;
-  deco = next;
+  // Nettoyer anciennes
+  if (wrap) wrap.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
+  el.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
+  el.classList.add('has-deco');
 
-  const isProfile = !!(el.id === 'profile-avatar' || el.id === 'edit-preview-avatar' ||
-    (wrap && wrap.classList.contains('zpc-avatar-wrap')));
+  // Taille selon contexte
+  let sizePx = 52; // membres / barre user
+  if (wrap && (wrap.classList.contains('zpc-avatar-wrap') || wrap.classList.contains('profile-avatar-wrapper'))) {
+    sizePx = 130; // profil ~80px avatar
+  } else if (wrap && wrap.classList.contains('uam-avatar-wrap')) {
+    sizePx = 110; // menu compte ~68px
+  } else if (el.id === 'profile-avatar' || el.id === 'edit-preview-avatar') {
+    sizePx = 130;
+  }
+
+  if (wrap) {
+    wrap.style.position = 'relative';
+    wrap.style.overflow = 'visible';
+  }
+  el.style.position = 'relative';
+  // garder la photo ronde
+  el.style.overflow = 'hidden';
 
   const img = document.createElement('img');
   img.className = 'avatar-deco-overlay';
-  img.dataset.decoId = deco;
-  img.src = DECO_URLS[deco];
+  img.dataset.decoId = next;
+  img.src = DECO_URLS[next];
   img.alt = '';
   img.draggable = false;
-  el.classList.add('has-deco');
+  img.style.cssText = [
+    'position:absolute',
+    'left:50%',
+    'top:50%',
+    'transform:translate(-50%,-50%)',
+    'width:' + sizePx + 'px',
+    'height:' + sizePx + 'px',
+    'max-width:none',
+    'max-height:none',
+    'object-fit:contain',
+    'pointer-events:none',
+    'z-index:20',
+    'margin:0',
+    'padding:0',
+    'border:0',
+    'display:block'
+  ].join(';');
 
-  if (isProfile && wrap) {
-    // Put deco ON the wrap, centered with negative offsets
-    if (body) {
-      body.style.position = 'relative';
-      body.style.overflow = 'visible';
-    }
-    if (card) card.style.overflow = 'visible';
-
-    wrap.style.position = 'absolute';
-    wrap.style.top = '-40px';
-    wrap.style.left = '16px';
-    wrap.style.width = '92px';
-    wrap.style.height = '92px';
-    wrap.style.overflow = 'visible';
-    wrap.style.zIndex = '50';
-
-    el.style.position = 'relative';
-    el.style.zIndex = '1';
-    el.style.overflow = 'hidden';
-
-    // Deco ~140% de la taille du wrap, centree (sans changer PDP)
-    img.style.position = 'absolute';
-    img.style.left = '50%';
-    img.style.top = '50%';
-    img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '160%';
-    img.style.height = '160%';
-    img.style.maxWidth = 'none';
-    img.style.maxHeight = 'none';
-    img.style.margin = '0';
-    img.style.padding = '0';
-    img.style.border = '0';
-    img.style.objectFit = 'contain';
-    img.style.pointerEvents = 'none';
-    img.style.zIndex = '100';
-    img.style.display = 'block';
-    // garder translate(-50%, -50%) pour centrer
-
-    wrap.appendChild(img);
-  } else if (wrap && wrap.classList.contains('uam-avatar-wrap')) {
-    // Menu compte uniquement — déco autour de la PDP (taille menu)
-    wrap.style.position = 'absolute';
-    wrap.style.overflow = 'visible';
-    wrap.style.zIndex = '20';
-    el.style.position = 'relative';
-    el.style.overflow = 'hidden';
-    el.style.zIndex = '1';
-    img.style.position = 'absolute';
-    img.style.left = '50%';
-    img.style.top = '50%';
-    img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '160%';
-    img.style.height = '160%';
-    img.style.maxWidth = 'none';
-    img.style.maxHeight = 'none';
-    img.style.objectFit = 'contain';
-    img.style.pointerEvents = 'none';
-    img.style.zIndex = '15';
-    img.style.display = 'block';
-    wrap.appendChild(img);
-  } else {
-    // Small avatars (user panel + members list)
-    const target = (wrap && (wrap.classList.contains('user-avatar-wrap') || wrap.classList.contains('member-avatar-wrap')))
-      ? wrap
-      : el;
-
-    target.style.position = 'relative';
-    target.style.overflow = 'visible';
-
-    el.style.position = 'relative';
-    el.style.overflow = 'visible';
-    el.style.zIndex = '1';
-
-    img.style.position = 'absolute';
-    img.style.left = '50%';
-    img.style.top = '50%';
-    img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '160%';
-    img.style.height = '160%';
-    img.style.maxWidth = 'none';
-    img.style.maxHeight = 'none';
-    img.style.objectFit = 'contain';
-    img.style.pointerEvents = 'none';
-    img.style.zIndex = '4';
-    img.style.display = 'block';
-
-    target.appendChild(img);
-  }
+  // Toujours sur le wrap pour que ca depasse du cercle
+  (wrap || el).appendChild(img);
 }
-
 
 function applyProfileEffect(card, effect) {
   if (!card) return;
   const next = (!effect || effect === 'none' || !EFFECT_URLS[effect]) ? 'none' : effect;
-  // Garde-fou fort : ne jamais recreer le meme effet
+
+  // Si meme effet deja applique ET overlay present → ne PAS toucher (pas de relance)
   if (card.dataset.appliedEffect === next) {
-    const existing = card.querySelector('.profile-effect-overlay');
-    if (next === 'none' || existing) return;
+    const stillThere = card.querySelector('.profile-effect-overlay');
+    if (next === 'none' || stillThere) return;
   }
 
+  // Changement reel uniquement
+  card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
   Array.from(card.classList).forEach(c => {
     if (c.startsWith('effect-')) card.classList.remove(c);
   });
-  card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
   card.dataset.appliedEffect = next;
   if (next === 'none') return;
-  card.classList.add('effect-' + next);
 
-  const isUam = card.id === 'user-account-menu' || card.classList.contains('user-account-menu');
+  card.classList.add('effect-' + next);
+  card.style.position = card.style.position || 'relative';
+
   const overlay = document.createElement('img');
   overlay.className = 'profile-effect-overlay';
   overlay.dataset.effectId = next;
@@ -375,43 +326,32 @@ function applyProfileEffect(card, effect) {
   overlay.alt = '';
   overlay.draggable = false;
   overlay.decoding = 'async';
-  overlay.loading = 'eager';
+  // Pas de rechargement du src apres
+  overlay.style.cssText = [
+    'position:absolute',
+    'left:0',
+    'top:0',
+    'width:100%',
+    'height:100%',
+    'object-fit:cover',
+    'object-position:center top',
+    'pointer-events:none',
+    'z-index:2',
+    'border-radius:inherit',
+    'opacity:1',
+    'mix-blend-mode:normal'
+  ].join(';');
 
-  if (isUam) {
-    card.style.position = 'absolute';
-    card.style.overflow = 'hidden';
-    card.style.borderRadius = '8px';
-    // Effet plein cadre, couleurs normales (pas screen)
-    overlay.style.cssText = [
-      'position:absolute',
-      'left:0',
-      'top:0',
-      'width:100%',
-      'height:100%',
-      'object-fit:cover',
-      'object-position:center top',
-      'pointer-events:none',
-      'z-index:3',
-      'border-radius:8px',
-      'opacity:1',
-      'mix-blend-mode:normal'
-    ].join(';');
-    card.appendChild(overlay);
-    // Texte / boutons au-dessus de l'effet
-    card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-name, .uam-handle, .uam-badges, .uam-item').forEach(el => {
-      el.style.position = 'relative';
-      el.style.zIndex = '12';
-    });
-    // Avatar tout en haut
-    const avw = card.querySelector('.uam-avatar-wrap');
-    if (avw) {
-      avw.style.zIndex = '30';
-    }
-  } else {
-    card.style.position = card.style.position || 'relative';
-    overlay.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;border-radius:inherit;opacity:0.95;mix-blend-mode:normal;';
-    card.insertBefore(overlay, card.firstChild);
-  }
+  // Derriere le contenu texte, devant le fond
+  card.insertBefore(overlay, card.firstChild);
+
+  // Contenu au-dessus
+  card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-profile-body, .zpc-body, .profile-content, .uam-avatar-wrap, .zpc-avatar-wrap, .profile-avatar-wrapper').forEach(el => {
+    el.style.position = 'relative';
+    el.style.zIndex = '5';
+  });
+  const avw = card.querySelector('.uam-avatar-wrap, .zpc-avatar-wrap, .profile-avatar-wrapper');
+  if (avw) avw.style.zIndex = '30';
 }
 
 
