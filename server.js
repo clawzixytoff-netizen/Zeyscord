@@ -4,12 +4,139 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const os = require('os');
 
 const app = express();
 app.use(cors());
+
+// Stripe (optionnel : si STRIPE_SECRET_KEY est défini)
+let stripe = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  try {
+    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    console.log('[Stripe] Activé');
+  } catch (e) {
+    console.log('[Stripe] Package manquant ou erreur:', e.message);
+  }
+}
+
+// Webhook Stripe AVANT express.json (besoin du body brut)
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe) return res.status(400).send('Stripe non configuré');
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    if (process.env.STRIPE_WEBHOOK_SECRET) {
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } else {
+      event = JSON.parse(req.body.toString());
+    }
+  } catch (err) {
+    console.log('[Stripe webhook] Erreur signature:', err.message);
+    return res.status(400).send('Webhook Error');
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const meta = session.metadata || {};
+    console.log('[Stripe] Paiement OK:', meta.itemId, meta.username, meta.email);
+    const pFile = path.join(__dirname, 'purchases.json');
+    let purchases = {};
+    try { if (fs.existsSync(pFile)) purchases = JSON.parse(fs.readFileSync(pFile, 'utf8')); } catch (e) {}
+    const key = (meta.email || meta.username || 'unknown') + '|' + meta.itemId;
+    purchases[key] = {
+      itemId: meta.itemId,
+      itemType: meta.itemType,
+      itemName: meta.itemName,
+      username: meta.username,
+      email: meta.email,
+      paidAt: new Date().toISOString(),
+      sessionId: session.id,
+      amount: session.amount_total
+    };
+    try { fs.writeFileSync(pFile, JSON.stringify(purchases, null, 2)); } catch (e) {}
+
+    // Notifier si io/users déjà prêts
+    try {
+      if (typeof io !== 'undefined' && typeof users !== 'undefined') {
+        for (const [sid, u] of users.entries()) {
+          if ((meta.email && u.email === meta.email) || (meta.username && u.username === meta.username)) {
+            io.to(sid).emit('purchaseUnlocked', {
+              itemId: meta.itemId,
+              itemType: meta.itemType,
+              itemName: meta.itemName
+            });
+          }
+        }
+      }
+    } catch (e) {}
+  }
+  res.json({ received: true });
+});
+
 app.use(express.json({ limit: '5mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+const staticDir = fs.existsSync(path.join(__dirname, 'public'))
+  ? path.join(__dirname, 'public')
+  : path.join(__dirname, 'publique');
+app.use(express.static(staticDir));
+console.log('[Static]', staticDir);
+
+
+// Créer une session Stripe Checkout
+app.post('/api/create-checkout', async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({ error: 'Stripe non configuré. Ajoute STRIPE_SECRET_KEY dans Render.' });
+  }
+  try {
+    const { itemId, itemName, itemType, price, username, email } = req.body;
+    if (!itemId || !price) return res.status(400).json({ error: 'Données manquantes' });
+
+    const amountCents = Math.round(Number(price) * 100);
+    const origin = req.headers.origin || req.headers.referer?.replace(/\/[^/]*$/, '') || 'https://zeyscord.onrender.com';
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items: [{
+        price_data: {
+          currency: 'eur',
+          product_data: { name: itemName || itemId, description: 'Zeyscord - ' + (itemType || 'item') },
+          unit_amount: amountCents
+        },
+        quantity: 1
+      }],
+      metadata: {
+        itemId: String(itemId),
+        itemType: String(itemType || ''),
+        itemName: String(itemName || ''),
+        username: String(username || ''),
+        email: String(email || '')
+      },
+      success_url: origin + '/?paid=1&item=' + encodeURIComponent(itemId) + '&type=' + encodeURIComponent(itemType || ''),
+      cancel_url: origin + '/?paid=0'
+    });
+
+    res.json({ url: session.url, sessionId: session.id });
+  } catch (e) {
+    console.error('[Stripe] create-checkout:', e.message);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Vérifier un paiement (fallback si webhook pas encore arrivé)
+app.get('/api/check-purchase', (req, res) => {
+  const { email, username, itemId } = req.query;
+  const pFile = path.join(__dirname, 'purchases.json');
+  let purchases = {};
+  try { if (fs.existsSync(pFile)) purchases = JSON.parse(fs.readFileSync(pFile, 'utf8')); } catch (e) {}
+  const key1 = (email || '') + '|' + itemId;
+  const key2 = (username || '') + '|' + itemId;
+  const found = purchases[key1] || purchases[key2];
+  res.json({ paid: !!found, purchase: found || null });
+});
+
+
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -41,6 +168,88 @@ try {
 function saveProfilesToDisk() {
   try { fs.writeFileSync(PROFILES_FILE, JSON.stringify(savedProfiles, null, 2)); } catch (e) {}
 }
+
+// ===== COMPTES (email / mdp / code) =====
+const ACCOUNTS_FILE = path.join(__dirname, 'accounts.json');
+const OWNER_EMAIL = 'zeyscolo@gmail.com';
+let accounts = loadJSON(ACCOUNTS_FILE, {}); // email -> { email, username, passwordHash, verified, code }
+const pendingCodes = {}; // email -> code
+
+function hashPass(pw) {
+  return crypto.createHash('sha256').update(String(pw) + '|zeyscord').digest('hex');
+}
+function saveAccounts() { saveJSON(ACCOUNTS_FILE, accounts); }
+function isOwnerEmail(email) {
+  return email && email.toLowerCase() === OWNER_EMAIL;
+}
+function isOwnerUser(user) {
+  if (!user) return false;
+  if (user.email && isOwnerEmail(user.email)) return true;
+  if (user.username && user.username.toLowerCase() === 'zeys') return true;
+  return false;
+}
+
+app.post('/api/register', (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const username = String(req.body.username || '').trim().slice(0, 32);
+  const password = String(req.body.password || '');
+  if (!email || !email.includes('@') || !username || password.length < 4) {
+    return res.status(400).json({ error: 'E-mail, pseudo et mot de passe (4+ car.) requis' });
+  }
+  if (accounts[email] && accounts[email].verified) {
+    return res.status(400).json({ error: 'Cet e-mail est déjà utilisé' });
+  }
+  const taken = Object.values(accounts).some(a => a.verified && a.username.toLowerCase() === username.toLowerCase());
+  if (taken) return res.status(400).json({ error: 'Ce pseudo est déjà pris' });
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  accounts[email] = {
+    email,
+    username,
+    passwordHash: hashPass(password),
+    verified: false,
+    code
+  };
+  pendingCodes[email] = code;
+  saveAccounts();
+  res.json({ ok: true, email, code, message: 'Entre ce code pour valider ton compte' });
+});
+
+app.post('/api/verify', (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const code = String(req.body.code || '').trim();
+  const acc = accounts[email];
+  if (!acc) return res.status(400).json({ error: 'Compte introuvable' });
+  if (acc.verified) return res.json({ ok: true, already: true });
+  if (acc.code !== code && pendingCodes[email] !== code) {
+    return res.status(400).json({ error: 'Code incorrect' });
+  }
+  acc.verified = true;
+  delete acc.code;
+  delete pendingCodes[email];
+  saveAccounts();
+  res.json({ ok: true, email: acc.email, username: acc.username });
+});
+
+app.post('/api/login', (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
+  const acc = accounts[email];
+  if (!acc) return res.status(400).json({ error: 'E-mail ou mot de passe incorrect' });
+  if (!acc.verified) return res.status(400).json({ error: 'Compte non vérifié. Valide le code d\'abord.' });
+  if (acc.passwordHash !== hashPass(password)) {
+    return res.status(400).json({ error: 'E-mail ou mot de passe incorrect' });
+  }
+  res.json({
+    ok: true,
+    email: acc.email,
+    username: acc.username,
+    isOwner: isOwnerEmail(acc.email) || acc.username.toLowerCase() === 'zeys'
+  });
+});
+
+
+
+
 
 // Multi-server
 const guilds = {
@@ -110,6 +319,16 @@ const AVAILABLE_BADGES = [
   { id: 'boost', name: 'Server Boost' },
   { id: 'staff', name: 'Discord Staff' },
   { id: 'verified', name: 'Active Developer' },
+  { id: 'quest', name: 'Quêtes' },
+  { id: 'orbs', name: 'Orbs' },
+  { id: 'leaf', name: 'Feuilles' },
+  { id: 'gift', name: 'Cadeau' },
+  { id: 'gift_rainbow', name: 'Cadeau Arc-en-ciel' },
+  { id: 'gift_gold', name: 'Cadeau Or' },
+  { id: 'gift_blue', name: 'Cadeau Bleu' },
+  { id: 'gift_teal', name: 'Cadeau Sarcelle' },
+  { id: 'gift_pink', name: 'Cadeau Rose' },
+  { id: 'certified', name: 'Certifié' },
   { id: 'nitro_bronze', name: 'Nitro Bronze' },
   { id: 'nitro_silver', name: 'Nitro Argent' },
   { id: 'nitro_gold', name: 'Nitro Or' },
@@ -126,6 +345,7 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 function isOwner(username) { return username && username.toLowerCase() === 'zeys'; }
+// owner also by email zeyscolo@gmail.com via isOwnerUser
 function dmKey(id1, id2) { return [id1, id2].sort().join('_'); }
 function publicUser(u) {
   return {
@@ -133,12 +353,15 @@ function publicUser(u) {
     avatarUrl: u.avatarUrl, bannerUrl: u.bannerUrl,
     badges: u.badges || [], customStatus: u.customStatus || '',
     avatarDeco: u.avatarDeco || 'none', profileEffect: u.profileEffect || 'none',
+    primaryColor: u.primaryColor || null,
+    secondaryColor: u.secondaryColor || null,
+    presenceStatus: u.presenceStatus || 'online',
     isOwner: !!u.isOwner, hasNitro: !!u.hasNitro, createdAt: u.createdAt || null
   };
 }
 function publicGuild(g) {
   return {
-    id: g.id, name: g.name, icon: g.icon, ownerId: g.ownerId,
+    id: g.id, name: g.name, icon: g.icon, iconUrl: g.iconUrl || null, ownerId: g.ownerId,
     channels: g.channels || [],
     categories: g.categories || [],
     roles: g.roles || [],
@@ -149,9 +372,11 @@ function publicGuild(g) {
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('join', (username) => {
+  socket.on('join', (payload) => {
+    const username = (payload && typeof payload === 'object') ? payload.username : payload;
+    const email = (payload && typeof payload === 'object') ? (payload.email || '') : '';
     const cleanName = (username || 'User' + Math.floor(Math.random() * 1000)).trim().substring(0, 32);
-    const owner = isOwner(cleanName);
+    const owner = isOwner(cleanName) || isOwnerEmail(email);
     const saved = savedProfiles[cleanName.toLowerCase()] || {};
     const user = {
       id: generateId(),
@@ -163,9 +388,13 @@ io.on('connection', (socket) => {
       customStatus: saved.customStatus || '',
       avatarDeco: saved.avatarDeco || 'none',
       profileEffect: saved.profileEffect || 'none',
+      primaryColor: saved.primaryColor || null,
+      secondaryColor: saved.secondaryColor || null,
+      presenceStatus: saved.presenceStatus || 'online',
       hasNitro: !!(saved.hasNitro || owner),
       createdAt: saved.createdAt || new Date().toISOString(),
       isOwner: owner,
+      email: email || null,
       socketId: socket.id,
       currentGuild: 'zeyscord'
     };
@@ -310,6 +539,12 @@ io.on('connection', (socket) => {
     if (data.username !== undefined && data.username.trim()) user.username = data.username.trim().substring(0, 32);
     if (data.avatarDeco !== undefined) user.avatarDeco = data.avatarDeco || 'none';
     if (data.profileEffect !== undefined) user.profileEffect = data.profileEffect || 'none';
+    if (data.primaryColor !== undefined) user.primaryColor = data.primaryColor || null;
+    if (data.secondaryColor !== undefined) user.secondaryColor = data.secondaryColor || null;
+    if (data.presenceStatus !== undefined) {
+      const ok = ['online','idle','dnd','invisible'];
+      user.presenceStatus = ok.includes(data.presenceStatus) ? data.presenceStatus : 'online';
+    }
     if (data.hasNitro !== undefined) user.hasNitro = !!data.hasNitro;
     if (data.createdAt !== undefined) {
       if (!user.isOwner) { socket.emit('error', { message: 'Seul le propriétaire peut modifier la date de création' }); }
@@ -322,7 +557,10 @@ io.on('connection', (socket) => {
     usersById.set(user.id, user);
     savedProfiles[user.username.toLowerCase()] = {
       avatarUrl: user.avatarUrl, bannerUrl: user.bannerUrl, customStatus: user.customStatus,
-      avatarDeco: user.avatarDeco, profileEffect: user.profileEffect, badges: user.badges, hasNitro: user.hasNitro, createdAt: user.createdAt
+      avatarDeco: user.avatarDeco, profileEffect: user.profileEffect,
+      primaryColor: user.primaryColor, secondaryColor: user.secondaryColor,
+      presenceStatus: user.presenceStatus,
+      badges: user.badges, hasNitro: user.hasNitro, createdAt: user.createdAt
     };
     saveProfilesToDisk();
     io.emit('userUpdated', publicUser(user));
@@ -527,7 +765,17 @@ io.on('connection', (socket) => {
       socket.emit('error', { message: 'Pas la permission' }); return;
     }
     if (data.name) guild.name = data.name.trim().substring(0, 32);
-    if (data.icon) guild.icon = data.icon.trim().substring(0, 2).toUpperCase();
+    if (data.icon !== undefined) guild.icon = (data.icon || '').toString().trim().substring(0, 2).toUpperCase() || (guild.name[0] || 'S').toUpperCase();
+    if (data.iconUrl !== undefined) {
+      if (data.iconUrl === null || data.iconUrl === '') {
+        guild.iconUrl = null;
+      } else if (typeof data.iconUrl === 'string' && data.iconUrl.startsWith('data:image/')) {
+        // max ~5MB base64 (~6.7M chars)
+        if (data.iconUrl.length <= 7_000_000) {
+          guild.iconUrl = data.iconUrl;
+        }
+      }
+    }
     saveGuilds();
     io.emit('guildUpdated', publicGuild(guild));
   });
@@ -695,6 +943,22 @@ io.on('connection', (socket) => {
     io.emit('onlineUsers', Array.from(users.values()).map(publicUser));
   });
 
+  socket.on('shopPurchase', (data) => {
+    const buyer = users.get(socket.id);
+    console.log('[SHOP] Achat:', data?.itemName, 'par', data?.buyer || buyer?.username, data?.email, data?.price + '€');
+    // Notifier tous les owners connectés
+    for (const [sid, u] of users.entries()) {
+      if (u.isOwner) {
+        io.to(sid).emit('shopPurchaseNotify', {
+          itemName: data?.itemName,
+          price: data?.price,
+          buyer: data?.buyer || buyer?.username,
+          email: data?.email
+        });
+      }
+    }
+  });
+
   socket.on('disconnect', () => {
     const user = users.get(socket.id);
     if (user) {
@@ -710,19 +974,14 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('========================================');
   console.log('  Zeyscord est en ligne !');
-  console.log('  → http://localhost:' + PORT + '  (toi sur ce PC)');
+  console.log('  → http://localhost:' + PORT);
   const nets = os.networkInterfaces();
   for (const name of Object.keys(nets)) {
     for (const net of nets[name] || []) {
       if (net.family === 'IPv4' && !net.internal) {
-        console.log('  → http://' + net.address + ':' + PORT + '  (amis même Wi-Fi)');
+        console.log('  → http://' + net.address + ':' + PORT + ' (amis Wi-Fi)');
       }
     }
   }
-  console.log('');
-  console.log('  Pour TOUT LE MONDE (téléphone, autre réseau…) :');
-  console.log('  Ouvre un 2e terminal et lance :');
-  console.log('    npx localtunnel --port ' + PORT);
-  console.log('  Puis partage le lien https://…loca.lt');
   console.log('========================================');
 });
