@@ -1107,42 +1107,40 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   z-index: 5;
 }
 
-/* Profile effect - more visible, cover full card */
+/* Profile effect - couleurs naturelles, plein cadre */
 .profile-effect-overlay {
   position: absolute !important;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background-size: 100% 100% !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
-  pointer-events: none;
-  z-index: 15 !important;
-  border-radius: 8px;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+  border-radius: 8px !important;
   opacity: 1 !important;
-  mix-blend-mode: screen;
+  mix-blend-mode: normal !important;
 }
 .profile-card {
   position: relative !important;
   overflow: hidden !important;
 }
-/* Keep content readable above effect */
 .profile-card .profile-content {
-  position: relative;
-  z-index: 20;
-  background: rgba(17, 18, 20, 0.75);
-  backdrop-filter: blur(2px);
+  position: relative !important;
+  z-index: 5 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
 }
 .profile-card .profile-avatar-wrapper {
-  position: relative;
-  z-index: 20;
+  position: relative !important;
+  z-index: 10 !important;
 }
 .profile-card .profile-banner {
-  position: relative;
-  z-index: 1;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 /* Settings preview bigger */
@@ -1153,17 +1151,17 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 }
 img.profile-effect-overlay {
   position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  pointer-events: none;
-  z-index: 15 !important;
-  border-radius: 8px;
-  opacity: 0.9;
-  mix-blend-mode: screen;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+  border-radius: 8px !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
 }
 
 /* CRITICAL: profile decoration must show outside circle */
@@ -3469,16 +3467,20 @@ img.profile-effect-overlay {
 }
 .zpc-avatar-wrap > .avatar-deco-overlay,
 .profile-avatar-wrapper > .avatar-deco-overlay,
-.zpc-body > .avatar-deco-overlay,
-.profile-card .avatar-deco-overlay {
-  width: 100px !important;
-  height: 100px !important;
-  max-width: 100px !important;
-  max-height: 100px !important;
-  left: -4px !important;
-  top: -4px !important;
-  transform: none !important;
+.zpc-body > .avatar-deco-overlay {
+  width: 128px !important;
+  height: 128px !important;
+  max-width: 128px !important;
+  max-height: 128px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
   z-index: 100 !important;
+  object-fit: contain !important;
+}
+/* Ne pas coller la déco sur toute la carte profil */
+.profile-card > .avatar-deco-overlay {
+  display: none !important;
 }
 /* fallback when deco is placed on body (legacy path) */
 .zpc-body > img.avatar-deco-overlay {
@@ -5513,11 +5515,12 @@ img.profile-effect-overlay {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
+  object-position: center top !important;
   pointer-events: none !important;
   z-index: 2 !important;
   border-radius: 8px !important;
-  opacity: 0.85 !important;
-  mix-blend-mode: screen !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
 }
 #user-account-menu .uam-profile-body,
 #user-account-menu .uam-banner {
@@ -7050,10 +7053,10 @@ img.profile-effect-overlay {
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 96px !important;
-  height: 96px !important;
-  max-width: 96px !important;
-  max-height: 96px !important;
+  width: 110px !important;
+  height: 110px !important;
+  max-width: 110px !important;
+  max-height: 110px !important;
   object-fit: contain !important;
   pointer-events: none !important;
   z-index: 15 !important;
@@ -7079,7 +7082,7 @@ img.profile-effect-overlay {
 /* Effet de profil plus visible partout (bannière + corps) */
 #user-account-menu .profile-effect-overlay {
   opacity: 1 !important;
-  mix-blend-mode: screen !important;
+  mix-blend-mode: normal !important;
   pointer-events: none !important;
   z-index: 2 !important;
 }
@@ -7113,7 +7116,7 @@ img.profile-effect-overlay {
   object-fit: cover !important;
   z-index: 5 !important;
   opacity: 1 !important;
-  mix-blend-mode: screen !important;
+  mix-blend-mode: normal !important;
   pointer-events: none !important;
 }
 #user-account-menu .uam-header-block > .profile-effect-overlay {
@@ -7131,7 +7134,7 @@ img.profile-effect-overlay {
 #user-account-menu .uam-profile-body > .profile-effect-overlay {
   z-index: 1 !important;
   opacity: 1 !important;
-  mix-blend-mode: screen !important;
+  mix-blend-mode: normal !important;
 }
 
 
@@ -7149,7 +7152,7 @@ img.profile-effect-overlay {
   object-fit: cover !important;
   z-index: 4 !important;
   opacity: 1 !important;
-  mix-blend-mode: screen !important;
+  mix-blend-mode: normal !important;
   pointer-events: none !important;
   border-radius: 8px !important;
 }
@@ -7218,7 +7221,7 @@ img.profile-effect-overlay {
   object-fit: cover !important;
   z-index: 8 !important;
   opacity: 1 !important;
-  mix-blend-mode: screen !important;
+  mix-blend-mode: normal !important;
   pointer-events: none !important;
   border-radius: 8px !important;
 }
@@ -7378,7 +7381,7 @@ img.profile-effect-overlay {
   width: 100% !important;
   height: 100% !important;
   opacity: 1 !important;
-  mix-blend-mode: screen !important;
+  mix-blend-mode: normal !important;
   pointer-events: none !important;
 }
 /* Aperçu boutique effets plus net */
@@ -7443,7 +7446,7 @@ img.profile-effect-overlay {
 }
 .picker-preview-fx {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; mix-blend-mode: screen; pointer-events: none;
+  object-fit: cover; mix-blend-mode: normal; pointer-events: none;
 }
 .picker-preview-av {
   position: absolute; left: 16px; bottom: 80px;

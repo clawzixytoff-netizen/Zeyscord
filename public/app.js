@@ -269,15 +269,15 @@ function applyAvatarDeco(el, deco) {
     el.style.zIndex = '1';
     el.style.overflow = 'hidden';
 
-    // 100px centered on 92px box = -4px each side
-    // DO NOT use inset — it resets left/top
+    // Deco ~1.4x avatar, centree sur la PDP (sans changer taille PDP)
     img.style.position = 'absolute';
-    img.style.left = '-4px';
-    img.style.top = '-4px';
-    img.style.width = '100px';
-    img.style.height = '100px';
-    img.style.maxWidth = '100px';
-    img.style.maxHeight = '100px';
+    img.style.left = '50%';
+    img.style.top = '50%';
+    img.style.transform = 'translate(-50%, -50%)';
+    img.style.width = '128px';
+    img.style.height = '128px';
+    img.style.maxWidth = '128px';
+    img.style.maxHeight = '128px';
     img.style.margin = '0';
     img.style.padding = '0';
     img.style.border = '0';
@@ -300,10 +300,10 @@ function applyAvatarDeco(el, deco) {
     img.style.left = '50%';
     img.style.top = '50%';
     img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '96px';
-    img.style.height = '96px';
-    img.style.maxWidth = '96px';
-    img.style.maxHeight = '96px';
+    img.style.width = '110px';
+    img.style.height = '110px';
+    img.style.maxWidth = '110px';
+    img.style.maxHeight = '110px';
     img.style.objectFit = 'contain';
     img.style.pointerEvents = 'none';
     img.style.zIndex = '15';
@@ -360,9 +360,9 @@ function applyProfileEffect(card, effect) {
 
   if (isUam) {
     card.style.position = 'absolute';
-    card.style.overflow = 'visible';
+    card.style.overflow = 'hidden';
     card.style.borderRadius = '8px';
-    // Un seul calque, AU-DESSUS des fonds (bannière + body)
+    // Effet plein cadre, couleurs normales (pas screen)
     overlay.style.cssText = [
       'position:absolute',
       'left:0',
@@ -370,11 +370,12 @@ function applyProfileEffect(card, effect) {
       'width:100%',
       'height:100%',
       'object-fit:cover',
+      'object-position:center top',
       'pointer-events:none',
-      'z-index:8',
+      'z-index:3',
       'border-radius:8px',
       'opacity:1',
-      'mix-blend-mode:screen'
+      'mix-blend-mode:normal'
     ].join(';');
     card.appendChild(overlay);
     // Texte / boutons au-dessus de l'effet
@@ -389,7 +390,7 @@ function applyProfileEffect(card, effect) {
     }
   } else {
     card.style.position = card.style.position || 'relative';
-    overlay.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;border-radius:inherit;opacity:0.95;mix-blend-mode:screen;';
+    overlay.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;border-radius:inherit;opacity:0.95;mix-blend-mode:normal;';
     card.insertBefore(overlay, card.firstChild);
   }
 }
