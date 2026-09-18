@@ -2512,33 +2512,37 @@ function renderEffectPickerGrid() {
 
 function refreshDiscordTiles() {
   try {
-    const avInner = document.getElementById('edit-avatar-tile-inner');
-    if (avInner && currentUser) {
-      avInner.style.background = currentUser.avatarColor || '#5865f2';
-      if (currentUser.avatarUrl) {
-        avInner.innerHTML = '<img src="'+currentUser.avatarUrl+'" alt="">';
-      } else {
-        avInner.textContent = (currentUser.username || 'Z')[0].toUpperCase();
-      }
+    function fillAv(id) {
+      const el = document.getElementById(id);
+      if (!el || !currentUser) return;
+      el.style.background = currentUser.avatarColor || '#5865f2';
+      if (currentUser.avatarUrl) el.innerHTML = '<img src="'+currentUser.avatarUrl+'" alt="">';
+      else el.textContent = (currentUser.username || 'Z')[0].toUpperCase();
     }
-    const decoInner = document.getElementById('edit-deco-tile-inner');
-    if (decoInner) {
-      const d = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
-      if (d && d !== 'none' && DECO_URLS[d]) {
-        decoInner.innerHTML = '<img src="'+DECO_URLS[d]+'" alt="">';
-      } else {
-        decoInner.innerHTML = '<span class="discord-tile-plus">+</span>';
-      }
+    function fillDeco(id, decoId) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const d = decoId || 'none';
+      if (d && d !== 'none' && DECO_URLS[d]) el.innerHTML = '<img src="'+DECO_URLS[d]+'" alt="">';
+      else el.innerHTML = '<span class="discord-tile-plus">+</span>';
     }
-    const fxInner = document.getElementById('edit-effect-tile-inner');
-    if (fxInner) {
-      const e = (typeof editSelectedEffect !== 'undefined' ? editSelectedEffect : null) || currentUser?.profileEffect || 'none';
-      if (e && e !== 'none' && EFFECT_URLS[e]) {
-        fxInner.innerHTML = '<img src="'+EFFECT_URLS[e]+'" alt="">';
-      } else {
-        fxInner.innerHTML = '<span class="discord-tile-plus">+</span>';
-      }
+    function fillFx(id, fxId) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const e = fxId || 'none';
+      if (e && e !== 'none' && EFFECT_URLS[e]) el.innerHTML = '<img src="'+EFFECT_URLS[e]+'" alt="">';
+      else el.innerHTML = '<span class="discord-tile-plus">+</span>';
     }
+    fillAv('edit-avatar-tile-inner');
+    fillAv('settings-avatar-tile-inner');
+    const editDeco = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
+    const setDeco = (typeof selectedDeco !== 'undefined' ? selectedDeco : null) || currentUser?.avatarDeco || 'none';
+    fillDeco('edit-deco-tile-inner', editDeco);
+    fillDeco('settings-deco-tile-inner', setDeco);
+    const editFx = (typeof editSelectedEffect !== 'undefined' ? editSelectedEffect : null) || currentUser?.profileEffect || 'none';
+    const setFx = (typeof selectedEffect !== 'undefined' ? selectedEffect : null) || currentUser?.profileEffect || 'none';
+    fillFx('edit-effect-tile-inner', editFx);
+    fillFx('settings-effect-tile-inner', setFx);
   } catch (e) {}
 }
 
@@ -2546,6 +2550,11 @@ document.getElementById('edit-deco-tile')?.addEventListener('click', () => openD
 document.getElementById('edit-effect-tile')?.addEventListener('click', () => openEffectPicker());
 document.getElementById('edit-avatar-tile')?.addEventListener('click', () => {
   document.getElementById('edit-avatar-file')?.click();
+});
+document.getElementById('settings-deco-tile')?.addEventListener('click', () => openDecoPicker());
+document.getElementById('settings-effect-tile')?.addEventListener('click', () => openEffectPicker());
+document.getElementById('settings-avatar-tile')?.addEventListener('click', () => {
+  document.getElementById('settings-avatar-file')?.click();
 });
 
 function openDecoPicker() {
@@ -3011,7 +3020,9 @@ function refreshEffectOptionsInSettings() {
       hint.textContent = 'Aucun effet possédé. Ouvre la Boutique pour en obtenir.';
       grid.appendChild(hint);
     }
+    grid.style.display = 'none';
   });
+  if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
 }
 
 function refreshDecoOptionsInSettings() {
@@ -3061,7 +3072,9 @@ function refreshDecoOptionsInSettings() {
       hint.textContent = 'Aucune déco possédée. Ouvre la Boutique pour en obtenir.';
       grid.appendChild(hint);
     }
+    grid.style.display = 'none';
   });
+  if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
 }
 
 // Hook openSettings to refresh deco list
