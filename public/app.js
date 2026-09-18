@@ -244,31 +244,51 @@ function applyAvatarDeco(el, deco) {
     el.classList.remove('has-deco');
     return;
   }
-  if (existing && existing.dataset.decoId === next) return;
-
-  if (wrap) wrap.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
-  el.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
+  // Toujours recreer pour corriger taille/position (force)
+  if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+  el.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
   el.classList.add('has-deco');
 
   const host = wrap || el;
-  host.style.setProperty('position', host.classList && host.classList.contains('uam-avatar-wrap') ? 'absolute' : 'relative', 'important');
-  host.style.setProperty('overflow', 'visible', 'important');
 
-  // Centrer l'avatar dans le wrap
-  el.style.setProperty('position', 'relative', 'important');
-  el.style.setProperty('overflow', 'hidden', 'important');
-  el.style.setProperty('margin', '0 auto', 'important');
-
-  // Taille deco = 1.55 x taille du host (mesure reelle)
-  const rect = host.getBoundingClientRect();
-  let base = Math.max(rect.width, rect.height) || 40;
-  if (base < 20) {
-    // fallback si pas encore rendu
-    if (host.classList && host.classList.contains('uam-avatar-wrap')) base = 80;
-    else if (host.classList && (host.classList.contains('zpc-avatar-wrap') || host.classList.contains('profile-avatar-wrapper'))) base = 92;
-    else base = 32;
+  // Host: visible + centré
+  if (host !== el) {
+    host.style.setProperty('overflow', 'visible', 'important');
+    if (!host.classList.contains('uam-avatar-wrap')) {
+      host.style.setProperty('position', 'relative', 'important');
+    }
+    host.style.setProperty('display', 'flex', 'important');
+    host.style.setProperty('align-items', 'center', 'important');
+    host.style.setProperty('justify-content', 'center', 'important');
   }
-  const sizePx = Math.round(base * 2.0);
+
+  // Parents jusqu'au menu : ne pas clipper
+  let p = host.parentElement;
+  for (let i = 0; i < 5 && p; i++) {
+    if (p.id === 'user-account-menu' || p.classList.contains('user-account-menu') ||
+        p.classList.contains('zpc') || p.classList.contains('profile-card')) {
+      p.style.setProperty('overflow', 'visible', 'important');
+      break;
+    }
+    p.style.setProperty('overflow', 'visible', 'important');
+    p = p.parentElement;
+  }
+
+  el.style.setProperty('position', 'relative', 'important');
+  el.style.setProperty('overflow', 'hidden', 'important'); // photo ronde seulement
+  el.style.setProperty('z-index', '1', 'important');
+  el.style.setProperty('flex-shrink', '0', 'important');
+
+  // Mesure de l'AVATAR (pas du wrap)
+  const avRect = el.getBoundingClientRect();
+  let avSize = Math.max(avRect.width, avRect.height);
+  if (!avSize || avSize < 16) {
+    if (el.id === 'uam-avatar') avSize = 68;
+    else if (el.id === 'profile-avatar' || el.id === 'edit-preview-avatar') avSize = 80;
+    else avSize = 32;
+  }
+  // Discord ~ avatar * 1.7 a 2.2 selon les decos
+  const sizePx = Math.round(avSize * 2.15);
 
   const img = document.createElement('img');
   img.className = 'avatar-deco-overlay';
@@ -286,12 +306,14 @@ function applyAvatarDeco(el, deco) {
   img.style.setProperty('height', sizePx + 'px', 'important');
   img.style.setProperty('max-width', 'none', 'important');
   img.style.setProperty('max-height', 'none', 'important');
+  img.style.setProperty('min-width', sizePx + 'px', 'important');
+  img.style.setProperty('min-height', sizePx + 'px', 'important');
   img.style.setProperty('object-fit', 'contain', 'important');
   img.style.setProperty('pointer-events', 'none', 'important');
-  img.style.setProperty('z-index', '25', 'important');
+  img.style.setProperty('z-index', '20', 'important');
   img.style.setProperty('margin', '0', 'important');
   img.style.setProperty('padding', '0', 'important');
-  img.style.setProperty('border', '0', 'important');
+  img.style.setProperty('border', 'none', 'important');
   img.style.setProperty('display', 'block', 'important');
   host.appendChild(img);
 }
@@ -312,7 +334,7 @@ function applyProfileEffect(card, effect) {
 
   card.classList.add('effect-' + next);
   card.style.setProperty('position', 'relative', 'important');
-  card.style.setProperty('overflow', 'hidden', 'important');
+  card.style.setProperty('overflow', 'visible', 'important');
 
   const overlay = document.createElement('img');
   overlay.className = 'profile-effect-overlay';

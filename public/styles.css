@@ -7672,3 +7672,32 @@ img.avatar-deco-overlay {
   position: relative !important;
   overflow: visible !important;
 }
+
+
+/* DECO NOCLIP 20260918 */
+#user-account-menu,
+#user-account-menu.user-account-menu,
+.zpc, .profile-card, .pe-preview-card {
+  overflow: visible !important;
+}
+#user-account-menu .uam-avatar-wrap,
+.zpc-avatar-wrap,
+.profile-avatar-wrapper,
+.user-avatar-wrap,
+.member-avatar-wrap {
+  overflow: visible !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+img.avatar-deco-overlay {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
