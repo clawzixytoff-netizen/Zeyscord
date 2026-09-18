@@ -352,14 +352,17 @@
             <div class="pe-section-title">Avatar et décoration</div>
             <input type="file" id="edit-avatar-file" accept="image/*,.gif" style="display:none">
             <div id="edit-avatar-preview" class="upload-preview avatar-preview" style="display:none"></div>
-            <div class="deco-grid" id="edit-deco-grid" data-picker="1" style="margin-top:0">
-              <div class="deco-option active" data-deco="none" title="Aucune"><div class="deco-preview none"></div></div>
-              <div class="deco-option" data-deco="angry" title="En colère"><img class="deco-img" src="/decos/angry.png" alt="Angry"></div>
-              <div class="deco-option" data-deco="ki" title="Le Ki"><img class="deco-img" src="/decos/ki.png" alt="Ki"></div>
-              <div class="deco-option" data-deco="rage" title="Rage"><img class="deco-img" src="/decos/rage.png" alt="Rage"></div>
-              <div class="deco-option" data-deco="phoenix" title="Phoenix"><img class="deco-img" src="/decos/phoenix.png" alt="Phoenix"></div>
-              <div class="deco-option" data-deco="lotus" title="Lotus"><img class="deco-img" src="/decos/lotus.png" alt="Lotus"></div>
+            <div class="discord-deco-row" id="edit-deco-row">
+              <button type="button" class="discord-tile" id="edit-avatar-tile" title="Changer l'avatar">
+                <div class="discord-tile-av" id="edit-avatar-tile-inner"></div>
+              </button>
+              <button type="button" class="discord-tile" id="edit-deco-tile" title="Changer la décoration">
+                <div class="discord-tile-deco" id="edit-deco-tile-inner">
+                  <span class="discord-tile-plus">+</span>
+                </div>
+              </button>
             </div>
+            <div class="deco-grid" id="edit-deco-grid" data-picker="1" style="display:none"></div>
           </div>
 
           <div class="pe-section">
@@ -384,15 +387,15 @@
           </div>
 
           <div class="pe-section">
-            <div class="pe-section-title">Effet de profil <button type="button" class="link-btn" onclick="openEffectPicker()">Changer</button></div>
-            <div class="effect-grid" id="edit-effect-grid">
-              <div class="effect-option active" data-effect="none">Aucun</div>
-              <div class="effect-option" data-effect="earthquake">Séisme</div>
-              <div class="effect-option" data-effect="sakura">Sakura</div>
-              <div class="effect-option" data-effect="cyberpunk">Cyberpunk</div>
-              <div class="effect-option" data-effect="mastery">Mastery</div>
-              <div class="effect-option" data-effect="vortex">Vortex</div>
+            <div class="pe-section-title">Effet de profil</div>
+            <div class="discord-deco-row" id="edit-effect-row">
+              <button type="button" class="discord-tile discord-tile-effect" id="edit-effect-tile" title="Changer l'effet">
+                <div class="discord-tile-effect-inner" id="edit-effect-tile-inner">
+                  <span class="discord-tile-plus">+</span>
+                </div>
+              </button>
             </div>
+            <div class="effect-grid" id="edit-effect-grid" style="display:none"></div>
           </div>
 
           <div class="pe-section">

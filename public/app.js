@@ -269,15 +269,15 @@ function applyAvatarDeco(el, deco) {
     el.style.zIndex = '1';
     el.style.overflow = 'hidden';
 
-    // Deco ~1.4x avatar, centree sur la PDP (sans changer taille PDP)
+    // Deco ~140% de la taille du wrap, centree (sans changer PDP)
     img.style.position = 'absolute';
     img.style.left = '50%';
     img.style.top = '50%';
     img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '128px';
-    img.style.height = '128px';
-    img.style.maxWidth = '128px';
-    img.style.maxHeight = '128px';
+    img.style.width = '140%';
+    img.style.height = '140%';
+    img.style.maxWidth = 'none';
+    img.style.maxHeight = 'none';
     img.style.margin = '0';
     img.style.padding = '0';
     img.style.border = '0';
@@ -300,10 +300,10 @@ function applyAvatarDeco(el, deco) {
     img.style.left = '50%';
     img.style.top = '50%';
     img.style.transform = 'translate(-50%, -50%)';
-    img.style.width = '110px';
-    img.style.height = '110px';
-    img.style.maxWidth = '110px';
-    img.style.maxHeight = '110px';
+    img.style.width = '140%';
+    img.style.height = '140%';
+    img.style.maxWidth = 'none';
+    img.style.maxHeight = 'none';
     img.style.objectFit = 'contain';
     img.style.pointerEvents = 'none';
     img.style.zIndex = '15';
@@ -1805,6 +1805,7 @@ function openEditProfile() {
   pendingEditBanner = undefined;
   editSelectedDeco = currentUser.avatarDeco || 'none';
   editSelectedEffect = currentUser.profileEffect || 'none';
+  if (typeof refreshDiscordTiles === 'function') setTimeout(refreshDiscordTiles, 50);
   const statusEl = document.getElementById('edit-status');
   if (statusEl) statusEl.value = currentUser.customStatus || '';
   setPreview('edit-avatar-preview', currentUser.avatarUrl || null);
@@ -2422,6 +2423,7 @@ function openEffectPicker() {
       selectedEffect = pickerTempEffect;
       if (typeof refreshEffectOptionsInSettings === 'function') refreshEffectOptionsInSettings();
       if (typeof updateEditPreview === 'function') updateEditPreview();
+      if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
       modal.classList.add('hidden');
     };
   }
@@ -2483,13 +2485,23 @@ function renderEffectPickerGrid() {
   grid.appendChild(shop);
 
   (SHOP_EFFECTS || []).forEach(item => {
-    if (!owned.includes(item.id)) return;
+    const isOwned = owned.includes(item.id) || (currentUser && currentUser.isOwner);
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'picker-tile' + (pickerTempEffect === item.id ? ' active' : '');
+    btn.className = 'picker-tile' + (pickerTempEffect === item.id ? ' active' : '') + (isOwned ? '' : ' locked');
     btn.dataset.id = item.id;
-    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>';
-    btn.onclick = () => select(item.id, item.name, item.img);
+    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>' + (isOwned ? '' : '<span class="picker-lock">🔒</span>');
+    btn.onclick = () => {
+      if (!isOwned) {
+        document.getElementById('effect-picker-modal')?.classList.add('hidden');
+        if (typeof openShop === 'function') {
+          document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'effects'));
+          openShop();
+        }
+        return;
+      }
+      select(item.id, item.name, item.img);
+    };
     grid.appendChild(btn);
   });
 
@@ -2497,6 +2509,44 @@ function renderEffectPickerGrid() {
   const cur = (SHOP_EFFECTS || []).find(i => i.id === pickerTempEffect);
   select(pickerTempEffect, cur ? cur.name : 'Aucun', cur ? cur.img : null);
 }
+
+function refreshDiscordTiles() {
+  try {
+    const avInner = document.getElementById('edit-avatar-tile-inner');
+    if (avInner && currentUser) {
+      avInner.style.background = currentUser.avatarColor || '#5865f2';
+      if (currentUser.avatarUrl) {
+        avInner.innerHTML = '<img src="'+currentUser.avatarUrl+'" alt="">';
+      } else {
+        avInner.textContent = (currentUser.username || 'Z')[0].toUpperCase();
+      }
+    }
+    const decoInner = document.getElementById('edit-deco-tile-inner');
+    if (decoInner) {
+      const d = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
+      if (d && d !== 'none' && DECO_URLS[d]) {
+        decoInner.innerHTML = '<img src="'+DECO_URLS[d]+'" alt="">';
+      } else {
+        decoInner.innerHTML = '<span class="discord-tile-plus">+</span>';
+      }
+    }
+    const fxInner = document.getElementById('edit-effect-tile-inner');
+    if (fxInner) {
+      const e = (typeof editSelectedEffect !== 'undefined' ? editSelectedEffect : null) || currentUser?.profileEffect || 'none';
+      if (e && e !== 'none' && EFFECT_URLS[e]) {
+        fxInner.innerHTML = '<img src="'+EFFECT_URLS[e]+'" alt="">';
+      } else {
+        fxInner.innerHTML = '<span class="discord-tile-plus">+</span>';
+      }
+    }
+  } catch (e) {}
+}
+
+document.getElementById('edit-deco-tile')?.addEventListener('click', () => openDecoPicker());
+document.getElementById('edit-effect-tile')?.addEventListener('click', () => openEffectPicker());
+document.getElementById('edit-avatar-tile')?.addEventListener('click', () => {
+  document.getElementById('edit-avatar-file')?.click();
+});
 
 function openDecoPicker() {
   pickerTempDeco = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
@@ -2536,6 +2586,7 @@ function openDecoPicker() {
       selectedDeco = pickerTempDeco;
       if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
       if (typeof updateEditPreview === 'function') updateEditPreview();
+      if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
       modal.classList.add('hidden');
     };
   }
@@ -2602,13 +2653,23 @@ function renderDecoPickerGrid() {
   grid.appendChild(shop);
 
   (SHOP_DECOS || []).forEach(item => {
-    if (!owned.includes(item.id)) return;
+    const isOwned = owned.includes(item.id) || (currentUser && currentUser.isOwner);
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'picker-tile' + (pickerTempDeco === item.id ? ' active' : '');
+    btn.className = 'picker-tile' + (pickerTempDeco === item.id ? ' active' : '') + (isOwned ? '' : ' locked');
     btn.dataset.id = item.id;
-    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>';
-    btn.onclick = () => select(item.id, item.name, item.img);
+    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>' + (isOwned ? '' : '<span class="picker-lock">🔒</span>');
+    btn.onclick = () => {
+      if (!isOwned) {
+        document.getElementById('deco-picker-modal')?.classList.add('hidden');
+        if (typeof openShop === 'function') {
+          document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'decos'));
+          openShop();
+        }
+        return;
+      }
+      select(item.id, item.name, item.img);
+    };
     grid.appendChild(btn);
   });
 
