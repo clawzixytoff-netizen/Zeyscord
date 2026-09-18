@@ -2824,31 +2824,57 @@ function openPaymentModal(item) {
 
 (function handleStripeReturn() {
   const params = new URLSearchParams(window.location.search);
-  if (params.get('paid') === '1' && params.get('item')) {
+  if (params.get('paid') === '1') {
+    const sessionId = params.get('session_id');
     const itemId = params.get('item');
     const itemType = params.get('type') || 'deco';
     try { history.replaceState({}, '', window.location.pathname); } catch (e) {}
-    async function tryUnlock(attempt) {
-      try {
-        const email = (currentUser && currentUser.email) || localStorage.getItem('zeyscord_email') || '';
-        const username = (currentUser && currentUser.username) || '';
-        const res = await fetch('/api/check-purchase?email=' + encodeURIComponent(email) + '&username=' + encodeURIComponent(username) + '&itemId=' + encodeURIComponent(itemId));
-        const data = await res.json();
-        if (data.paid) {
-          if (itemType === 'deco') ownDeco(itemId);
-          else if (itemType === 'effect') ownEffect(itemId);
-          else if (itemType === 'nitro') ownNitro();
-          if (typeof openShop === 'function') openShop();
-          alert('Paiement reussi ! Article debloque.');
-          return;
-        }
-      } catch (e) {}
-      if (attempt < 8) setTimeout(function() { tryUnlock(attempt + 1); }, 1500);
-      else alert('Paiement recu. Reconnecte-toi dans 1 minute si besoin.');
+    // Sauvegarder pour apres reconnexion
+    if (sessionId || itemId) {
+      localStorage.setItem('zeyscord_pending_unlock', JSON.stringify({
+        sessionId: sessionId || '',
+        itemId: itemId || '',
+        itemType: itemType
+      }));
     }
-    setTimeout(function() { tryUnlock(0); }, 1000);
   }
 })();
+
+async function processPendingUnlock() {
+  let pending = null;
+  try { pending = JSON.parse(localStorage.getItem('zeyscord_pending_unlock') || 'null'); } catch (e) {}
+  if (!pending) return;
+  try {
+    let itemId = pending.itemId;
+    let itemType = pending.itemType || 'deco';
+    if (pending.sessionId) {
+      const res = await fetch('/api/confirm-session?session_id=' + encodeURIComponent(pending.sessionId));
+      const data = await res.json();
+      if (data.paid && data.itemId) {
+        itemId = data.itemId;
+        itemType = data.itemType || itemType;
+      } else {
+        return; // pas encore valide
+      }
+    }
+    if (!itemId) return;
+    if (itemType === 'deco') ownDeco(itemId);
+    else if (itemType === 'effect') ownEffect(itemId);
+    else if (itemType === 'nitro') ownNitro();
+    localStorage.removeItem('zeyscord_pending_unlock');
+    if (typeof openShop === 'function') openShop();
+    alert('Paiement reussi ! Article debloque : ' + itemId);
+  } catch (e) {
+    console.log('pending unlock error', e);
+  }
+}
+
+// Apres init (connexion), appliquer le debloquage en attente
+socket.on('init', function onInitUnlock() {
+  setTimeout(processPendingUnlock, 500);
+});
+// Aussi au chargement si deja connecte plus tard
+setTimeout(processPendingUnlock, 3000);
 
 socket.on('purchaseUnlocked', function(data) {
   if (!data || !data.itemId) return;
