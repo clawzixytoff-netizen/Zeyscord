@@ -1,7 +1,7 @@
 const socket = io();
 
 let currentUser = null;
-let currentChannel = 'general';
+let currentChannel = 'zeyscord_general';
 let currentDM = null; // target user id if in DM
 let currentView = 'home'; // 'home' | 'server'
 let guilds = [];
@@ -15,7 +15,7 @@ let typingTimeout = null;
 let selectedUserForBadges = null;
 
 const BADGE_ICONS = {
-  owner: `<img src="/badges/staff.png" width="22" height="22">`,
+  owner: `<img src="/badges/certified.png" width="22" height="22">`,
   early_supporter: `<img src="/badges/early_supporter.png" width="22" height="22">`,
   bot_developer: `<img src="/badges/bot_developer.png" width="22" height="22">`,
   hypesquad: `<img src="/badges/hypesquad.png" width="22" height="22">`,
@@ -43,10 +43,20 @@ const BADGE_ICONS = {
   nitro_diamond: `<img src="/badges/nitro_diamond.png" width="22" height="22">`,
   nitro_emerald: `<img src="/badges/nitro_emerald.png" width="22" height="22">`,
   nitro_ruby: `<img src="/badges/nitro_ruby.png" width="22" height="22">`,
-  nitro_opal: `<img src="/badges/nitro_opal.png" width="22" height="22">`
+  nitro_opal: `<img src="/badges/nitro_opal.png" width="22" height="22">`,
+  quest: `<img src="/badges/quest.png" width="22" height="22">`,
+  orbs: `<img src="/badges/orbs.png" width="22" height="22">`,
+  leaf: `<img src="/badges/leaf.png" width="22" height="22">`,
+  gift: `<img src="/badges/gift_purple.png" width="22" height="22">`,
+  gift_rainbow: `<img src="/badges/gift_rainbow.png" width="22" height="22">`,
+  gift_gold: `<img src="/badges/gift_gold.png" width="22" height="22">`,
+  gift_blue: `<img src="/badges/gift_blue.png" width="22" height="22">`,
+  gift_teal: `<img src="/badges/gift_teal.png" width="22" height="22">`,
+  gift_pink: `<img src="/badges/gift_pink.png" width="22" height="22">`,
+  certified: `<img src="/badges/certified.png" width="22" height="22">`
 };
 const BADGE_NAMES = {
-  owner: 'Propriétaire de l\'application',
+  owner: 'Créateur de l\'application',
   early_supporter: 'Soutien de la première heure',
   bot_developer: 'Développeur de bot certifié de la première heure',
   hypesquad: 'Événements HypeSquad',
@@ -74,7 +84,17 @@ const BADGE_NAMES = {
   nitro_diamond: 'Nitro Diamant',
   nitro_emerald: 'Nitro Émeraude',
   nitro_ruby: 'Nitro Rubis',
-  nitro_opal: 'Nitro Opal'
+  nitro_opal: 'Nitro Opal',
+  quest: 'Quêtes',
+  orbs: 'Orbs',
+  leaf: 'Feuilles',
+  gift: 'Cadeau',
+  gift_rainbow: 'Cadeau Arc-en-ciel',
+  gift_gold: 'Cadeau Or',
+  gift_blue: 'Cadeau Bleu',
+  gift_teal: 'Cadeau Sarcelle',
+  gift_pink: 'Cadeau Rose',
+  certified: 'Certifié'
 };
 
 
@@ -122,96 +142,256 @@ function badgesHtml(badges) {
   ).join('');
 }
 
+
+// Force zpc profile styles (injected once)
+(function injectZpcStyles() {
+  if (document.getElementById('zpc-force-css')) return;
+  const s = document.createElement('style');
+  s.id = 'zpc-force-css';
+  s.textContent = `
+    .zpc { width:340px!important; border-radius:12px!important; overflow:visible!important; position:relative!important; box-shadow:0 8px 32px rgba(0,0,0,.5)!important; }
+    .zpc-banner { height:120px!important; min-height:120px!important; width:100%!important; display:block!important; border-radius:12px 12px 0 0!important; background-size:cover!important; background-position:center!important; }
+    .zpc-body { position:relative!important; padding:48px 16px 16px!important; border-radius:0 0 12px 12px!important; min-height:80px!important; }
+    .zpc-avatar-wrap { position:absolute!important; top:-40px!important; left:16px!important; width:92px!important; height:92px!important; overflow:visible!important; z-index:30!important; margin:0!important; padding:0!important; }
+    .zpc-avatar { width:80px!important; height:80px!important; border-radius:50%!important; border:6px solid #232428!important; box-sizing:content-box!important; display:flex!important; align-items:center!important; justify-content:center!important; font-size:32px!important; font-weight:600!important; color:#fff!important; position:relative!important; z-index:1!important; overflow:hidden!important; }
+    .zpc-avatar img { width:100%!important; height:100%!important; object-fit:cover!important; border-radius:50%!important; display:block!important; }
+    /* deco handled elsewhere */
+    .zpc-name { color:#fff!important; font-size:20px!important; font-weight:700!important; margin:0 0 2px!important; }
+    .zpc-handle { color:rgba(255,255,255,.7)!important; font-size:14px!important; margin-bottom:8px!important; }
+    .zpc-status, .zpc-section { background:rgba(0,0,0,.35)!important; border-radius:8px!important; padding:10px 12px!important; margin-bottom:10px!important; color:#dbdee1!important; }
+    .pe-preview-wrap { overflow:visible!important; }
+  `;
+  document.head.appendChild(s);
+})();
+
 const DECO_URLS = {
+  air: '/decos/air.png',
   angry: '/decos/angry.png',
-  ki: '/decos/ki.png',
-  rage: '/decos/rage.png',
+  balance: '/decos/balance.png',
+  blue_ring: '/decos/blue_ring.png',
+  cat: '/decos/cat.png',
+  cat_ears: '/decos/cat_ears.png',
+  crackers: '/decos/crackers.png',
+  earth: '/decos/earth.png',
+  fan: '/decos/fan.png',
+  fan_flourish: '/decos/fan_flourish.png',
+  fire: '/decos/fire.png',
+  firecrackers: '/decos/firecrackers.png',
+  flaming_sword: '/decos/flaming_sword.png',
+  halo: '/decos/halo.png',
+  lightning: '/decos/lightning.png',
+  lotus: '/decos/lotus.png',
+  lunar_lanterns: '/decos/lunar_lanterns.png',
+  moon: '/decos/moon.png',
   phoenix: '/decos/phoenix.png',
-  lotus: '/decos/lotus.png'
+  phoenix2: '/decos/phoenix2.png',
+  purple_ring: '/decos/purple_ring.png',
+  rage: '/decos/rage.png',
+  rainbow_hugh: '/decos/rainbow_hugh.png',
+  ring_purple2: '/decos/ring_purple2.png',
+  ring_yellow2: '/decos/ring_yellow2.png',
+  water: '/decos/water.png',
+  wreath: '/decos/wreath.png',
+  yellow_ring: '/decos/yellow_ring.png'
 };
 const EFFECT_URLS = {
-  earthquake: '/effects/earthquake.png',
-  sakura: '/effects/sakura.png',
-  cyberpunk: '/effects/cyberpunk.png',
-  mastery: '/effects/mastery.png',
-  vortex: '/effects/vortex.png'
+  boost_relic: '/effects/boost_relic.gif',
+  breakfast_plate: '/effects/breakfast_plate.gif',
+  dark_omens: '/effects/dark_omens.gif',
+  discord_os: '/effects/discord_os.gif',
+  dreamy: '/effects/dreamy.gif',
+  fall_foliage: '/effects/fall_foliage.gif',
+  feelin_90s: '/effects/feelin_90s.gif',
+  feelin_mischievous: '/effects/feelin_mischievous.gif',
+  ghoulish_graffiti: '/effects/ghoulish_graffiti.gif',
+  goozilla: '/effects/goozilla.gif',
+  haunted_man_o_war: '/effects/haunted_man_o_war.gif',
+  heartzilla: '/effects/heartzilla.gif',
+  hydro_blast: '/effects/hydro_blast.gif',
+  ki_detonate: '/effects/ki_detonate.gif',
+  lillypad_life: '/effects/lillypad_life.gif',
+  magic_hearts: '/effects/magic_hearts.gif',
+  monster_pop: '/effects/monster_pop.gif',
+  pixie_dust: '/effects/pixie_dust.gif',
+  power_surge: '/effects/power_surge.gif',
+  saya: '/effects/saya.gif',
+  shatter: '/effects/shatter.gif',
+  snowy_shenanigans: '/effects/snowy_shenanigans.gif',
+  spirit_flame: '/effects/spirit_flame.gif',
+  sushi_mania: '/effects/sushi_mania.gif',
+  tocotoco: '/effects/tocotoco.gif',
+  turbo_drive: '/effects/turbo_drive.gif',
+  wake_up: '/effects/wake_up.gif',
+  watercolors: '/effects/watercolors.gif',
+  zombie_slime: '/effects/zombie_slime.gif'
 };
 
 function applyAvatarDeco(el, deco) {
   if (!el) return;
+  const wrap = el.parentElement;
+  const card = el.closest('.zpc') || el.closest('.profile-card');
+  const body = card ? (card.querySelector('.zpc-body') || card.querySelector('#edit-preview-content') || card.querySelector('#profile-content')) : null;
+
   el.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
-  if (el.parentElement) {
-    el.parentElement.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => {
-      if (n.parentElement === el.parentElement) n.remove();
-    });
-  }
+  if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+  if (body) body.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+  if (card) card.querySelectorAll(':scope > .avatar-deco-overlay').forEach(n => n.remove());
   el.classList.remove('has-deco');
   if (!deco || deco === 'none' || !DECO_URLS[deco]) return;
+
+  const isProfile = !!(el.id === 'profile-avatar' || el.id === 'edit-preview-avatar' ||
+    (wrap && wrap.classList.contains('zpc-avatar-wrap')));
 
   const img = document.createElement('img');
   img.className = 'avatar-deco-overlay';
   img.src = DECO_URLS[deco];
   img.alt = '';
   img.draggable = false;
-
-  const isProfile = el.id === 'profile-avatar' || el.classList.contains('profile-avatar');
-  const isMessage = el.classList.contains('message-avatar');
-  const isMember = el.classList.contains('member-avatar');
-  const isUser = el.classList.contains('user-avatar');
-
   el.classList.add('has-deco');
-  el.style.position = 'relative';
-  el.style.overflow = 'visible';
 
-  // Size relative to avatar type (Discord-like: deco ~1.5x avatar)
-  let size = '64px';
-  if (isProfile) size = '120px';
-  else if (isMessage) size = '60px';
-  else if (isMember) size = '48px';
-  else if (isUser) size = '52px';
+  if (isProfile && wrap) {
+    // Put deco ON the wrap, centered with negative offsets
+    if (body) {
+      body.style.position = 'relative';
+      body.style.overflow = 'visible';
+    }
+    if (card) card.style.overflow = 'visible';
 
-  img.style.cssText = [
-    'position:absolute',
-    'left:50%',
-    'top:50%',
-    'transform:translate(-50%,-50%)',
-    'width:' + size,
-    'height:' + size,
-    'max-width:none',
-    'pointer-events:none',
-    'z-index:2',
-    'object-fit:contain'
-  ].join(';');
+    wrap.style.position = 'absolute';
+    wrap.style.top = '-40px';
+    wrap.style.left = '16px';
+    wrap.style.width = '92px';
+    wrap.style.height = '92px';
+    wrap.style.overflow = 'visible';
+    wrap.style.zIndex = '50';
 
-  // Avatar image itself stays circular and under deco
-  const innerImg = el.querySelector('img:not(.avatar-deco-overlay)');
-  if (innerImg) {
-    innerImg.style.borderRadius = '50%';
-    innerImg.style.width = '100%';
-    innerImg.style.height = '100%';
-    innerImg.style.objectFit = 'cover';
-    innerImg.style.position = 'relative';
-    innerImg.style.zIndex = '1';
+    el.style.position = 'relative';
+    el.style.zIndex = '1';
+    el.style.overflow = 'hidden';
+
+    // 100px centered on 92px box = -4px each side
+    // DO NOT use inset — it resets left/top
+    img.style.position = 'absolute';
+    img.style.left = '-4px';
+    img.style.top = '-4px';
+    img.style.width = '100px';
+    img.style.height = '100px';
+    img.style.maxWidth = '100px';
+    img.style.maxHeight = '100px';
+    img.style.margin = '0';
+    img.style.padding = '0';
+    img.style.border = '0';
+    img.style.transform = 'none';
+    img.style.objectFit = 'contain';
+    img.style.pointerEvents = 'none';
+    img.style.zIndex = '100';
+    img.style.display = 'block';
+
+    wrap.appendChild(img);
+  } else if (wrap && wrap.classList.contains('uam-avatar-wrap')) {
+    // Menu compte uniquement — déco autour de la PDP (taille menu)
+    wrap.style.position = 'absolute';
+    wrap.style.overflow = 'visible';
+    wrap.style.zIndex = '20';
+    el.style.position = 'relative';
+    el.style.overflow = 'hidden';
+    el.style.zIndex = '1';
+    img.style.position = 'absolute';
+    img.style.left = '50%';
+    img.style.top = '50%';
+    img.style.transform = 'translate(-50%, -50%)';
+    img.style.width = '96px';
+    img.style.height = '96px';
+    img.style.maxWidth = '96px';
+    img.style.maxHeight = '96px';
+    img.style.objectFit = 'contain';
+    img.style.pointerEvents = 'none';
+    img.style.zIndex = '15';
+    img.style.display = 'block';
+    wrap.appendChild(img);
+  } else {
+    // Small avatars (user panel + members list)
+    const target = (wrap && (wrap.classList.contains('user-avatar-wrap') || wrap.classList.contains('member-avatar-wrap')))
+      ? wrap
+      : el;
+
+    target.style.position = 'relative';
+    target.style.overflow = 'visible';
+
+    el.style.position = 'relative';
+    el.style.overflow = 'visible';
+    el.style.zIndex = '1';
+
+    img.style.position = 'absolute';
+    img.style.left = '50%';
+    img.style.top = '50%';
+    img.style.transform = 'translate(-50%, -50%)';
+    img.style.width = '44px';
+    img.style.height = '44px';
+    img.style.maxWidth = '44px';
+    img.style.maxHeight = '44px';
+    img.style.objectFit = 'contain';
+    img.style.pointerEvents = 'none';
+    img.style.zIndex = '4';
+    img.style.display = 'block';
+
+    target.appendChild(img);
   }
-
-  el.appendChild(img);
 }
-
-
 
 
 function applyProfileEffect(card, effect) {
   if (!card) return;
-  card.className = 'profile-card';
-  const oldFx = card.querySelector('.profile-effect-overlay');
-  if (oldFx) oldFx.remove();
+  Array.from(card.classList).forEach(c => {
+    if (c.startsWith('effect-')) card.classList.remove(c);
+  });
+  card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
   if (!effect || effect === 'none' || !EFFECT_URLS[effect]) return;
   card.classList.add('effect-' + effect);
+
+  const isUam = card.id === 'user-account-menu' || card.classList.contains('user-account-menu');
   const overlay = document.createElement('img');
   overlay.className = 'profile-effect-overlay';
   overlay.src = EFFECT_URLS[effect];
   overlay.alt = '';
-  card.insertBefore(overlay, card.firstChild);
+  overlay.draggable = false;
+  overlay.decoding = 'async';
+  overlay.loading = 'eager';
+
+  if (isUam) {
+    card.style.position = 'absolute';
+    card.style.overflow = 'visible';
+    card.style.borderRadius = '8px';
+    // Un seul calque, AU-DESSUS des fonds (bannière + body)
+    overlay.style.cssText = [
+      'position:absolute',
+      'left:0',
+      'top:0',
+      'width:100%',
+      'height:100%',
+      'object-fit:cover',
+      'pointer-events:none',
+      'z-index:8',
+      'border-radius:8px',
+      'opacity:1',
+      'mix-blend-mode:screen'
+    ].join(';');
+    card.appendChild(overlay);
+    // Texte / boutons au-dessus de l'effet
+    card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-name, .uam-handle, .uam-badges, .uam-item').forEach(el => {
+      el.style.position = 'relative';
+      el.style.zIndex = '12';
+    });
+    // Avatar tout en haut
+    const avw = card.querySelector('.uam-avatar-wrap');
+    if (avw) {
+      avw.style.zIndex = '30';
+    }
+  } else {
+    card.style.position = card.style.position || 'relative';
+    overlay.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;border-radius:inherit;opacity:0.95;mix-blend-mode:screen;';
+    card.insertBefore(overlay, card.firstChild);
+  }
 }
 
 
@@ -219,7 +399,7 @@ function applyProfileEffect(card, effect) {
 const loginScreen = document.getElementById('login-screen');
 const app = document.getElementById('app');
 const loginForm = document.getElementById('login-form');
-const usernameInput = document.getElementById('username');
+const usernameInput = document.getElementById('username') || document.getElementById('login-email');
 const channelsList = document.getElementById('channels-list');
 const messagesList = document.getElementById('messages-list');
 const messagesContainer = document.getElementById('messages-container');
@@ -232,11 +412,146 @@ const membersList = document.getElementById('members-list');
 const membersCount = document.getElementById('members-count');
 const typingIndicator = document.getElementById('typing-indicator');
 
-loginForm.addEventListener('submit', e => {
+
+// ===== AUTH (login / register / verify) =====
+let pendingRegEmail = null;
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  if (!el) return alert(msg);
+  el.textContent = msg || '';
+  el.classList.toggle('hidden', !msg);
+}
+function showAuthPanel(name) {
+  ['auth-login-panel', 'auth-register-panel', 'auth-verify-panel'].forEach(id => {
+    document.getElementById(id)?.classList.toggle('hidden', id !== name);
+  });
+  showAuthError('');
+}
+document.getElementById('goto-register')?.addEventListener('click', (e) => {
   e.preventDefault();
-  const u = usernameInput.value.trim();
-  if (u) socket.emit('join', u);
+  showAuthPanel('auth-register-panel');
 });
+document.getElementById('goto-login')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  showAuthPanel('auth-login-panel');
+});
+document.getElementById('goto-login-from-verify')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  showAuthPanel('auth-login-panel');
+});
+
+loginForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email')?.value.trim().toLowerCase();
+  const password = document.getElementById('login-password')?.value || '';
+  if (!email || !password) return;
+  showAuthError('');
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showAuthError(data.error || 'Connexion impossible');
+      return;
+    }
+    localStorage.setItem('zeyscord_email', data.email);
+    localStorage.setItem('zeyscord_username', data.username);
+    sessionStorage.setItem('zeyscord_session', JSON.stringify({ email: data.email, username: data.username }));
+    // save for multi-account list
+    if (typeof saveRecentAccount === 'function') {
+      saveRecentAccount({ username: data.username, avatarColor: '#5865f2', email: data.email });
+    }
+    socket.emit('join', { username: data.username, email: data.email });
+  } catch (err) {
+    showAuthError('Erreur réseau');
+  }
+});
+
+document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('reg-email')?.value.trim().toLowerCase();
+  const username = document.getElementById('reg-username')?.value.trim();
+  const password = document.getElementById('reg-password')?.value || '';
+  if (!email || !username || password.length < 4) {
+    showAuthError('Remplis tous les champs (mdp 4+ caractères)');
+    return;
+  }
+  showAuthError('');
+  try {
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showAuthError(data.error || 'Inscription impossible');
+      return;
+    }
+    pendingRegEmail = data.email;
+    const disp = document.getElementById('verify-code-display');
+    if (disp) disp.textContent = data.code;
+    document.getElementById('verify-code').value = '';
+    showAuthPanel('auth-verify-panel');
+  } catch (err) {
+    showAuthError('Erreur réseau');
+  }
+});
+
+document.getElementById('verify-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const code = document.getElementById('verify-code')?.value.trim();
+  const email = pendingRegEmail || document.getElementById('reg-email')?.value.trim().toLowerCase();
+  if (!email || !code) return;
+  showAuthError('');
+  try {
+    const res = await fetch('/api/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showAuthError(data.error || 'Code invalide');
+      return;
+    }
+    // Auto login after verify - need password from form
+    const password = document.getElementById('reg-password')?.value || '';
+    localStorage.setItem('zeyscord_email', data.email);
+    localStorage.setItem('zeyscord_username', data.username);
+    sessionStorage.setItem('zeyscord_session', JSON.stringify({ email: data.email, username: data.username }));
+    if (password) {
+      const loginRes = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email, password })
+      });
+      if (loginRes.ok) {
+        socket.emit('join', { username: data.username, email: data.email });
+        return;
+      }
+    }
+    showAuthPanel('auth-login-panel');
+    const le = document.getElementById('login-email');
+    if (le) le.value = data.email;
+    showAuthError('Compte validé ! Connecte-toi.');
+  } catch (err) {
+    showAuthError('Erreur réseau');
+  }
+});
+
+// Ajouter un compte → page d'inscription
+document.getElementById('accounts-add')?.addEventListener('click', () => {
+  closeAccountsManager?.();
+  sessionStorage.removeItem('zeyscord_session');
+  localStorage.removeItem('zeyscord_username');
+  if (socket) socket.disconnect();
+  location.reload();
+});
+
 
 socket.on('init', data => {
   currentUser = data.user;
@@ -246,9 +561,10 @@ socket.on('init', data => {
   friendRequests = data.friendRequests || [];
   guilds = data.guilds || [];
   currentGuild = data.currentGuild || (guilds[0] && guilds[0].id);
-  currentChannel = (data.channels && data.channels[0] && data.channels[0].id) || currentChannel;
+  currentChannel = (data.channels && data.channels[0] && data.channels[0].id) || data.messages?.[0]?.channelId || 'zeyscord_general';
   loginScreen.classList.add('hidden');
   app.classList.remove('hidden');
+  saveRecentAccount(currentUser);
   updateUserPanel();
   renderServers();
   renderChannels(data.channels || []);
@@ -283,25 +599,27 @@ socket.on('dmMessages', data => {
 });
 
 socket.on('newMessage', msg => {
-  // Si c'est notre propre message, on enlève les versions temporaires optimistes
+  // Remove optimistic temps matching this content from same author
   if (currentUser && msg.author && msg.author.id === currentUser.id) {
     document.querySelectorAll('.message[data-message-id^="temp_"]').forEach(el => {
-      // Vérifie si le contenu correspond (évite de supprimer d'autres temps)
       const contentEl = el.querySelector('.message-content');
-      if (contentEl && contentEl.textContent === msg.content) {
-        el.remove();
-      }
+      if (contentEl && contentEl.textContent === msg.content) el.remove();
     });
   }
-  if (currentDM && msg.channelId && msg.channelId.startsWith('dm_')) {
-    // Évite le doublon exact si déjà présent
-    if (!document.querySelector(`.message[data-message-id="${msg.id}"]`)) {
-      appendMessage(msg); scrollToBottom();
-    }
-  } else if (!currentDM && msg.channelId === currentChannel) {
-    if (!document.querySelector(`.message[data-message-id="${msg.id}"]`)) {
-      appendMessage(msg); scrollToBottom();
-    }
+  if (document.querySelector('.message[data-message-id="' + msg.id + '"]')) return;
+
+  const isDM = msg.channelId && String(msg.channelId).startsWith('dm_');
+  let show = false;
+  if (isDM && currentDM) {
+    // show if DM involves current user and selected DM partner
+    show = true;
+  } else if (!isDM && !currentDM && msg.channelId) {
+    // update currentChannel if server sent message for room we're in
+    if (msg.channelId === currentChannel) show = true;
+  }
+  if (show) {
+    appendMessage(msg);
+    scrollToBottom();
   }
 });
 
@@ -396,24 +714,445 @@ socket.on('guildJoined', data => {
 
 socket.on('error', data => alert(data.message || 'Erreur'));
 
-function updateUserPanel() {
-  if (!currentUser) return;
-  if (currentUser.avatarUrl) {
-    userAvatar.innerHTML = '';
-    userAvatar.style.background = 'transparent';
+const STATUS_LABELS = {
+  online: 'En ligne',
+  idle: 'Inactif',
+  dnd: 'Ne pas déranger',
+  invisible: 'Invisible'
+};
+const STATUS_COLORS = {
+  online: '#23a559',
+  idle: '#f0b232',
+  dnd: '#f23f43',
+  invisible: '#80848e'
+};
+
+function setStatusDot(el, status) {
+  if (!el) return;
+  const s = status || 'online';
+  // keep structural classes
+  const keep = [];
+  if (el.classList.contains('zpc-online')) keep.push('zpc-online');
+  if (el.classList.contains('status-dot')) keep.push('status-dot');
+  if (el.classList.contains('member-status-dot')) keep.push('member-status-dot');
+  if (el.id === 'user-status-dot') keep.push('status-dot');
+  el.className = keep.join(' ') + ' status-' + s;
+  el.style.background = STATUS_COLORS[s] || STATUS_COLORS.online;
+  el.style.display = 'block';
+}
+
+function fillSmallAvatar(el, user) {
+  if (!el || !user) return;
+  if (user.avatarUrl) {
+    el.innerHTML = '';
+    el.style.background = 'transparent';
     const img = document.createElement('img');
-    img.src = currentUser.avatarUrl;
+    img.src = user.avatarUrl;
     img.alt = '';
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
-    userAvatar.appendChild(img);
+    el.appendChild(img);
   } else {
-    userAvatar.innerHTML = '';
-    userAvatar.style.background = currentUser.avatarColor || '#5865f2';
-    userAvatar.textContent = (currentUser.username || '?')[0].toUpperCase();
+    el.innerHTML = '';
+    el.style.background = user.avatarColor || '#5865f2';
+    el.textContent = (user.username || '?')[0].toUpperCase();
   }
-  userName.textContent = currentUser.username;
-  applyAvatarDeco(userAvatar, currentUser.avatarDeco);
 }
+
+function updateUserPanel() {
+  if (!currentUser) return;
+  fillSmallAvatar(userAvatar, currentUser);
+  userName.textContent = currentUser.username;
+  const cs = document.getElementById('user-custom-status');
+  if (cs) {
+    cs.textContent = currentUser.customStatus || '';
+    cs.title = currentUser.customStatus || '';
+  }
+  applyAvatarDeco(userAvatar, currentUser.avatarDeco);
+  const st = currentUser.presenceStatus || 'online';
+  setStatusDot(document.getElementById('user-status-dot'), st);
+  // keep account menu in sync if open
+  populateAccountMenu();
+}
+
+function getRecentAccounts() {
+  try {
+    return JSON.parse(localStorage.getItem('zeyscord_accounts') || '[]');
+  } catch { return []; }
+}
+function saveRecentAccount(user) {
+  if (!user || !user.username) return;
+  let list = getRecentAccounts().filter(a => a.username.toLowerCase() !== user.username.toLowerCase());
+  list.unshift({
+    username: user.username,
+    avatarUrl: user.avatarUrl || null,
+    avatarColor: user.avatarColor || '#5865f2',
+    badges: (user.badges || []).slice(0, 4)
+  });
+  list = list.slice(0, 8);
+  localStorage.setItem('zeyscord_accounts', JSON.stringify(list));
+}
+
+function populateAccountMenu() {
+  if (!currentUser) return;
+
+  // Banner — force image (CSS must not use background shorthand with !important)
+  const banner = document.getElementById('uam-banner');
+  if (banner) {
+    if (currentUser.bannerUrl) {
+      const url = String(currentUser.bannerUrl).replace(/"/g, '%22');
+      banner.style.setProperty('background-image', 'url("' + url + '")', 'important');
+      banner.style.setProperty('background-size', 'cover', 'important');
+      banner.style.setProperty('background-position', 'center', 'important');
+      banner.style.setProperty('background-color', 'transparent', 'important');
+      banner.style.setProperty('background-repeat', 'no-repeat', 'important');
+    } else {
+      banner.style.setProperty('background-image', 'none', 'important');
+      banner.style.setProperty('background-color', currentUser.avatarColor || '#5865f2', 'important');
+    }
+  }
+
+  // Avatar (large, overlapping banner)
+  const wrap = document.querySelector('.uam-profile-body .uam-avatar-wrap') || document.querySelector('.uam-avatar-wrap');
+  const av = document.getElementById('uam-avatar');
+  if (av) {
+    av.style.background = currentUser.avatarColor || '#5865f2';
+  }
+  fillSmallAvatar(av, currentUser);
+  if (av) {
+    const img = av.querySelector('img');
+    if (img) img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+  }
+  applyAvatarDeco(av, currentUser.avatarDeco);
+  // uam-avatar-wrap FINAL position (ne pas couper la PDP)
+  const avWrapFinal = document.querySelector('#user-account-menu > .uam-avatar-wrap') || document.querySelector('#user-account-menu .uam-avatar-wrap');
+  if (avWrapFinal) {
+    const menu = document.getElementById('user-account-menu');
+    if (menu && avWrapFinal.parentElement !== menu) {
+      menu.insertBefore(avWrapFinal, menu.querySelector('.uam-profile-body'));
+    }
+    avWrapFinal.style.setProperty('position', 'absolute', 'important');
+    avWrapFinal.style.setProperty('left', '16px', 'important');
+    avWrapFinal.style.setProperty('top', '70px', 'important');
+    avWrapFinal.style.setProperty('bottom', 'auto', 'important');
+    avWrapFinal.style.setProperty('width', '80px', 'important');
+    avWrapFinal.style.setProperty('height', '80px', 'important');
+    avWrapFinal.style.setProperty('z-index', '50', 'important');
+    avWrapFinal.style.setProperty('overflow', 'visible', 'important');
+  }
+
+  // Fill name + handle + badges (next to avatar)
+  const nameEl = document.getElementById('uam-name');
+  const handleEl = document.getElementById('uam-handle');
+  const badgesEl = document.getElementById('uam-badges');
+  const uname = currentUser.username || 'User';
+  const st0 = currentUser.presenceStatus || 'online';
+  const stLabel = (STATUS_LABELS[st0] || 'en ligne').toLowerCase();
+  const handle = uname.toLowerCase().replace(/\s/g, '');
+
+  if (nameEl) {
+    nameEl.textContent = uname;
+    nameEl.style.cssText = 'font-size:18px;font-weight:700;color:#fff;display:block;line-height:1.25;margin:0;';
+  }
+  if (handleEl) {
+    handleEl.textContent = handle + ' • ' + stLabel;
+    handleEl.style.cssText = 'font-size:13px;color:#b5bac1;display:block;margin:0;';
+  }
+  if (badgesEl) {
+    const blist = (currentUser.badges || []).slice(0, 12);
+    badgesEl.innerHTML = blist.map(b => {
+      let icon = (BADGE_ICONS[b] || '🏅')
+        .replace(/width="\d+"/gi, 'width="20"')
+        .replace(/height="\d+"/gi, 'height="20"');
+      return '<span class="badge" data-badge="' + b + '" style="width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;">' + icon + '</span>';
+    }).join('');
+    badgesEl.style.cssText = 'display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;';
+    badgesEl.querySelectorAll('img,svg').forEach(el => {
+      el.style.width = '20px';
+      el.style.height = '20px';
+    });
+    bindBadgeTooltips(badgesEl);
+  }
+
+  // Custom status
+  const cs = document.getElementById('uam-custom-status');
+  if (cs) {
+    cs.textContent = currentUser.customStatus || '';
+    cs.style.display = currentUser.customStatus ? 'block' : 'none';
+  }
+
+  // Status
+  const st = currentUser.presenceStatus || 'online';
+  const statusDot = document.getElementById('uam-status-dot');
+  if (statusDot) {
+    statusDot.className = 'status-dot status-' + st;
+    statusDot.style.background = STATUS_COLORS[st] || '#23a559';
+  }
+  const ind = document.getElementById('uam-status-indicator');
+  if (ind) {
+    ind.className = 'uam-status-icon status-' + st;
+    ind.style.background = '';
+  }
+  const lab = document.getElementById('uam-status-label');
+  if (lab) lab.textContent = STATUS_LABELS[st] || 'En ligne';
+
+  // Theme: couleurs de profil + effet (sans changer les tailles)
+  const menuEl = document.getElementById('user-account-menu');
+  const bodyEl = document.querySelector('#user-account-menu .uam-profile-body');
+  const hasTheme = !!(currentUser.primaryColor);
+  const p = currentUser.primaryColor || '#111214';
+  const s = currentUser.secondaryColor || p;
+
+  if (bodyEl) {
+    if (hasTheme) {
+      bodyEl.style.setProperty('background', 'linear-gradient(180deg, ' + p + ' 0%, ' + s + ' 100%)', 'important');
+    } else {
+      bodyEl.style.setProperty('background', '#111214', 'important');
+    }
+  }
+  // Banner color if no image
+  if (banner && !currentUser.bannerUrl) {
+    const banColor = currentUser.primaryColor || currentUser.avatarColor || '#5865f2';
+    banner.style.setProperty('background-color', banColor, 'important');
+  }
+  // Glass buttons over theme
+  document.querySelectorAll('#user-account-menu .uam-actions .uam-item').forEach(el => {
+    el.style.background = hasTheme ? 'rgba(0,0,0,0.35)' : 'transparent';
+    el.style.backdropFilter = hasTheme ? 'blur(8px)' : 'none';
+  });
+  // Pas de cercle noir autour de la PDP
+  const avBorder = document.getElementById('uam-avatar');
+  if (avBorder) {
+    avBorder.style.setProperty('border-color', 'transparent', 'important');
+    avBorder.style.setProperty('border-width', '0px', 'important');
+    avBorder.style.setProperty('box-shadow', '0 0 0 4px rgba(0,0,0,0.25)', 'important');
+  }
+  const statusDotBorder = document.getElementById('uam-status-dot');
+  if (statusDotBorder) {
+    statusDotBorder.style.setProperty('border-color', hasTheme ? p : '#111214', 'important');
+  }
+
+  if (menuEl) {
+    menuEl.style.position = 'absolute';
+    menuEl.style.overflow = 'visible';
+    menuEl.style.background = 'transparent';
+    // Ne pas toucher à la position de l'avatar (gérée par CSS)
+    applyProfileEffect(menuEl, currentUser.profileEffect || 'none');
+  }
+
+  // Accounts list — Discord style switcher
+  const listEl = document.getElementById('uam-accounts-list');
+  if (listEl) {
+    const accounts = getRecentAccounts();
+    listEl.innerHTML = '';
+    accounts.forEach(acc => {
+      const isCurrent = acc.username.toLowerCase() === currentUser.username.toLowerCase();
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'uam-account-item' + (isCurrent ? ' active' : '');
+      const letter = (acc.username || '?')[0].toUpperCase();
+      const bg = acc.avatarUrl ? 'transparent' : (acc.avatarColor || '#5865f2');
+      btn.innerHTML =
+        '<span class="uam-acc-av" style="background:' + bg + '">' +
+          (acc.avatarUrl ? '<img src="' + acc.avatarUrl + '" alt="">' : letter) +
+        '</span>' +
+        '<span class="uam-acc-name">' + escapeHtml(acc.username) + '</span>' +
+        (isCurrent ? '<span class="uam-check">✓</span>' : '');
+      if (!isCurrent) {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          switchAccount(acc.username);
+        };
+      }
+      listEl.appendChild(btn);
+    });
+
+    // Gérer les comptes / Ajouter
+    let manage = document.getElementById('uam-manage-accounts');
+    if (!manage) {
+      manage = document.createElement('button');
+      manage.type = 'button';
+      manage.id = 'uam-manage-accounts';
+      manage.className = 'uam-manage-accounts';
+      manage.textContent = 'Gérer les comptes';
+      manage.onclick = (e) => {
+        e.stopPropagation();
+        closeAccountMenu();
+        openAccountsManager();
+      };
+    }
+    const sub = document.getElementById('uam-accounts-submenu');
+    if (sub) {
+      // remove old add btn if any
+      document.getElementById('uam-add-account')?.remove();
+      if (!document.getElementById('uam-manage-accounts')) {
+        const sep = document.createElement('div');
+        sep.className = 'uam-accounts-sep';
+        sub.appendChild(sep);
+        sub.appendChild(manage);
+      }
+    }
+  }
+
+  // Click on avatar/name card opens full profile
+  const card = document.querySelector('.uam-user-card');
+  if (card && !card._boundProfile) {
+    card._boundProfile = true;
+    card.style.cursor = 'pointer';
+    card.title = 'Voir le profil';
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.badge')) return;
+      e.stopPropagation();
+      closeAccountMenu();
+      if (currentUser) openProfile(currentUser.id);
+    });
+  }
+}
+
+
+function switchAccount(username) {
+  closeAccountMenu();
+  // disconnect and rejoin with new name (keeps saved profile server-side)
+  if (socket) socket.disconnect();
+  location.reload(); // simplest: user will type the name again, or we auto-join
+  // better: store pending name
+  sessionStorage.setItem('zeyscord_autojoin', username);
+}
+
+function closeAccountMenu() {
+  const menu = document.getElementById('user-account-menu');
+  const sub = document.getElementById('uam-status-submenu');
+  const acc = document.getElementById('uam-accounts-submenu');
+  const toggle = document.getElementById('uam-status-toggle');
+  if (menu) menu.classList.add('hidden');
+  if (sub) sub.classList.add('hidden');
+  if (acc) acc.classList.add('hidden');
+  if (toggle) toggle.classList.remove('open');
+}
+
+// Account menu (Discord-style) — event delegation for reliability
+(function setupAccountMenu() {
+  const infoBtn = document.getElementById('user-info-btn');
+  const menu = document.getElementById('user-account-menu');
+  if (!infoBtn || !menu) {
+    console.warn('[zeyscord] account menu elements missing');
+    return;
+  }
+
+  infoBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const wasHidden = menu.classList.contains('hidden');
+    // close first
+    menu.classList.add('hidden');
+    document.getElementById('uam-status-submenu')?.classList.add('hidden');
+    document.getElementById('uam-accounts-submenu')?.classList.add('hidden');
+    document.getElementById('uam-status-toggle')?.classList.remove('open');
+    if (wasHidden) {
+      populateAccountMenu();
+      menu.classList.remove('hidden');
+    }
+  });
+
+  // All interactions inside the menu via delegation
+  menu.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const t = e.target.closest('button, [data-status]');
+    if (!t) return;
+
+    // Edit profile
+    if (t.id === 'uam-edit-profile' || t.closest('#uam-edit-profile')) {
+      closeAccountMenu();
+      if (typeof openEditProfile === 'function') openEditProfile();
+      else if (currentUser) openProfile(currentUser.id);
+      return;
+    }
+
+    // Toggle status submenu
+    if (t.id === 'uam-status-toggle' || t.closest('#uam-status-toggle')) {
+      const sub = document.getElementById('uam-status-submenu');
+      const acc = document.getElementById('uam-accounts-submenu');
+      const toggle = document.getElementById('uam-status-toggle');
+      if (acc) acc.classList.add('hidden');
+      if (sub) {
+        const open = sub.classList.contains('hidden');
+        sub.classList.toggle('hidden');
+        if (toggle) toggle.classList.toggle('open', open);
+      }
+      return;
+    }
+
+    // Pick a status
+    const statusOpt = t.closest('.uam-status-option') || (t.dataset && t.dataset.status ? t : null);
+    if (statusOpt && statusOpt.dataset && statusOpt.dataset.status) {
+      const status = statusOpt.dataset.status;
+      socket.emit('updateProfile', { presenceStatus: status });
+      if (currentUser) currentUser.presenceStatus = status;
+      updateUserPanel();
+      populateAccountMenu();
+      document.getElementById('uam-status-submenu')?.classList.add('hidden');
+      document.getElementById('uam-status-toggle')?.classList.remove('open');
+      return;
+    }
+
+    // Toggle accounts submenu — open full manager like Discord
+    if (t.id === 'uam-switch-account' || t.closest('#uam-switch-account')) {
+      closeAccountMenu();
+      openAccountsManager();
+      return;
+    }
+
+    if (t.id === 'uam-copy-id' || t.closest('#uam-copy-id')) {
+      const id = currentUser?.id || currentUser?.username || '';
+      navigator.clipboard?.writeText(String(id)).then(() => {
+        const btn = document.getElementById('uam-copy-id');
+        if (btn) {
+          const span = btn.querySelector('span');
+          if (span) { const o = span.textContent; span.textContent = 'Copié !'; setTimeout(() => span.textContent = o, 1500); }
+        }
+      }).catch(() => {});
+      return;
+    }
+
+    // Logout
+    if (t.id === 'uam-logout' || t.closest('#uam-logout')) {
+      closeAccountMenu();
+      sessionStorage.removeItem('zeyscord_autojoin');
+      if (socket) socket.disconnect();
+      location.reload();
+      return;
+    }
+
+    // Switch to another account
+    if (t.classList.contains('uam-account-item') || t.closest('.uam-account-item')) {
+      const btn = t.closest('.uam-account-item') || t;
+      // handled by onclick set in populateAccountMenu
+    }
+  });
+
+  document.addEventListener('click', () => closeAccountMenu());
+
+  document.getElementById('btn-settings')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeAccountMenu();
+    const settings = document.getElementById('settings-modal');
+    if (settings) { settings.classList.remove('hidden'); if (typeof refreshEffectOptionsInSettings==='function') refreshEffectOptionsInSettings(); if (typeof refreshDecoOptionsInSettings==='function') refreshDecoOptionsInSettings(); }
+  });
+})();
+
+// Auto-join last / switched account
+(function autoJoin() {
+  const name = sessionStorage.getItem('zeyscord_autojoin');
+  if (!name) return;
+  sessionStorage.removeItem('zeyscord_autojoin');
+  const input = document.getElementById('username-input');
+  const form = document.getElementById('login-form');
+  if (input) input.value = name;
+  // small delay so socket is ready
+  setTimeout(() => {
+    if (form) form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  }, 200);
+})();
+
 
 function renderChannels(channels) {
   channelsList.innerHTML = '';
@@ -589,13 +1328,18 @@ function appendMessage(message) {
 
 function renderMembers() {
   membersList.innerHTML = '';
+  // Invisible users still listed but with gray status
   membersCount.textContent = onlineUsers.length;
   onlineUsers.forEach(user => {
     const el = document.createElement('div');
     el.className = 'member-item';
     const badgesStr = badgesHtml((user.badges || []).slice(0, 4));
+    const st = user.presenceStatus || 'online';
     el.innerHTML = `
-      <div class="member-avatar" style="background:${user.avatarUrl ? 'transparent' : (user.avatarColor||'#5865f2')}"></div>
+      <div class="member-avatar-wrap" style="position:relative;width:32px;height:32px;flex-shrink:0">
+        <div class="member-avatar" style="background:${user.avatarUrl ? 'transparent' : (user.avatarColor||'#5865f2')}"></div>
+        <span class="member-status-dot status-${st}" style="position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:3px solid #2b2d31;background:${(STATUS_COLORS&&STATUS_COLORS[st])||'#23a559'};box-sizing:border-box;z-index:2"></span>
+      </div>
       <div class="member-info">
         <div class="member-name-row">
           <span class="member-name">${escapeHtml(user.username)}</span>
@@ -616,11 +1360,39 @@ function renderMembers() {
     el.onclick = () => openProfile(user.id);
     membersList.appendChild(el);
     applyAvatarDeco(avEl, user.avatarDeco);
+    // remove any extra status dots that deco/CSS might add
+    const dots = el.querySelectorAll('.member-status-dot, .status-dot');
+    dots.forEach((d, i) => { if (i > 0) d.remove(); });
     bindBadgeTooltips(el);
   });
 }
 
+function friendRowHtml(f) {
+  const st = f.presenceStatus || 'online';
+  const stLabel = (typeof STATUS_LABELS !== 'undefined' && STATUS_LABELS[st]) ? STATUS_LABELS[st] : 'En ligne';
+  const custom = f.customStatus ? escapeHtml(f.customStatus) : stLabel;
+  const av = f.avatarUrl
+    ? `<img src="${esc(f.avatarUrl)}" alt="">`
+    : `<div class="friend-av-fallback" style="background:${f.avatarColor||'#5865f2'}">${(f.username||'?')[0].toUpperCase()}</div>`;
+  return `
+    <div class="friend-row-av">
+      ${av}
+      <div class="status-dot status-${st}"></div>
+    </div>
+    <div class="friend-row-info">
+      <div class="friend-row-name">${escapeHtml(f.username)}</div>
+      <div class="friend-row-status">${custom}</div>
+    </div>
+    <div class="friend-row-actions">
+      <button type="button" class="friend-msg-btn" title="Message">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      </button>
+    </div>`;
+}
+
 function renderFriends() {
+  try { renderFriendsMain(); } catch(e) {}
+
   const list = document.getElementById('friends-list');
   const dmList = document.getElementById('dm-list');
   const reqList = document.getElementById('friend-requests-list');
@@ -629,16 +1401,20 @@ function renderFriends() {
     list.innerHTML = '';
     friends.forEach(f => {
       const el = document.createElement('div');
-      el.className = 'channel-item' + (currentDM === f.id ? ' active' : '');
-      const av = f.avatarUrl
-        ? `<img src="${esc(f.avatarUrl)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover">`
-        : `<span style="width:24px;height:24px;border-radius:50%;background:${f.avatarColor||'#5865f2'};display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">${f.username[0].toUpperCase()}</span>`;
-      el.innerHTML = `${av}<span>${escapeHtml(f.username)}</span>`;
-      el.onclick = () => openDM(f.id);
+      el.className = 'friend-row' + (currentDM === f.id ? ' active' : '');
+      el.innerHTML = friendRowHtml(f);
+      el.onclick = (e) => {
+        if (e.target.closest('.friend-msg-btn')) { openDM(f.id); return; }
+        openProfile(f.id);
+      };
+      el.querySelector('.friend-msg-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openDM(f.id);
+      });
       list.appendChild(el);
     });
     if (!friends.length) {
-      list.innerHTML = '<div style="padding:8px;color:#949ba4;font-size:13px">Aucun ami pour le moment</div>';
+      list.innerHTML = '<div style="padding:12px;color:#949ba4;font-size:13px">Aucun ami pour le moment</div>';
     }
   }
 
@@ -646,16 +1422,17 @@ function renderFriends() {
     dmList.innerHTML = '';
     friends.forEach(f => {
       const el = document.createElement('div');
-      el.className = 'channel-item' + (currentDM === f.id ? ' active' : '');
-      const av = f.avatarUrl
-        ? `<img src="${esc(f.avatarUrl)}" style="width:24px;height:24px;border-radius:50%;object-fit:cover">`
-        : `<span style="width:24px;height:24px;border-radius:50%;background:${f.avatarColor||'#5865f2'};display:inline-flex;align-items:center;justify-content:center;font-size:11px;color:white;flex-shrink:0">${f.username[0].toUpperCase()}</span>`;
-      el.innerHTML = `${av}<span>${escapeHtml(f.username)}</span>`;
+      el.className = 'friend-row' + (currentDM === f.id ? ' active' : '');
+      el.innerHTML = friendRowHtml(f);
       el.onclick = () => openDM(f.id);
+      el.querySelector('.friend-msg-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openDM(f.id);
+      });
       dmList.appendChild(el);
     });
     if (!friends.length) {
-      dmList.innerHTML = '<div style="padding:8px;color:#949ba4;font-size:13px">Ajoute des amis pour discuter en privé</div>';
+      dmList.innerHTML = '<div style="padding:12px;color:#949ba4;font-size:13px">Ajoute des amis pour discuter en privé</div>';
     }
   }
 
@@ -692,6 +1469,11 @@ function renderFriends() {
 function openDM(userId) {
   currentDM = userId;
   socket.emit('joinDM', userId);
+  document.getElementById('friends-panel')?.classList.add('hidden');
+  document.getElementById('messages-container')?.classList.remove('hidden');
+  document.getElementById('message-form')?.classList.remove('hidden');
+  const ch = document.querySelector('.chat-header');
+  if (ch) ch.style.display = '';
 }
 
 function scrollToBottom() { messagesContainer.scrollTop = messagesContainer.scrollHeight; }
@@ -705,6 +1487,7 @@ function openProfile(userId) {
   const modal = document.getElementById('profile-modal');
   const banner = document.getElementById('profile-banner');
   const avatar = document.getElementById('profile-avatar');
+  const body = document.getElementById('profile-body');
   const uname = document.getElementById('profile-username');
   const handle = document.getElementById('profile-handle');
   const badges = document.getElementById('profile-badges');
@@ -713,31 +1496,52 @@ function openProfile(userId) {
   const memberSince = document.getElementById('profile-member-since');
   const actions = document.getElementById('profile-actions');
 
+  const p = user.primaryColor || null;
+  const s = user.secondaryColor || p;
+  const ac = user.avatarColor || '#5865f2';
+
+  // Banner
   if (user.bannerUrl) {
-    // Quotes required for data: URLs (base64)
     banner.style.backgroundImage = `url("${String(user.bannerUrl).replace(/"/g, '%22')}")`;
     banner.style.backgroundColor = 'transparent';
   } else {
     banner.style.backgroundImage = 'none';
-    banner.style.backgroundColor = user.avatarColor || '#5865f2';
+    banner.style.backgroundColor = (p && ac.toLowerCase() === p.toLowerCase()) ? '#111214' : ac;
   }
 
+  // Avatar
   if (user.avatarUrl) {
     avatar.innerHTML = '';
     avatar.style.background = 'transparent';
     const img = document.createElement('img');
     img.src = user.avatarUrl;
     img.alt = '';
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
     avatar.appendChild(img);
   } else {
     avatar.innerHTML = '';
-    avatar.style.background = user.avatarColor || '#5865f2';
+    avatar.style.background = (p && ac.toLowerCase() === p.toLowerCase()) ? '#1e1f22' : ac;
     avatar.textContent = (user.username || '?')[0].toUpperCase();
+  }
+  avatar.style.borderColor = p || '#232428';
+  setStatusDot(document.getElementById('profile-status-dot'), user.presenceStatus || 'online');
+  const pWrap = document.getElementById('profile-avatar-wrap') || avatar.parentElement;
+  if (pWrap) {
+    pWrap.style.position = 'relative';
+    pWrap.style.top = 'auto';
+    pWrap.style.left = 'auto';
+    pWrap.style.marginTop = '-30px';
+    pWrap.style.marginLeft = '4px';
+    pWrap.style.width = '72px';
+    pWrap.style.height = '72px';
+    pWrap.style.overflow = 'visible';
+    pWrap.style.zIndex = '30';
   }
 
   uname.textContent = user.username;
-  if (handle) handle.textContent = user.username.toLowerCase().replace(/\s/g,'') + ' • en ligne';
+  if (handle) {
+    const st = user.presenceStatus || 'online';
+    handle.textContent = user.username.toLowerCase().replace(/\s/g,'') + ' • ' + (STATUS_LABELS[st] || 'en ligne').toLowerCase();
+  }
   badges.innerHTML = badgesHtml(user.badges);
   bindBadgeTooltips(badges);
   status.textContent = user.customStatus || 'Pas de statut personnalisé';
@@ -793,9 +1597,21 @@ function openProfile(userId) {
     oBtn.onclick = () => { closeProfile(); openBadgesManager(user); };
     actions.appendChild(oBtn);
   }
-  const card = modal.querySelector('.profile-card');
+
+  // Theme
+  const card = document.getElementById('profile-card-main') || modal.querySelector('.zpc');
+  if (body) {
+    if (p) {
+      body.style.background = `linear-gradient(180deg, ${p} 0%, ${s || p} 100%)`;
+      avatar.style.borderColor = p;
+      const dot = document.getElementById('profile-status-dot');
+      if (dot) dot.style.borderColor = p;
+    } else {
+      body.style.background = '#232428';
+      avatar.style.borderColor = '#232428';
+    }
+  }
   applyProfileEffect(card, user.profileEffect);
-  // Apply deco after layout so size is correct
   requestAnimationFrame(() => {
     applyAvatarDeco(avatar, user.avatarDeco);
   });
@@ -859,28 +1675,153 @@ function wireUpload(btnId, fileId, previewId, onData) {
   };
 }
 
+let editSelectedDeco = 'none';
+let editSelectedEffect = 'none';
+
+function getEditDraft() {
+  const avatarUrl = pendingEditAvatar !== undefined ? (pendingEditAvatar || null) : (currentUser?.avatarUrl || null);
+  const bannerUrl = pendingEditBanner !== undefined ? (pendingEditBanner || null) : (currentUser?.bannerUrl || null);
+  return {
+    username: document.getElementById('edit-username')?.value.trim() || currentUser?.username || 'User',
+    customStatus: document.getElementById('edit-status')?.value.trim() || '',
+    primaryColor: document.getElementById('edit-primary-color')?.value || null,
+    secondaryColor: document.getElementById('edit-secondary-color')?.value || null,
+    avatarUrl,
+    bannerUrl,
+    avatarDeco: editSelectedDeco,
+    profileEffect: editSelectedEffect,
+    avatarColor: currentUser?.avatarColor || '#5865f2'
+  };
+}
+
+function refreshEditPreview() {
+  if (!currentUser) return;
+  const d = getEditDraft();
+  const banner = document.getElementById('edit-preview-banner');
+  const avatar = document.getElementById('edit-preview-avatar');
+  const card = document.getElementById('edit-preview-card');
+  const body = document.getElementById('edit-preview-content');
+  const uname = document.getElementById('edit-preview-username');
+  const handle = document.getElementById('edit-preview-handle');
+  const status = document.getElementById('edit-preview-status');
+  const about = document.getElementById('edit-preview-about');
+  if (!banner || !avatar || !card) return;
+
+  const p = d.primaryColor || '#5865f2';
+  const s = d.secondaryColor || p;
+  const ac = d.avatarColor || '#5865f2';
+
+  // Banner: always visible top strip
+  banner.style.height = '120px';
+  banner.style.minHeight = '120px';
+  banner.style.display = 'block';
+  if (d.bannerUrl) {
+    banner.style.backgroundImage = `url("${String(d.bannerUrl).replace(/"/g, '%22')}")`;
+    banner.style.backgroundSize = 'cover';
+    banner.style.backgroundPosition = 'center';
+    banner.style.backgroundColor = 'transparent';
+  } else {
+    banner.style.backgroundImage = 'none';
+    // Darker version of primary so the strip is always distinct from the body
+    banner.style.backgroundColor = ac !== p ? ac : '#111214';
+  }
+
+  // Avatar circle
+  if (d.avatarUrl) {
+    avatar.innerHTML = '';
+    avatar.style.background = 'transparent';
+    const img = document.createElement('img');
+    img.src = d.avatarUrl;
+    img.alt = '';
+    avatar.appendChild(img);
+  } else {
+    avatar.innerHTML = '';
+    avatar.style.background = (ac.toLowerCase() === p.toLowerCase()) ? '#1e1f22' : ac;
+    avatar.textContent = (d.username || '?')[0].toUpperCase();
+  }
+  avatar.style.borderColor = p;
+
+  // Force avatar wrap geometry so deco centers correctly
+  const wrap = document.getElementById('edit-preview-avatar-wrap') || avatar.parentElement;
+  if (wrap) {
+    wrap.style.position = 'absolute';
+    wrap.style.top = '-40px';
+    wrap.style.left = '16px';
+    wrap.style.width = '92px';
+    wrap.style.height = '92px';
+    wrap.style.overflow = 'visible';
+    wrap.style.zIndex = '30';
+  }
+
+  if (uname) uname.textContent = d.username;
+  if (handle) {
+    const st = currentUser?.presenceStatus || 'online';
+    handle.textContent = (d.username || '').toLowerCase().replace(/\s/g, '') + ' • ' + (STATUS_LABELS[st] || 'en ligne').toLowerCase();
+  }
+  if (status) status.textContent = d.customStatus || 'Pas de statut personnalisé';
+  if (about) about.textContent = d.customStatus || 'Aucune bio pour le moment.';
+
+  if (body) body.style.background = `linear-gradient(180deg, ${p} 0%, ${s} 100%)`;
+
+
+  // Badges in edit preview
+  let badgesPreview = document.getElementById('edit-preview-badges');
+  if (!badgesPreview && body) {
+    badgesPreview = document.createElement('div');
+    badgesPreview.id = 'edit-preview-badges';
+    badgesPreview.className = 'zpc-badges';
+    const handleNode = document.getElementById('edit-preview-handle');
+    if (handleNode && handleNode.parentNode) {
+      handleNode.parentNode.insertBefore(badgesPreview, handleNode.nextSibling);
+    } else {
+      body.appendChild(badgesPreview);
+    }
+  }
+  if (badgesPreview) {
+    const blist = (currentUser.badges || []).slice(0, 12);
+    badgesPreview.innerHTML = blist.map(b => {
+      let icon = (BADGE_ICONS[b] || '🏅')
+        .replace(/width="\d+"/gi, 'width="22"')
+        .replace(/height="\d+"/gi, 'height="22"');
+      return '<span class="badge" data-badge="' + b + '" style="width:22px;height:22px;display:inline-flex;">' + icon + '</span>';
+    }).join('');
+    badgesPreview.style.cssText = 'display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:6px 0 8px 0;';
+    badgesPreview.querySelectorAll('img,svg').forEach(el => {
+      el.style.width = '22px';
+      el.style.height = '22px';
+    });
+    bindBadgeTooltips(badgesPreview);
+  }
+
+  applyProfileEffect(card, d.profileEffect || 'none');
+  requestAnimationFrame(() => applyAvatarDeco(avatar, d.avatarDeco || 'none'));
+}
+
 function openEditProfile() {
-  pendingEditAvatar = undefined; // undefined = keep existing
+  if (typeof refreshEffectOptionsInSettings === 'function') refreshEffectOptionsInSettings();
+  if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
+  pendingEditAvatar = undefined;
   pendingEditBanner = undefined;
-  document.getElementById('edit-status').value = currentUser.customStatus || '';
+  editSelectedDeco = currentUser.avatarDeco || 'none';
+  editSelectedEffect = currentUser.profileEffect || 'none';
+  const statusEl = document.getElementById('edit-status');
+  if (statusEl) statusEl.value = currentUser.customStatus || '';
   setPreview('edit-avatar-preview', currentUser.avatarUrl || null);
   setPreview('edit-banner-preview', currentUser.bannerUrl || null);
-  // Add username field if missing
-  let unameField = document.getElementById('edit-username');
-  if (!unameField) {
-    const card = document.querySelector('#edit-profile-modal .edit-card');
-    const label = document.createElement('label');
-    label.textContent = 'Nom d\'utilisateur';
-    unameField = document.createElement('input');
-    unameField.type = 'text';
-    unameField.id = 'edit-username';
-    unameField.maxLength = 32;
-    const firstLabel = card.querySelector('label');
-    card.insertBefore(label, firstLabel);
-    card.insertBefore(unameField, firstLabel);
-  }
-  unameField.value = currentUser.username || '';
+  const unameField = document.getElementById('edit-username');
+  if (unameField) unameField.value = currentUser.username || '';
+  const ep = document.getElementById('edit-primary-color');
+  const es = document.getElementById('edit-secondary-color');
+  if (ep) ep.value = currentUser.primaryColor || currentUser.avatarColor || '#5865f2';
+  if (es) es.value = currentUser.secondaryColor || currentUser.primaryColor || currentUser.avatarColor || '#eb459e';
+  document.querySelectorAll('#edit-deco-grid .deco-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.deco === editSelectedDeco);
+  });
+  document.querySelectorAll('#edit-effect-grid .effect-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.effect === editSelectedEffect);
+  });
   document.getElementById('edit-profile-modal').classList.remove('hidden');
+  refreshEditPreview();
 }
 function closeEditProfile() { document.getElementById('edit-profile-modal').classList.add('hidden'); }
 document.getElementById('edit-overlay')?.addEventListener('click', closeEditProfile);
@@ -888,7 +1829,11 @@ document.getElementById('edit-cancel')?.addEventListener('click', closeEditProfi
 document.getElementById('edit-save')?.addEventListener('click', () => {
   const payload = {
     customStatus: document.getElementById('edit-status').value.trim(),
-    username: document.getElementById('edit-username')?.value.trim()
+    username: document.getElementById('edit-username')?.value.trim(),
+    primaryColor: document.getElementById('edit-primary-color')?.value || null,
+    secondaryColor: document.getElementById('edit-secondary-color')?.value || null,
+    avatarDeco: editSelectedDeco,
+    profileEffect: editSelectedEffect
   };
   if (pendingEditAvatar !== undefined) payload.avatarUrl = pendingEditAvatar || null;
   if (pendingEditBanner !== undefined) payload.bannerUrl = pendingEditBanner || null;
@@ -896,16 +1841,45 @@ document.getElementById('edit-save')?.addEventListener('click', () => {
   closeEditProfile();
 });
 
-// Wire edit modal uploads
-wireUpload('edit-avatar-btn', 'edit-avatar-file', 'edit-avatar-preview', (d) => { pendingEditAvatar = d; });
-wireUpload('edit-banner-btn', 'edit-banner-file', 'edit-banner-preview', (d) => { pendingEditBanner = d; });
-document.getElementById('edit-avatar-clear')?.addEventListener('click', () => {
-  pendingEditAvatar = null;
-  setPreview('edit-avatar-preview', null);
+// Wire edit modal uploads + live preview
+// Avatar / banner via pencil on preview (file inputs only)
+function wireFileOnly(fileId, onData) {
+  const input = document.getElementById(fileId);
+  if (!input || input.dataset.wired) return;
+  input.dataset.wired = '1';
+  input.addEventListener('change', () => {
+    const f = input.files && input.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => onData(reader.result);
+    reader.readAsDataURL(f);
+    input.value = '';
+  });
+}
+wireFileOnly('edit-avatar-file', (d) => { pendingEditAvatar = d; refreshEditPreview(); });
+wireFileOnly('edit-banner-file', (d) => { pendingEditBanner = d; refreshEditPreview(); });
+
+['edit-username', 'edit-status', 'edit-primary-color', 'edit-secondary-color'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', refreshEditPreview);
+  el.addEventListener('change', refreshEditPreview);
 });
-document.getElementById('edit-banner-clear')?.addEventListener('click', () => {
-  pendingEditBanner = null;
-  setPreview('edit-banner-preview', null);
+document.querySelectorAll('#edit-deco-grid .deco-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('#edit-deco-grid .deco-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    editSelectedDeco = opt.dataset.deco;
+    refreshEditPreview();
+  });
+});
+document.querySelectorAll('#edit-effect-grid .effect-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('#edit-effect-grid .effect-option').forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    editSelectedEffect = opt.dataset.effect;
+    refreshEditPreview();
+  });
 });
 
 function openBadgesManager(user) {
@@ -982,25 +1956,29 @@ document.getElementById('badges-save')?.addEventListener('click', () => {
   closeBadgesManager();
 });
 
-userAvatar?.addEventListener('click', () => currentUser && openProfile(currentUser.id));
-userName?.addEventListener('click', () => currentUser && openProfile(currentUser.id));
-
 messageForm.addEventListener('submit', e => {
   e.preventDefault();
   const content = messageInput.value.trim();
   if (!content) return;
-  // Optimistic: affiche le message immédiatement pour éviter qu'il "disparaisse"
+  // Ensure we have a real channel id
+  if (!currentDM) {
+    const active = document.querySelector('.channel-item.active');
+    if (active && active.dataset.channel) currentChannel = active.dataset.channel;
+    if (!currentChannel || currentChannel === 'general') currentChannel = 'zeyscord_general';
+  }
+  const channelId = currentDM
+    ? ('dm_' + [currentUser.id, currentDM].sort().join('_'))
+    : currentChannel;
   if (currentUser) {
     const tempId = 'temp_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
-    const optimisticMsg = {
+    appendMessage({
       id: tempId,
       content,
       author: currentUser,
       timestamp: new Date().toISOString(),
-      channelId: currentDM ? ('dm_' + [currentUser.id, currentDM].sort().join('_')) : currentChannel,
+      channelId,
       _temp: true
-    };
-    appendMessage(optimisticMsg);
+    });
     scrollToBottom();
   }
   if (currentDM) {
@@ -1009,6 +1987,7 @@ messageForm.addEventListener('submit', e => {
     socket.emit('sendMessage', { content, channelId: currentChannel });
   }
   messageInput.value = '';
+  messageInput.focus();
 });
 messageInput.addEventListener('input', () => {
   // Empêche le spam de typing events
@@ -1024,11 +2003,24 @@ function renderServers() {
   const list = document.getElementById('servers-list');
   if (!list) return;
   list.innerHTML = '';
+  // dedupe by id
+  const seen = new Set();
   guilds.forEach(g => {
+    if (!g || !g.id || seen.has(g.id)) return;
+    seen.add(g.id);
     const el = document.createElement('div');
     el.className = 'server-icon' + (g.id === currentGuild && currentView === 'server' ? ' active' : '');
     el.title = g.name;
-    el.innerHTML = '<span>' + escapeHtml((g.icon || g.name[0] || 'S').toString().substring(0, 2)) + '</span>';
+    if (g.iconUrl) {
+      el.innerHTML = '';
+      el.style.backgroundImage = `url("${String(g.iconUrl).replace(/"/g, '')}")`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.backgroundColor = 'transparent';
+    } else {
+      el.style.backgroundImage = '';
+      el.innerHTML = '<span>' + escapeHtml((g.icon || g.name[0] || 'S').toString().substring(0, 2)) + '</span>';
+    }
     el.onclick = () => {
       currentGuild = g.id;
       socket.emit('joinGuild', g.id);
@@ -1056,7 +2048,7 @@ function switchView(view) {
     currentChannelName.textContent = 'Amis';
     messageInput.placeholder = 'Sélectionne un ami pour discuter...';
     if (!currentDM) {
-      messagesList.innerHTML = '<div style="padding:40px;text-align:center;color:#949ba4"><h3 style="color:#f2f3f5;margin-bottom:8px">Messages privés</h3><p>Choisis un ami à gauche pour commencer une conversation.</p></div>';
+      setHomeTab('friends');
     }
     renderFriends();
   } else {
@@ -1065,11 +2057,16 @@ function switchView(view) {
     homeBtn?.classList.remove('active');
     serverBtn?.classList.add('active');
     if (membersSidebar) membersSidebar.style.display = '';
+    document.getElementById('friends-panel')?.classList.add('hidden');
+    document.getElementById('messages-container')?.classList.remove('hidden');
+    document.getElementById('message-form')?.classList.remove('hidden');
+    const ch = document.querySelector('.chat-header');
+    if (ch) ch.style.display = '';
     currentDM = null;
     if (currentChannel) {
       socket.emit('joinChannel', currentChannel);
     } else {
-      socket.emit('joinChannel', 'general');
+      socket.emit('joinChannel', currentChannel || 'zeyscord_general');
     }
   }
 }
@@ -1104,6 +2101,11 @@ function openSettings() {
   document.querySelectorAll('.effect-option').forEach(o => {
     o.classList.toggle('active', o.dataset.effect === selectedEffect);
   });
+  const sp = document.getElementById('settings-primary-color');
+  const ss = document.getElementById('settings-secondary-color');
+  if (sp) sp.value = currentUser.primaryColor || currentUser.avatarColor || '#5865f2';
+  if (ss) ss.value = currentUser.secondaryColor || currentUser.primaryColor || currentUser.avatarColor || '#eb459e';
+  updateSettingsColorPreview();
   refreshDecoOptionsInSettings();
   document.getElementById('settings-modal').classList.remove('hidden');
 }
@@ -1156,11 +2158,30 @@ document.querySelectorAll('.effect-option').forEach(opt => {
   });
 });
 
+function updateSettingsColorPreview() {
+  const p = document.getElementById('settings-primary-color')?.value || '#5865f2';
+  const s = document.getElementById('settings-secondary-color')?.value || '#eb459e';
+  const prev = document.getElementById('settings-color-preview');
+  if (prev) prev.style.background = `linear-gradient(90deg, ${p}, ${s})`;
+}
+document.getElementById('settings-primary-color')?.addEventListener('input', updateSettingsColorPreview);
+document.getElementById('settings-secondary-color')?.addEventListener('input', updateSettingsColorPreview);
+document.getElementById('settings-colors-reset')?.addEventListener('click', () => {
+  const defP = currentUser?.avatarColor || '#5865f2';
+  const sp = document.getElementById('settings-primary-color');
+  const ss = document.getElementById('settings-secondary-color');
+  if (sp) sp.value = defP;
+  if (ss) ss.value = defP;
+  updateSettingsColorPreview();
+});
+
 document.getElementById('save-profile')?.addEventListener('click', () => {
   const payload = {
     customStatus: document.getElementById('settings-bio').value.trim(),
     avatarDeco: selectedDeco,
-    profileEffect: selectedEffect
+    profileEffect: selectedEffect,
+    primaryColor: document.getElementById('settings-primary-color')?.value || null,
+    secondaryColor: document.getElementById('settings-secondary-color')?.value || null
   };
   if (pendingSettingsAvatar !== undefined) payload.avatarUrl = pendingSettingsAvatar || null;
   if (pendingSettingsBanner !== undefined) payload.bannerUrl = pendingSettingsBanner || null;
@@ -1235,21 +2256,68 @@ document.getElementById('settings-logout')?.addEventListener('click', () => {
 
 // ===== SHOP & OWNED DECOS =====
 const SHOP_DECOS = [
-  { id: 'angry', name: 'En colère', img: '/decos/angry.png', price: 0, type: 'deco' },
-  { id: 'ki', name: 'Le Ki', img: '/decos/ki.png', price: 0, type: 'deco' },
-  { id: 'rage', name: 'Rage', img: '/decos/rage.png', price: 0, type: 'deco' },
-  { id: 'phoenix', name: 'Phoenix', img: '/decos/phoenix.png', price: 0, type: 'deco' },
-  { id: 'lotus', name: 'Lotus', img: '/decos/lotus.png', price: 0, type: 'deco' }
+  { id: 'air', name: 'Air', img: '/decos/air.png', price: 2.75, type: 'deco' },
+  { id: 'angry', name: 'En colère', img: '/decos/angry.png', price: 2.75, type: 'deco' },
+  { id: 'balance', name: 'Balance', img: '/decos/balance.png', price: 2.75, type: 'deco' },
+  { id: 'blue_ring', name: 'Anneau bleu', img: '/decos/blue_ring.png', price: 2.75, type: 'deco' },
+  { id: 'cat', name: 'Chat', img: '/decos/cat.png', price: 2.75, type: 'deco' },
+  { id: 'cat_ears', name: 'Oreilles de chat', img: '/decos/cat_ears.png', price: 2.75, type: 'deco' },
+  { id: 'crackers', name: 'Pétards festifs', img: '/decos/crackers.png', price: 2.75, type: 'deco' },
+  { id: 'earth', name: 'Terre', img: '/decos/earth.png', price: 2.75, type: 'deco' },
+  { id: 'fan', name: 'Éventail doré', img: '/decos/fan.png', price: 2.75, type: 'deco' },
+  { id: 'fan_flourish', name: 'Éventail', img: '/decos/fan_flourish.png', price: 2.75, type: 'deco' },
+  { id: 'fire', name: 'Feu', img: '/decos/fire.png', price: 2.75, type: 'deco' },
+  { id: 'firecrackers', name: 'Pétards', img: '/decos/firecrackers.png', price: 2.75, type: 'deco' },
+  { id: 'flaming_sword', name: 'Épée de feu', img: '/decos/flaming_sword.png', price: 2.75, type: 'deco' },
+  { id: 'halo', name: 'Halo', img: '/decos/halo.png', price: 2.75, type: 'deco' },
+  { id: 'lightning', name: 'Foudre', img: '/decos/lightning.png', price: 2.75, type: 'deco' },
+  { id: 'lotus', name: 'Lotus', img: '/decos/lotus.png', price: 2.75, type: 'deco' },
+  { id: 'lunar_lanterns', name: 'Lanternes', img: '/decos/lunar_lanterns.png', price: 2.75, type: 'deco' },
+  { id: 'moon', name: 'Lune', img: '/decos/moon.png', price: 2.75, type: 'deco' },
+  { id: 'phoenix', name: 'Phoenix', img: '/decos/phoenix.png', price: 2.75, type: 'deco' },
+  { id: 'phoenix2', name: 'Phénix', img: '/decos/phoenix2.png', price: 2.75, type: 'deco' },
+  { id: 'purple_ring', name: 'Anneau violet', img: '/decos/purple_ring.png', price: 2.75, type: 'deco' },
+  { id: 'rage', name: 'Rage', img: '/decos/rage.png', price: 2.75, type: 'deco' },
+  { id: 'rainbow_hugh', name: 'Arc-en-ciel', img: '/decos/rainbow_hugh.png', price: 2.75, type: 'deco' },
+  { id: 'ring_purple2', name: 'Anneau améthyste', img: '/decos/ring_purple2.png', price: 2.75, type: 'deco' },
+  { id: 'ring_yellow2', name: 'Anneau or', img: '/decos/ring_yellow2.png', price: 2.75, type: 'deco' },
+  { id: 'water', name: 'Eau', img: '/decos/water.png', price: 2.75, type: 'deco' },
+  { id: 'wreath', name: 'Couronne', img: '/decos/wreath.png', price: 2.75, type: 'deco' },
+  { id: 'yellow_ring', name: 'Anneau jaune', img: '/decos/yellow_ring.png', price: 2.75, type: 'deco' }
 ];
 const SHOP_EFFECTS = [
-  { id: 'earthquake', name: 'Séisme', img: '/effects/earthquake.png', price: 0, type: 'effect' },
-  { id: 'sakura', name: 'Sakura', img: '/effects/sakura.png', price: 0, type: 'effect' },
-  { id: 'cyberpunk', name: 'Cyberpunk', img: '/effects/cyberpunk.png', price: 0, type: 'effect' },
-  { id: 'mastery', name: 'Mastery', img: '/effects/mastery.png', price: 0, type: 'effect' },
-  { id: 'vortex', name: 'Vortex', img: '/effects/vortex.png', price: 0, type: 'effect' }
+  { id: 'boost_relic', name: 'Boost Relic', img: '/effects/boost_relic.gif', price: 2.75, type: 'effect' },
+  { id: 'breakfast_plate', name: 'Breakfast Plate', img: '/effects/breakfast_plate.gif', price: 2.75, type: 'effect' },
+  { id: 'dark_omens', name: 'Dark Omens', img: '/effects/dark_omens.gif', price: 2.75, type: 'effect' },
+  { id: 'discord_os', name: 'Discord Os', img: '/effects/discord_os.gif', price: 2.75, type: 'effect' },
+  { id: 'dreamy', name: 'Dreamy', img: '/effects/dreamy.gif', price: 2.75, type: 'effect' },
+  { id: 'fall_foliage', name: 'Fall Foliage', img: '/effects/fall_foliage.gif', price: 2.75, type: 'effect' },
+  { id: 'feelin_90s', name: 'Feelin\' 90s', img: '/effects/feelin_90s.gif', price: 0, type: 'effect' },
+  { id: 'feelin_mischievous', name: 'Feelin\' Mischievous', img: '/effects/feelin_mischievous.gif', price: 0, type: 'effect' },
+  { id: 'ghoulish_graffiti', name: 'Ghoulish Graffiti', img: '/effects/ghoulish_graffiti.gif', price: 2.75, type: 'effect' },
+  { id: 'goozilla', name: 'Goozilla', img: '/effects/goozilla.gif', price: 2.75, type: 'effect' },
+  { id: 'haunted_man_o_war', name: 'Haunted Man O\' War', img: '/effects/haunted_man_o_war.gif', price: 0, type: 'effect' },
+  { id: 'heartzilla', name: 'Heartzilla', img: '/effects/heartzilla.gif', price: 2.75, type: 'effect' },
+  { id: 'hydro_blast', name: 'Hydro Blast', img: '/effects/hydro_blast.gif', price: 2.75, type: 'effect' },
+  { id: 'ki_detonate', name: 'Ki Detonate', img: '/effects/ki_detonate.gif', price: 2.75, type: 'effect' },
+  { id: 'lillypad_life', name: 'Lillypad Life', img: '/effects/lillypad_life.gif', price: 2.75, type: 'effect' },
+  { id: 'magic_hearts', name: 'Magic Hearts', img: '/effects/magic_hearts.gif', price: 2.75, type: 'effect' },
+  { id: 'monster_pop', name: 'Monster Pop', img: '/effects/monster_pop.gif', price: 2.75, type: 'effect' },
+  { id: 'pixie_dust', name: 'Pixie Dust', img: '/effects/pixie_dust.gif', price: 2.75, type: 'effect' },
+  { id: 'power_surge', name: 'Power Surge', img: '/effects/power_surge.gif', price: 2.75, type: 'effect' },
+  { id: 'saya', name: 'Saya', img: '/effects/saya.gif', price: 2.75, type: 'effect' },
+  { id: 'shatter', name: 'Shatter', img: '/effects/shatter.gif', price: 2.75, type: 'effect' },
+  { id: 'snowy_shenanigans', name: 'Snowy Shenanigans', img: '/effects/snowy_shenanigans.gif', price: 2.75, type: 'effect' },
+  { id: 'spirit_flame', name: 'Spirit Flame', img: '/effects/spirit_flame.gif', price: 2.75, type: 'effect' },
+  { id: 'sushi_mania', name: 'Sushi Mania', img: '/effects/sushi_mania.gif', price: 2.75, type: 'effect' },
+  { id: 'tocotoco', name: 'Tocotoco', img: '/effects/tocotoco.gif', price: 2.75, type: 'effect' },
+  { id: 'turbo_drive', name: 'Turbo Drive', img: '/effects/turbo_drive.gif', price: 2.75, type: 'effect' },
+  { id: 'wake_up', name: 'Wake Up!', img: '/effects/wake_up.gif', price: 2.75, type: 'effect' },
+  { id: 'watercolors', name: 'Watercolors', img: '/effects/watercolors.gif', price: 2.75, type: 'effect' },
+  { id: 'zombie_slime', name: 'Zombie Slime', img: '/effects/zombie_slime.gif', price: 2.75, type: 'effect' }
 ];
 const SHOP_NITRO = [
-  { id: 'nitro', name: 'Nitro', img: '/badges/nitro.png', price: 0, type: 'nitro', desc: 'Badge Nitro + avantages' }
+  { id: 'nitro', name: 'Nitro', img: '/badges/nitro.png', price: 3.00, type: 'nitro', desc: 'Badge Nitro + avantages' }
 ];
 const SHOP_ITEMS = [...SHOP_DECOS, ...SHOP_EFFECTS, ...SHOP_NITRO];
 
@@ -1280,7 +2348,10 @@ function ownDeco(id) {
   if (!list.includes(id)) {
     list.push(id);
     setOwnedDecos(list);
-  }
+  
+  if (typeof refreshDecoOptionsInSettings === "function") refreshDecoOptionsInSettings();
+}
+  if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
 }
 function getOwnedEffects() { return shopGet('effects'); }
 function setOwnedEffects(list) { shopSet('effects', list); }
@@ -1301,7 +2372,247 @@ function ownEffect(id) {
   if (!list.includes(id)) {
     list.push(id);
     setOwnedEffects(list);
+  
+  if (typeof refreshEffectOptionsInSettings === "function") refreshEffectOptionsInSettings();
+}
+}
+
+
+
+// ===== Discord-style Effect / Deco picker panels =====
+let pickerTempEffect = 'none';
+let pickerTempDeco = 'none';
+
+function openEffectPicker() {
+  pickerTempEffect = (typeof editSelectedEffect !== 'undefined' ? editSelectedEffect : null) || currentUser?.profileEffect || 'none';
+  let modal = document.getElementById('effect-picker-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'effect-picker-modal';
+    modal.className = 'picker-modal hidden';
+    modal.innerHTML = `
+      <div class="picker-overlay" data-close="1"></div>
+      <div class="picker-panel">
+        <div class="picker-header">
+          <div>
+            <h2>Changer l'effet de profil</h2>
+            <p class="picker-sub">Tes effets</p>
+          </div>
+          <button type="button" class="picker-x" data-close="1">×</button>
+        </div>
+        <div class="picker-body">
+          <div class="picker-grid" id="effect-picker-grid"></div>
+          <div class="picker-preview-col">
+            <div class="picker-preview-card" id="effect-picker-preview"></div>
+            <div class="picker-item-meta">
+              <div class="picker-item-name" id="effect-picker-name">Aucun</div>
+            </div>
+          </div>
+        </div>
+        <div class="picker-footer">
+          <button type="button" class="btn-secondary" data-close="1">Annuler</button>
+          <button type="button" class="btn-primary" id="effect-picker-apply">Appliquer</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', () => modal.classList.add('hidden')));
+    document.getElementById('effect-picker-apply').onclick = () => {
+      editSelectedEffect = pickerTempEffect;
+      selectedEffect = pickerTempEffect;
+      if (typeof refreshEffectOptionsInSettings === 'function') refreshEffectOptionsInSettings();
+      if (typeof updateEditPreview === 'function') updateEditPreview();
+      modal.classList.add('hidden');
+    };
   }
+  renderEffectPickerGrid();
+  modal.classList.remove('hidden');
+}
+
+function renderEffectPickerGrid() {
+  const grid = document.getElementById('effect-picker-grid');
+  const preview = document.getElementById('effect-picker-preview');
+  const nameEl = document.getElementById('effect-picker-name');
+  if (!grid) return;
+  const owned = getOwnedEffects();
+  grid.innerHTML = '';
+
+  function select(id, name, img) {
+    pickerTempEffect = id;
+    grid.querySelectorAll('.picker-tile').forEach(t => t.classList.remove('active'));
+    const tile = grid.querySelector('[data-id="'+id+'"]');
+    if (tile) tile.classList.add('active');
+    if (nameEl) nameEl.textContent = name;
+    if (preview) {
+      preview.innerHTML = '';
+      preview.style.background = (currentUser && (currentUser.primaryColor || currentUser.avatarColor)) || '#5865f2';
+      if (img) {
+        const im = document.createElement('img');
+        im.src = img;
+        im.className = 'picker-preview-fx';
+        preview.appendChild(im);
+      }
+      const av = document.createElement('div');
+      av.className = 'picker-preview-av';
+      av.textContent = ((currentUser && currentUser.username) || 'Z')[0].toUpperCase();
+      preview.appendChild(av);
+    }
+  }
+
+  // None
+  const none = document.createElement('button');
+  none.type = 'button';
+  none.className = 'picker-tile' + (pickerTempEffect === 'none' ? ' active' : '');
+  none.dataset.id = 'none';
+  none.innerHTML = '<div class="picker-tile-inner none">∅</div><span>Aucun</span>';
+  none.onclick = () => select('none', 'Aucun', null);
+  grid.appendChild(none);
+
+  // Shop shortcut
+  const shop = document.createElement('button');
+  shop.type = 'button';
+  shop.className = 'picker-tile';
+  shop.innerHTML = '<div class="picker-tile-inner shop">🛒</div><span>Boutique</span>';
+  shop.onclick = () => {
+    document.getElementById('effect-picker-modal')?.classList.add('hidden');
+    if (typeof openShop === 'function') {
+      document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'effects'));
+      openShop();
+    }
+  };
+  grid.appendChild(shop);
+
+  (SHOP_EFFECTS || []).forEach(item => {
+    if (!owned.includes(item.id)) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'picker-tile' + (pickerTempEffect === item.id ? ' active' : '');
+    btn.dataset.id = item.id;
+    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>';
+    btn.onclick = () => select(item.id, item.name, item.img);
+    grid.appendChild(btn);
+  });
+
+  // init preview
+  const cur = (SHOP_EFFECTS || []).find(i => i.id === pickerTempEffect);
+  select(pickerTempEffect, cur ? cur.name : 'Aucun', cur ? cur.img : null);
+}
+
+function openDecoPicker() {
+  pickerTempDeco = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
+  let modal = document.getElementById('deco-picker-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'deco-picker-modal';
+    modal.className = 'picker-modal hidden';
+    modal.innerHTML = `
+      <div class="picker-overlay" data-close="1"></div>
+      <div class="picker-panel">
+        <div class="picker-header">
+          <div>
+            <h2>Changer la déco d'avatar</h2>
+            <p class="picker-sub">Tes décorations</p>
+          </div>
+          <button type="button" class="picker-x" data-close="1">×</button>
+        </div>
+        <div class="picker-body">
+          <div class="picker-grid" id="deco-picker-grid"></div>
+          <div class="picker-preview-col">
+            <div class="picker-preview-card picker-preview-deco" id="deco-picker-preview"></div>
+            <div class="picker-item-meta">
+              <div class="picker-item-name" id="deco-picker-name">Aucune</div>
+            </div>
+          </div>
+        </div>
+        <div class="picker-footer">
+          <button type="button" class="btn-secondary" data-close="1">Annuler</button>
+          <button type="button" class="btn-primary" id="deco-picker-apply">Appliquer</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', () => modal.classList.add('hidden')));
+    document.getElementById('deco-picker-apply').onclick = () => {
+      editSelectedDeco = pickerTempDeco;
+      selectedDeco = pickerTempDeco;
+      if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
+      if (typeof updateEditPreview === 'function') updateEditPreview();
+      modal.classList.add('hidden');
+    };
+  }
+  renderDecoPickerGrid();
+  modal.classList.remove('hidden');
+}
+
+function renderDecoPickerGrid() {
+  const grid = document.getElementById('deco-picker-grid');
+  const preview = document.getElementById('deco-picker-preview');
+  const nameEl = document.getElementById('deco-picker-name');
+  if (!grid) return;
+  const owned = getOwnedDecos();
+  grid.innerHTML = '';
+
+  function select(id, name, img) {
+    pickerTempDeco = id;
+    grid.querySelectorAll('.picker-tile').forEach(t => t.classList.remove('active'));
+    const tile = grid.querySelector('[data-id="'+id+'"]');
+    if (tile) tile.classList.add('active');
+    if (nameEl) nameEl.textContent = name;
+    if (preview) {
+      preview.innerHTML = '';
+      const wrap = document.createElement('div');
+      wrap.className = 'picker-deco-av-wrap';
+      const av = document.createElement('div');
+      av.className = 'picker-preview-av';
+      av.style.background = (currentUser && currentUser.avatarColor) || '#5865f2';
+      if (currentUser && currentUser.avatarUrl) {
+        av.innerHTML = '<img src="'+currentUser.avatarUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+      } else {
+        av.textContent = ((currentUser && currentUser.username) || 'Z')[0].toUpperCase();
+      }
+      wrap.appendChild(av);
+      if (img) {
+        const d = document.createElement('img');
+        d.src = img;
+        d.className = 'picker-deco-overlay';
+        wrap.appendChild(d);
+      }
+      preview.appendChild(wrap);
+    }
+  }
+
+  const none = document.createElement('button');
+  none.type = 'button';
+  none.className = 'picker-tile' + (pickerTempDeco === 'none' ? ' active' : '');
+  none.dataset.id = 'none';
+  none.innerHTML = '<div class="picker-tile-inner none">∅</div><span>Aucun</span>';
+  none.onclick = () => select('none', 'Aucune', null);
+  grid.appendChild(none);
+
+  const shop = document.createElement('button');
+  shop.type = 'button';
+  shop.className = 'picker-tile';
+  shop.innerHTML = '<div class="picker-tile-inner shop">🛒</div><span>Boutique</span>';
+  shop.onclick = () => {
+    document.getElementById('deco-picker-modal')?.classList.add('hidden');
+    if (typeof openShop === 'function') {
+      document.querySelectorAll('.shop-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'decos'));
+      openShop();
+    }
+  };
+  grid.appendChild(shop);
+
+  (SHOP_DECOS || []).forEach(item => {
+    if (!owned.includes(item.id)) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'picker-tile' + (pickerTempDeco === item.id ? ' active' : '');
+    btn.dataset.id = item.id;
+    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>';
+    btn.onclick = () => select(item.id, item.name, item.img);
+    grid.appendChild(btn);
+  });
+
+  const cur = (SHOP_DECOS || []).find(i => i.id === pickerTempDeco);
+  select(pickerTempDeco, cur ? cur.name : 'Aucune', cur ? cur.img : null);
 }
 
 
@@ -1310,140 +2621,377 @@ function openShop() {
   if (!grid) return;
   const ownedD = getOwnedDecos();
   const ownedE = getOwnedEffects();
+  const ownedN = getOwnedNitro();
+  const activeTab = document.querySelector('.shop-tab.active')?.dataset?.tab || 'decos';
+
+  const items = activeTab === 'effects' ? SHOP_EFFECTS
+    : activeTab === 'nitro' ? SHOP_NITRO
+    : SHOP_DECOS;
+  const owned = activeTab === 'effects' ? ownedE
+    : activeTab === 'nitro' ? ownedN
+    : ownedD;
+
   grid.innerHTML = '';
 
-  const section = (title) => {
-    const h = document.createElement('div');
-    h.className = 'shop-section-title';
-    h.textContent = title;
-    grid.appendChild(h);
-  };
-
-  const addItem = (item, owned, onBuy) => {
+  items.forEach(item => {
     const isOwned = owned.includes(item.id);
+    const isFreeForOwner = currentUser && currentUser.isOwner;
+    const priceText = isOwned ? 'Possédé' : (isFreeForOwner ? 'Gratuit (Owner)' : (Number(item.price).toFixed(2).replace('.', ',') + ' €'));
     const el = document.createElement('div');
-    el.className = 'shop-item' + (isOwned ? ' owned' : '');
-    el.innerHTML = `
-      <img src="${item.img}" alt="${item.name}">
-      <div class="shop-item-name">${item.name}</div>
-      <div class="shop-item-price">${item.price === 0 ? 'Gratuit' : item.price + ' ZC'}</div>
-      <button class="shop-item-btn${isOwned ? ' owned' : ''}" data-id="${item.id}">
-        ${isOwned ? 'Possédé ✓' : 'Obtenir'}
-      </button>`;
-    const btn = el.querySelector('button');
-    if (!isOwned) btn.onclick = () => onBuy(item);
+    el.className = 'shop-card' + (isOwned ? ' owned' : '');
+
+    if (item.type === 'nitro') {
+      // Nitro: just the logo
+      el.innerHTML = `
+        <div class="shop-card-preview shop-nitro-preview">
+          <img class="shop-nitro-logo" src="${item.img}" alt="Nitro">
+        </div>
+        <div class="shop-card-footer">
+          <div class="shop-card-name">Nitro</div>
+          <div class="shop-card-meta">
+            <span class="shop-card-price">${priceText}</span>
+            <button class="shop-card-btn" type="button">${isOwned ? 'Possédé ✓' : 'Obtenir'}</button>
+          </div>
+        </div>`;
+    } else {
+      const avBg = (currentUser && currentUser.avatarColor) || '#5865f2';
+      const avInner = (currentUser && currentUser.avatarUrl)
+        ? '<img src="' + currentUser.avatarUrl + '" alt="">'
+        : ((currentUser && currentUser.username) || 'Z')[0].toUpperCase();
+      const overlay = item.type === 'deco'
+        ? '<img class="shop-card-deco" src="' + item.img + '" alt="">'
+        : '<img class="shop-card-effect" src="' + item.img + '" alt="">';
+      el.innerHTML = `
+        <div class="shop-card-preview">
+          <div class="shop-card-avatar-wrap">
+            <div class="shop-card-avatar" style="background:${avBg}">${avInner}</div>
+            ${overlay}
+          </div>
+        </div>
+        <div class="shop-card-footer">
+          <div class="shop-card-name">${item.name}</div>
+          <div class="shop-card-meta">
+            <span class="shop-card-price">${priceText}</span>
+            <button class="shop-card-btn" type="button">${isOwned ? 'Possédé ✓' : 'Obtenir'}</button>
+          </div>
+        </div>`;
+    }
+
+    const buy = () => {
+      if (isOwned) return;
+      // Owner = tout gratuit
+      if (currentUser && currentUser.isOwner) {
+        if (item.type === 'deco') ownDeco(item.id);
+        else if (item.type === 'effect') ownEffect(item.id);
+        else if (item.type === 'nitro') ownNitro();
+        openShop();
+        return;
+      }
+      // Sinon → modal de paiement
+      openPaymentModal(item);
+    };
+
+    el.querySelector('.shop-card-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      buy();
+    });
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.shop-card-btn')) return;
+      buy();
+    });
+
     grid.appendChild(el);
-  };
-
-  section("Décorations d'avatar");
-  SHOP_DECOS.forEach(item => addItem(item, ownedD, (it) => {
-    ownDeco(it.id);
-    openShop();
-    alert("« " + it.name + " » ajoutée ! Paramètres → Profil pour l'équiper.");
-  }));
-
-  section('Effets de profil');
-  SHOP_EFFECTS.forEach(item => addItem(item, ownedE, (it) => {
-    ownEffect(it.id);
-    openShop();
-    alert("« " + it.name + " » ajouté ! Paramètres → Profil pour l'équiper.");
-  }));
-
-  section('Nitro');
-  const ownedN = getOwnedNitro();
-  SHOP_NITRO.forEach(item => addItem(item, ownedN, (it) => {
-    ownNitro();
-    openShop();
-    alert("Nitro activé ! Badge équipé automatiquement.");
-  }));
+  });
 
   document.getElementById('shop-modal').classList.remove('hidden');
 }
 
+function showShopDetail(item, isOwned) {
+  const detail = document.getElementById('shop-detail');
+  if (!detail) return;
+  const uname = (currentUser && currentUser.username) || 'User';
+  const avColor = (currentUser && currentUser.avatarColor) || '#5865f2';
+  const avUrl = currentUser && currentUser.avatarUrl;
+  detail.innerHTML = `
+    <div class="shop-detail-preview" style="background:linear-gradient(135deg,#7b2ff7,#f107a3);">
+      <div class="shop-detail-card">
+        <div class="shop-detail-av-wrap">
+          <div class="shop-detail-av" style="background:${avUrl ? 'transparent' : avColor}">
+            ${avUrl ? '<img src="' + avUrl + '" alt="">' : uname[0].toUpperCase()}
+          </div>
+          ${item.type === 'deco' ? '<img class="shop-detail-deco" src="' + item.img + '" alt="">' : ''}
+        </div>
+        <div class="shop-detail-uname">${escapeHtml(uname)}</div>
+      </div>
+    </div>
+    <div class="shop-detail-info">
+      <div class="shop-detail-large-preview">
+        <div class="shop-detail-av-wrap big">
+          <div class="shop-detail-av" style="background:${avUrl ? 'transparent' : avColor}">
+            ${avUrl ? '<img src="' + avUrl + '" alt="">' : uname[0].toUpperCase()}
+          </div>
+          ${item.type === 'deco' ? '<img class="shop-detail-deco" src="' + item.img + '" alt="">' : ''}
+          ${item.type === 'effect' ? '<img class="shop-detail-effect" src="' + item.img + '" alt="">' : ''}
+        </div>
+      </div>
+      <h3 class="shop-detail-title">${escapeHtml(item.name)}</h3>
+      <p class="shop-detail-desc">${item.type === 'deco' ? 'Donne un nouveau look à ton avatar.' : item.type === 'effect' ? 'Anime ton profil avec un effet.' : (item.desc || 'Avantages Nitro')}</p>
+      <div class="shop-detail-price">${isOwned ? 'Possédé' : (currentUser && currentUser.isOwner ? 'Gratuit (Owner)' : (item.price === 0 ? 'Gratuit' : item.price + ' €'))}</div>
+      <button type="button" class="shop-detail-buy" id="shop-detail-buy-btn">
+        ${isOwned ? 'Possédé ✓' : (currentUser && currentUser.isOwner ? 'Obtenir gratuitement' : (item.price === 0 ? 'Obtenir' : 'Acheter pour ' + item.price + ' €'))}
+      </button>
+    </div>
+  `;
+  const buyBtn = document.getElementById('shop-detail-buy-btn');
+  if (buyBtn && !isOwned) {
+    buyBtn.onclick = () => {
+      if (currentUser && currentUser.isOwner) {
+        if (item.type === 'deco') ownDeco(item.id);
+        else if (item.type === 'effect') ownEffect(item.id);
+        else if (item.type === 'nitro') ownNitro();
+        openShop();
+        showShopDetail(item, true);
+      } else {
+        openPaymentModal(item);
+      }
+    };
+  }
+}
+
+// ===== PAIEMENT (Carte / PayPal / LTC) =====
+// Configure tes infos de paiement ici :
+// ===== PAIEMENT STRIPE (vérification automatique) =====
+function openPaymentModal(item) {
+  let modal = document.getElementById('payment-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'payment-modal';
+    modal.className = 'picker-modal';
+    document.body.appendChild(modal);
+  }
+  const price = Number(item.price).toFixed(2).replace('.', ',') + ' €';
+  modal.classList.remove('hidden');
+  modal.innerHTML = `
+    <div class="picker-overlay" data-close-pay="1"></div>
+    <div class="picker-panel" style="max-width:420px;">
+      <div class="picker-header">
+        <div>
+          <h2>Paiement sécurisé</h2>
+          <p class="picker-sub">${escapeHtml(item.name)} — <strong>${price}</strong></p>
+        </div>
+        <button type="button" class="picker-x" data-close-pay="1">×</button>
+      </div>
+      <div class="picker-body" style="display:block;padding:16px;">
+        <p style="color:#b5bac1;font-size:14px;margin-bottom:16px;">
+          Paiement par <strong>carte bancaire</strong> via Stripe.<br>
+          L'article se débloque <strong>automatiquement</strong> après le paiement.
+        </p>
+        <button type="button" class="btn-primary" id="pay-stripe" style="width:100%;padding:14px;font-size:15px;">
+          💳 Payer ${price} avec Stripe
+        </button>
+        <p id="pay-status" style="color:#ed4245;font-size:13px;margin-top:12px;display:none;"></p>
+        <p style="color:#72767d;font-size:12px;margin-top:14px;text-align:center;">
+          Aucun bouton « j'ai payé » — impossible de bypasser.
+        </p>
+      </div>
+    </div>`;
+
+  modal.querySelectorAll('[data-close-pay]').forEach(el => {
+    el.onclick = () => modal.classList.add('hidden');
+  });
+
+  document.getElementById('pay-stripe').onclick = async () => {
+    const btn = document.getElementById('pay-stripe');
+    const status = document.getElementById('pay-status');
+    btn.disabled = true;
+    btn.textContent = 'Redirection…';
+    status.style.display = 'none';
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: item.id,
+          itemName: item.name,
+          itemType: item.type,
+          price: item.price,
+          username: currentUser?.username,
+          email: currentUser?.email
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur Stripe');
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('Pas d\\'URL de paiement');
+      }
+    } catch (e) {
+      status.style.display = 'block';
+      status.textContent = e.message || 'Erreur. Stripe n\\'est peut-être pas encore configuré.';
+      btn.disabled = false;
+      btn.textContent = '💳 Payer ' + price + ' avec Stripe';
+    }
+  };
+}
+
+// Après retour de Stripe (?paid=1&item=...) — vérifie côté serveur
+(function handleStripeReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('paid') === '1' && params.get('item')) {
+    const itemId = params.get('item');
+    const itemType = params.get('type') || 'deco';
+    try { history.replaceState({}, '', window.location.pathname); } catch (_) {}
+
+    async function tryUnlock(attempt) {
+      try {
+        const email = currentUser?.email || localStorage.getItem('zeyscord_email') || '';
+        const username = currentUser?.username || '';
+        const res = await fetch('/api/check-purchase?email=' + encodeURIComponent(email) + '&username=' + encodeURIComponent(username) + '&itemId=' + encodeURIComponent(itemId));
+        const data = await res.json();
+        if (data.paid) {
+          if (itemType === 'deco') ownDeco(itemId);
+          else if (itemType === 'effect') ownEffect(itemId);
+          else if (itemType === 'nitro') ownNitro();
+          if (typeof openShop === 'function') openShop();
+          alert('Paiement réussi ! Article débloqué.');
+          return;
+        }
+      } catch (_) {}
+      if (attempt < 8) setTimeout(() => tryUnlock(attempt + 1), 1500);
+      else alert('Paiement reçu. Si l\'article n\'apparaît pas, reconnecte-toi dans 1 minute.');
+    }
+    // Attendre que currentUser soit prêt
+    setTimeout(() => tryUnlock(0), 1000);
+  }
+})();
+
+socket.on('purchaseUnlocked', (data) => {
+  if (!data || !data.itemId) return;
+  if (data.itemType === 'deco') ownDeco(data.itemId);
+  else if (data.itemType === 'effect') ownEffect(data.itemId);
+  else if (data.itemType === 'nitro') ownNitro();
+  if (typeof openShop === 'function') openShop();
+});
+
 function closeShop() {
+ {
   document.getElementById('shop-modal').classList.add('hidden');
 }
 document.getElementById('shop-overlay')?.addEventListener('click', closeShop);
 document.getElementById('shop-close')?.addEventListener('click', closeShop);
 document.getElementById('shop-btn')?.addEventListener('click', openShop);
 
+document.querySelectorAll('.shop-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    openShop();
+  });
+});
+
+
 // Filter profile deco options in settings to only owned (+ none)
 
 function refreshEffectOptionsInSettings() {
-  const grid = document.getElementById('profile-effect-grid');
-  if (!grid) return;
   const owned = getOwnedEffects();
-  grid.innerHTML = '';
-  const none = document.createElement('div');
-  none.className = 'effect-option' + ((selectedEffect || 'none') === 'none' ? ' active' : '');
-  none.dataset.effect = 'none';
-  none.textContent = 'Aucun';
-  none.onclick = () => {
-    document.querySelectorAll('.effect-option').forEach(o => o.classList.remove('active'));
-    none.classList.add('active');
-    selectedEffect = 'none';
-  };
-  grid.appendChild(none);
-  SHOP_EFFECTS.forEach(item => {
-    if (!owned.includes(item.id)) return;
-    const opt = document.createElement('div');
-    opt.className = 'effect-option' + (selectedEffect === item.id ? ' active' : '');
-    opt.dataset.effect = item.id;
-    opt.textContent = item.name;
-    opt.onclick = () => {
-      document.querySelectorAll('.effect-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      selectedEffect = item.id;
-    };
-    grid.appendChild(opt);
+  const grids = [
+    { el: document.getElementById('profile-effect-grid'), mode: 'settings' },
+    { el: document.getElementById('edit-effect-grid'), mode: 'edit' }
+  ];
+  grids.forEach(({ el: grid, mode }) => {
+    if (!grid) return;
+    const current = mode === 'edit' ? (editSelectedEffect || 'none') : (selectedEffect || 'none');
+    grid.innerHTML = '';
+    grid.classList.add('effect-grid-owned');
+
+    function makeOpt(id, name, img) {
+      const opt = document.createElement('button');
+      opt.type = 'button';
+      opt.className = 'effect-tile' + (current === id ? ' active' : '');
+      opt.dataset.effect = id;
+      if (id === 'none') {
+        opt.innerHTML = '<div class="effect-tile-preview effect-tile-none">∅</div><span>Aucun</span>';
+      } else {
+        opt.innerHTML = '<div class="effect-tile-preview"><img src="' + img + '" alt=""></div><span>' + name + '</span>';
+      }
+      opt.onclick = () => {
+        grid.querySelectorAll('.effect-tile').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        if (mode === 'edit') {
+          editSelectedEffect = id;
+          if (typeof updateEditPreview === 'function') updateEditPreview();
+          else if (typeof refreshEditPreview === 'function') refreshEditPreview();
+        } else {
+          selectedEffect = id;
+        }
+      };
+      grid.appendChild(opt);
+    }
+
+    makeOpt('none', 'Aucun', null);
+    SHOP_EFFECTS.forEach(item => {
+      if (!owned.includes(item.id)) return;
+      makeOpt(item.id, item.name, item.img);
+    });
+    if (owned.length === 0) {
+      const hint = document.createElement('div');
+      hint.className = 'effect-owned-hint';
+      hint.textContent = 'Aucun effet possédé. Ouvre la Boutique pour en obtenir.';
+      grid.appendChild(hint);
+    }
   });
-  if (owned.length === 0) {
-    const hint = document.createElement('div');
-    hint.style.cssText = 'color:#b5bac1;font-size:13px;padding:8px 0;width:100%';
-    hint.textContent = 'Aucun effet possédé. Ouvre la Boutique pour en obtenir.';
-    grid.appendChild(hint);
-  }
 }
 
 function refreshDecoOptionsInSettings() {
-  const grid = document.getElementById('avatar-deco-grid');
-  if (!grid) return;
   const owned = getOwnedDecos();
-  grid.innerHTML = '';
-  // Always "none"
-  const none = document.createElement('div');
-  none.className = 'deco-option' + ((selectedDeco || 'none') === 'none' ? ' active' : '');
-  none.dataset.deco = 'none';
-  none.title = 'Aucune';
-  none.innerHTML = '<div class="deco-preview none"></div>';
-  none.onclick = () => {
-    document.querySelectorAll('.deco-option').forEach(o => o.classList.remove('active'));
-    none.classList.add('active');
-    selectedDeco = 'none';
-  };
-  grid.appendChild(none);
+  const grids = [
+    { el: document.getElementById('avatar-deco-grid'), mode: 'settings' },
+    { el: document.getElementById('edit-deco-grid'), mode: 'edit' }
+  ];
+  grids.forEach(({ el: grid, mode }) => {
+    if (!grid) return;
+    const current = mode === 'edit' ? (editSelectedDeco || 'none') : (selectedDeco || 'none');
+    grid.innerHTML = '';
+    grid.classList.add('deco-grid-owned');
 
-  SHOP_ITEMS.forEach(item => {
-    if (!owned.includes(item.id)) return;
-    const opt = document.createElement('div');
-    opt.className = 'deco-option' + (selectedDeco === item.id ? ' active' : '');
-    opt.dataset.deco = item.id;
-    opt.title = item.name;
-    opt.innerHTML = `<img class="deco-img" src="${item.img}" alt="${item.name}">`;
-    opt.onclick = () => {
-      document.querySelectorAll('.deco-option').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      selectedDeco = item.id;
-    };
-    grid.appendChild(opt);
+    function makeOpt(id, name, img) {
+      const opt = document.createElement('button');
+      opt.type = 'button';
+      opt.className = 'deco-option' + (current === id ? ' active' : '');
+      opt.dataset.deco = id;
+      opt.title = name;
+      if (id === 'none') {
+        opt.innerHTML = '<div class="deco-preview none"></div>';
+      } else {
+        opt.innerHTML = '<img class="deco-img" src="' + img + '" alt="">';
+      }
+      opt.onclick = () => {
+        grid.querySelectorAll('.deco-option').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        if (mode === 'edit') {
+          editSelectedDeco = id;
+          if (typeof updateEditPreview === 'function') updateEditPreview();
+        } else {
+          selectedDeco = id;
+        }
+      };
+      grid.appendChild(opt);
+    }
+
+    makeOpt('none', 'Aucune', null);
+    (typeof SHOP_DECOS !== 'undefined' ? SHOP_DECOS : []).forEach(item => {
+      if (!owned.includes(item.id)) return;
+      makeOpt(item.id, item.name, item.img);
+    });
+    if (owned.length === 0) {
+      const hint = document.createElement('div');
+      hint.style.cssText = 'grid-column:1/-1;color:#b5bac1;font-size:13px;padding:8px 0';
+      hint.textContent = 'Aucune déco possédée. Ouvre la Boutique pour en obtenir.';
+      grid.appendChild(hint);
+    }
   });
-
-  if (owned.length === 0) {
-    const hint = document.createElement('div');
-    hint.style.cssText = 'grid-column:1/-1;color:#b5bac1;font-size:13px;padding:8px 0';
-    hint.textContent = 'Aucune déco possédée. Ouvre la Boutique (icône panier) pour en obtenir gratuitement.';
-    grid.appendChild(hint);
-  }
 }
 
 // Hook openSettings to refresh deco list
@@ -1482,6 +3030,20 @@ function fillServerSettings() {
   if (!guild) return;
   document.getElementById('ss-name').value = guild.name || '';
   document.getElementById('ss-icon').value = guild.icon || '';
+  pendingServerIcon = undefined;
+  const iconPrev = document.getElementById('ss-icon-preview');
+  if (iconPrev) {
+    if (guild.iconUrl) {
+      iconPrev.style.backgroundImage = 'url("' + guild.iconUrl + '")';
+      iconPrev.style.backgroundSize = 'cover';
+      iconPrev.style.backgroundPosition = 'center';
+      iconPrev.innerHTML = '';
+    } else {
+      iconPrev.style.backgroundImage = '';
+      iconPrev.style.background = '#5865f2';
+      iconPrev.innerHTML = (guild.icon || guild.name || 'S').toString().substring(0, 2).toUpperCase();
+    }
+  }
   // categories select
   const sel = document.getElementById('ss-ch-cat');
   sel.innerHTML = '<option value="">Sans catégorie</option>';
@@ -1568,12 +3130,54 @@ document.querySelectorAll('[data-stab]').forEach(item => {
   });
 });
 
+let pendingServerIcon = undefined;
+
+document.getElementById('ss-icon-upload')?.addEventListener('click', () => {
+  document.getElementById('ss-icon-file')?.click();
+});
+document.getElementById('ss-icon-file')?.addEventListener('change', () => {
+  const input = document.getElementById('ss-icon-file');
+  const f = input && input.files && input.files[0];
+  if (!f) return;
+  if (f.size > 5 * 1024 * 1024) {
+    alert('Image trop lourde (max 5 Mo)');
+    input.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    pendingServerIcon = reader.result;
+    const prev = document.getElementById('ss-icon-preview');
+    if (prev) {
+      prev.style.backgroundImage = 'url("' + reader.result + '")';
+      prev.style.backgroundSize = 'cover';
+      prev.style.backgroundPosition = 'center';
+      prev.innerHTML = '';
+    }
+  };
+  reader.readAsDataURL(f);
+  input.value = '';
+});
+document.getElementById('ss-icon-clear')?.addEventListener('click', () => {
+  pendingServerIcon = null;
+  const prev = document.getElementById('ss-icon-preview');
+  const letters = ((document.getElementById('ss-icon') && document.getElementById('ss-icon').value) || 'S').substring(0, 2).toUpperCase();
+  if (prev) {
+    prev.style.backgroundImage = '';
+    prev.style.background = '#5865f2';
+    prev.innerHTML = letters;
+  }
+});
+
 document.getElementById('ss-save-overview')?.addEventListener('click', () => {
-  socket.emit('updateGuild', {
+  const payload = {
     guildId: currentGuild,
     name: document.getElementById('ss-name').value.trim(),
     icon: document.getElementById('ss-icon').value.trim()
-  });
+  };
+  if (pendingServerIcon !== undefined) payload.iconUrl = pendingServerIcon;
+  socket.emit('updateGuild', payload);
+  pendingServerIcon = undefined;
   alert('Serveur mis à jour');
 });
 
@@ -1622,6 +3226,48 @@ function boostCurrentServer() {
   if (!confirm('Booster ce serveur ? (nécessite Nitro, max 2 boosts par compte)\nTu recevras le badge Boost 1 mois.')) return;
   socket.emit('boostServer', { guildId: currentGuild });
 }
+
+function openServerBoostMenu(anchor) {
+  let menu = document.getElementById('server-boost-menu');
+  if (menu) menu.remove();
+  menu = document.createElement('div');
+  menu.id = 'server-boost-menu';
+  menu.className = 'server-context-menu';
+  const nitro = hasNitroForBoost();
+  menu.innerHTML = `
+    <button type="button" class="scm-item scm-boost" id="scm-boost-btn">
+      <span class="scm-icon">💎</span>
+      <span>Boost de serveur</span>
+      ${nitro ? '' : '<span class="scm-lock">Nitro requis</span>'}
+    </button>
+    <button type="button" class="scm-item" id="scm-invite-btn">
+      <span class="scm-icon">👥</span>
+      <span>Inviter sur le serveur</span>
+    </button>
+  `;
+  document.body.appendChild(menu);
+  const rect = (anchor || document.getElementById('boost-server-btn')).getBoundingClientRect();
+  menu.style.left = Math.min(rect.left, window.innerWidth - 260) + 'px';
+  menu.style.top = (rect.bottom + 6) + 'px';
+  document.getElementById('scm-boost-btn').onclick = () => {
+    menu.remove();
+    boostCurrentServer();
+  };
+  document.getElementById('scm-invite-btn').onclick = () => {
+    menu.remove();
+    const link = location.origin + '/?invite=' + (currentGuild || 'zeyscord');
+    navigator.clipboard?.writeText(link);
+    alert('Lien d\'invitation copié !\n' + link);
+  };
+  const close = (ev) => {
+    if (!menu.contains(ev.target) && ev.target !== anchor) {
+      menu.remove();
+      document.removeEventListener('click', close);
+    }
+  };
+  setTimeout(() => document.addEventListener('click', close), 0);
+}
+
 socket.on('boostSuccess', (data) => {
   alert('Serveur boosté ! Badge obtenu.\nBoosts restants : ' + data.boostsLeft + '/2\nBoosts du serveur : ' + data.guildBoosts);
   updateBoostUI(data.guildBoosts);
@@ -1641,7 +3287,7 @@ function updateBoostUI(count) {
   }
 }
 
-document.getElementById('boost-server-btn')?.addEventListener('click', (e) => { e.stopPropagation(); boostCurrentServer(); });
+document.getElementById('boost-server-btn')?.addEventListener('click', (e) => { e.stopPropagation(); openServerBoostMenu(e.currentTarget); });
 
 
 // ===== HOME TABS: Amis / Ton Nitro / Boutique =====
@@ -1684,40 +3330,220 @@ function updateNitroCard() {
   if (bar) bar.style.width = (tier.progress || 0) + '%';
 }
 
+let friendsTab = 'online';
+
 function setHomeTab(tab) {
   document.querySelectorAll('.home-nav-item').forEach(el => el.classList.remove('active'));
   const nitroPanel = document.getElementById('nitro-panel');
-  const friendsPanel = document.getElementById('home-friends-panel');
+  const homeFriendsPanel = document.getElementById('home-friends-panel');
+  const friendsPanel = document.getElementById('friends-panel');
   const messagesContainer = document.getElementById('messages-container');
   const messageForm = document.getElementById('message-form');
+  const chatHeader = document.querySelector('.chat-header');
 
   if (tab === 'friends') {
     document.getElementById('nav-friends')?.classList.add('active');
     nitroPanel?.classList.add('hidden');
-    if (friendsPanel) friendsPanel.style.display = '';
-    messagesContainer?.classList.remove('hidden');
-    messageForm?.classList.remove('hidden');
+    if (homeFriendsPanel) homeFriendsPanel.style.display = '';
+    friendsPanel?.classList.remove('hidden');
+    messagesContainer?.classList.add('hidden');
+    messageForm?.classList.add('hidden');
+    if (chatHeader) chatHeader.style.display = 'none';
+    renderFriendsMain();
   } else if (tab === 'nitro') {
     document.getElementById('nav-nitro')?.classList.add('active');
     updateNitroCard();
     nitroPanel?.classList.remove('hidden');
-    if (friendsPanel) friendsPanel.style.display = 'none';
+    friendsPanel?.classList.add('hidden');
+    if (homeFriendsPanel) homeFriendsPanel.style.display = 'none';
+    messagesContainer?.classList.add('hidden');
+    messageForm?.classList.add('hidden');
+    if (chatHeader) chatHeader.style.display = 'none';
   } else if (tab === 'shop') {
     document.getElementById('nav-shop')?.classList.add('active');
     nitroPanel?.classList.add('hidden');
-    if (friendsPanel) friendsPanel.style.display = '';
+    friendsPanel?.classList.add('hidden');
+    if (homeFriendsPanel) homeFriendsPanel.style.display = '';
     openShop();
   }
 }
 
-document.getElementById('nav-friends')?.addEventListener('click', () => setHomeTab('friends'));
-document.getElementById('nav-nitro')?.addEventListener('click', () => {
-  switchView('home');
-  setHomeTab('nitro');
+function renderFriendsMain() {
+  const list = document.getElementById('friends-main-list');
+  const addPanel = document.getElementById('friends-add-panel');
+  const search = (document.getElementById('friends-search')?.value || '').toLowerCase().trim();
+  const badge = document.getElementById('friends-pending-badge');
+  if (badge) {
+    if (friendRequests.length) {
+      badge.textContent = friendRequests.length;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+  if (!list) return;
+
+  if (friendsTab === 'add') {
+    list.innerHTML = '';
+    addPanel?.classList.remove('hidden');
+    return;
+  }
+  addPanel?.classList.add('hidden');
+
+  let items = [];
+  if (friendsTab === 'online') {
+    items = friends.filter(f => (f.presenceStatus || 'online') !== 'invisible');
+    // also include onlineUsers who are friends
+    const onlineIds = new Set(onlineUsers.map(u => u.id));
+    items = items.filter(f => onlineIds.has(f.id) || true);
+    // merge live presence from onlineUsers
+    items = items.map(f => {
+      const live = onlineUsers.find(u => u.id === f.id);
+      return live ? { ...f, ...live } : f;
+    }).filter(f => (f.presenceStatus || 'online') !== 'invisible');
+  } else if (friendsTab === 'all') {
+    items = friends.map(f => {
+      const live = onlineUsers.find(u => u.id === f.id);
+      return live ? { ...f, ...live } : f;
+    });
+  } else if (friendsTab === 'pending') {
+    list.innerHTML = '';
+    if (!friendRequests.length) {
+      list.innerHTML = '<div class="friends-empty">Aucune demande en attente</div>';
+      return;
+    }
+    const label = document.createElement('div');
+    label.className = 'friends-section-label';
+    label.textContent = 'Demandes en attente — ' + friendRequests.length;
+    list.appendChild(label);
+    friendRequests.forEach(r => {
+      const el = document.createElement('div');
+      el.className = 'friends-main-row';
+      el.innerHTML = `
+        <div class="friend-row-av">
+          <div class="friend-av-fallback" style="background:#5865f2">${(r.fromUsername||'?')[0].toUpperCase()}</div>
+        </div>
+        <div class="friend-row-info">
+          <div class="friend-row-name">${escapeHtml(r.fromUsername)}</div>
+          <div class="friend-row-status">Demande d'ami</div>
+        </div>
+        <div class="friend-row-actions" style="opacity:1">
+          <button type="button" data-accept="${r.fromId}" title="Accepter" style="background:#23a559;color:#fff">✓</button>
+          <button type="button" data-decline="${r.fromId}" title="Refuser" style="background:#f23f43;color:#fff">✕</button>
+        </div>`;
+      el.querySelector('[data-accept]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        socket.emit('acceptFriendRequest', r.fromId);
+      });
+      el.querySelector('[data-decline]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        socket.emit('declineFriendRequest', r.fromId);
+        friendRequests = friendRequests.filter(x => x.fromId !== r.fromId);
+        renderFriendsMain();
+        renderFriends();
+      });
+      list.appendChild(el);
+    });
+    return;
+  }
+
+  if (search) {
+    items = items.filter(f => (f.username || '').toLowerCase().includes(search));
+  }
+
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = '<div class="friends-empty">' +
+      (friendsTab === 'online' ? 'Personne n\'est en ligne pour le moment.' : 'Aucun ami pour le moment.') +
+      '</div>';
+    return;
+  }
+
+  const label = document.createElement('div');
+  label.className = 'friends-section-label';
+  label.textContent = (friendsTab === 'online' ? 'En ligne' : 'Tous les amis') + ' — ' + items.length;
+  list.appendChild(label);
+
+  items.forEach(f => {
+    const st = f.presenceStatus || 'online';
+    const stLabel = (STATUS_LABELS && STATUS_LABELS[st]) || 'En ligne';
+    const custom = f.customStatus || stLabel;
+    const el = document.createElement('div');
+    el.className = 'friends-main-row';
+    const av = f.avatarUrl
+      ? `<img src="${esc(f.avatarUrl)}" alt="">`
+      : `<div class="friend-av-fallback" style="background:${f.avatarColor||'#5865f2'}">${(f.username||'?')[0].toUpperCase()}</div>`;
+    el.innerHTML = `
+      <div class="friend-row-av">
+        ${av}
+        <div class="status-dot status-${st}"></div>
+      </div>
+      <div class="friend-row-info">
+        <div class="friend-row-name">${escapeHtml(f.username)}</div>
+        <div class="friend-row-status">${escapeHtml(custom)}</div>
+      </div>
+      <div class="friend-row-actions">
+        <button type="button" class="friend-msg-btn" title="Message">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        </button>
+      </div>`;
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.friend-msg-btn')) return;
+      openProfile(f.id);
+    });
+    el.querySelector('.friend-msg-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openDM(f.id);
+      // show chat
+      document.getElementById('friends-panel')?.classList.add('hidden');
+      document.getElementById('messages-container')?.classList.remove('hidden');
+      document.getElementById('message-form')?.classList.remove('hidden');
+      const ch = document.querySelector('.chat-header');
+      if (ch) ch.style.display = '';
+    });
+    list.appendChild(el);
+  });
+}
+
+// Friends tabs
+document.querySelectorAll('.friends-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.friends-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    friendsTab = tab.dataset.ftab || 'online';
+    renderFriendsMain();
+  });
 });
+document.getElementById('friends-search')?.addEventListener('input', () => renderFriendsMain());
+document.getElementById('friends-add-btn')?.addEventListener('click', () => {
+  const input = document.getElementById('friends-add-input');
+  const name = input?.value.trim();
+  if (name) {
+    socket.emit('sendFriendRequest', name);
+    if (input) input.value = '';
+  }
+});
+
+
+
+// Pencil buttons in profile editor preview
+document.getElementById('edit-avatar-pencil')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('edit-avatar-file')?.click();
+});
+document.getElementById('edit-banner-pencil')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('edit-banner-file')?.click();
+});
+
+document.getElementById('nav-friends')?.addEventListener('click', () => setHomeTab('friends'));
 document.getElementById('nav-shop')?.addEventListener('click', () => {
   switchView('home');
   setHomeTab('shop');
+});
+document.getElementById('nav-nitro')?.addEventListener('click', () => {
+  switchView('home');
+  setHomeTab('nitro');
 });
 document.getElementById('nitro-open-shop')?.addEventListener('click', openShop);
 
@@ -1750,7 +3576,9 @@ document.getElementById('profile-created-save')?.addEventListener('click', () =>
     // wait for socket connect
     const tryJoin = () => {
       if (socket.connected) {
-        socket.emit('join', saved);
+        const sess = JSON.parse(sessionStorage.getItem('zeyscord_session') || localStorage.getItem('zeyscord_session') || 'null');
+        if (sess && sess.username) socket.emit('join', { username: sess.username, email: sess.email || '' });
+        else socket.emit('join', { username: saved, email: localStorage.getItem('zeyscord_email') || '' });
       } else {
         socket.once('connect', () => socket.emit('join', saved));
       }
@@ -1758,3 +3586,98 @@ document.getElementById('profile-created-save')?.addEventListener('click', () =>
     tryJoin();
   }
 })();
+
+
+// ===== GÉRER LES COMPTES (Discord style) =====
+function openAccountsManager() {
+  const modal = document.getElementById('accounts-modal');
+  if (!modal) return;
+  renderAccountsManager();
+  modal.classList.remove('hidden');
+}
+function closeAccountsManager() {
+  document.getElementById('accounts-modal')?.classList.add('hidden');
+  document.querySelectorAll('.acc-more-menu').forEach(m => m.remove());
+}
+function renderAccountsManager() {
+  const list = document.getElementById('accounts-list');
+  if (!list) return;
+  list.innerHTML = '';
+  const accounts = getRecentAccounts();
+  // ensure current user is in list
+  if (currentUser && !accounts.some(a => a.username.toLowerCase() === currentUser.username.toLowerCase())) {
+    saveRecentAccount(currentUser);
+  }
+  const all = getRecentAccounts();
+  all.forEach(acc => {
+    const isCurrent = currentUser && acc.username.toLowerCase() === currentUser.username.toLowerCase();
+    const row = document.createElement('div');
+    row.className = 'acc-row' + (isCurrent ? ' active' : '');
+    const letter = (acc.username || '?')[0].toUpperCase();
+    const bg = acc.avatarUrl ? 'transparent' : (acc.avatarColor || '#5865f2');
+    row.innerHTML = `
+      <div class="acc-av" style="background:${bg}">${acc.avatarUrl ? `<img src="${acc.avatarUrl}" alt="">` : letter}</div>
+      <div class="acc-info">
+        <div class="acc-name">${escapeHtml(acc.username)}</div>
+        ${isCurrent ? '<div class="acc-active">Compte actif</div>' : ''}
+      </div>
+      ${isCurrent ? '' : '<button type="button" class="acc-switch">Changer</button>'}
+      <button type="button" class="acc-more" title="Plus">⋯</button>
+    `;
+    if (!isCurrent) {
+      row.querySelector('.acc-switch').onclick = () => {
+        closeAccountsManager();
+        switchAccount(acc.username);
+      };
+    }
+    row.querySelector('.acc-more').onclick = (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.acc-more-menu').forEach(m => m.remove());
+      const menu = document.createElement('div');
+      menu.className = 'acc-more-menu';
+      menu.innerHTML = `<button type="button" class="acc-logout-btn">Déconnexion</button>`;
+      document.body.appendChild(menu);
+      const r = e.currentTarget.getBoundingClientRect();
+      menu.style.left = (r.right - 140) + 'px';
+      menu.style.top = (r.bottom + 4) + 'px';
+      menu.querySelector('.acc-logout-btn').onclick = () => {
+        // remove from saved accounts
+        const next = getRecentAccounts().filter(a => a.username.toLowerCase() !== acc.username.toLowerCase());
+        localStorage.setItem('zeyscord_accounts', JSON.stringify(next));
+        if (isCurrent) {
+          sessionStorage.removeItem('zeyscord_autojoin');
+          localStorage.removeItem('zeyscord_username');
+          if (socket) socket.disconnect();
+          location.reload();
+        } else {
+          menu.remove();
+          renderAccountsManager();
+        }
+      };
+      const close = (ev) => {
+        if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener('click', close); }
+      };
+      setTimeout(() => document.addEventListener('click', close), 0);
+    };
+    list.appendChild(row);
+  });
+}
+document.getElementById('accounts-overlay')?.addEventListener('click', closeAccountsManager);
+document.getElementById('accounts-close')?.addEventListener('click', closeAccountsManager);
+document.getElementById('accounts-add')?.addEventListener('click', () => {
+  closeAccountsManager();
+  sessionStorage.removeItem('zeyscord_autojoin');
+  localStorage.removeItem('zeyscord_username');
+  if (socket) socket.disconnect();
+  location.reload();
+});
+
+// Fix switchAccount to set autojoin BEFORE reload
+function switchAccount(username) {
+  closeAccountMenu();
+  closeAccountsManager();
+  sessionStorage.setItem('zeyscord_autojoin', username);
+  localStorage.setItem('zeyscord_username', username);
+  if (socket) socket.disconnect();
+  location.reload();
+}

@@ -38,7 +38,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 .channel-item.active{background:var(--bg-active);color:#fff}
 .channel-item svg{width:20px;height:20px;flex-shrink:0}
 
-.user-panel{height:52px;background:#232428;padding:0 8px;display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.user-panel{height:52px;background:#232428;padding:0 8px;display:flex;align-items:center;justify-content:space-between;margin-top:auto;overflow:visible}
 .user-info{display:flex;align-items:center;gap:8px;padding:4px;border-radius:4px;cursor:pointer;flex:1;min-width:0}
 .user-info:hover{background:var(--bg-hover)}
 .user-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;flex-shrink:0}
@@ -84,13 +84,13 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 #message-input{flex:1;background:transparent;border:none;outline:none;color:var(--text-normal);font-size:16px;padding:10px 0;font-family:inherit}
 #message-input::placeholder{color:var(--text-muted)}
 
-.members-sidebar{width:240px;background:var(--bg-secondary);flex-shrink:0;display:flex;flex-direction:column;padding:24px 8px 16px;overflow-y:auto}
+.members-sidebar{width:240px;background:var(--bg-secondary);flex-shrink:0;display:flex;flex-direction:column;padding:24px 8px 16px;overflow-y:auto;overflow-x:visible}
 .members-header{padding:0 8px;margin-bottom:8px;color:var(--text-muted);font-size:12px;font-weight:600;text-transform:uppercase}
 .members-list{display:flex;flex-direction:column;gap:1px}
 .member-item{display:flex;align-items:center;gap:12px;padding:6px 8px;border-radius:4px;cursor:pointer}
 .member-item:hover{background:var(--bg-hover)}
 .member-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:#fff;position:relative}
-.member-avatar::after{content:'';position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;background:var(--green);border:3px solid var(--bg-secondary);border-radius:50%}
+.member-avatar::after{display:none!important;content:none!important}
 .member-name{font-size:14px;font-weight:500;color:var(--header2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .member-item:hover .member-name{color:var(--header)}
 
@@ -1034,16 +1034,6 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 }
 
 /* Real Discord decoration overlays */
-.avatar-deco-overlay {
-  position: absolute;
-  inset: -30%;
-  width: 160%;
-  height: 160%;
-  max-width: none;
-  pointer-events: none;
-  z-index: 5;
-  object-fit: contain;
-}
 .user-avatar.has-deco,
 .member-avatar.has-deco,
 .message-avatar.has-deco,
@@ -1102,41 +1092,16 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   position: relative !important;
   overflow: visible !important;
 }
-.message-avatar .avatar-deco-overlay {
-  inset: -35%;
-  width: 170%;
-  height: 170%;
-}
-.member-avatar .avatar-deco-overlay {
-  inset: -35%;
-  width: 170%;
-  height: 170%;
-}
-.user-avatar .avatar-deco-overlay {
-  inset: -40%;
-  width: 180%;
-  height: 180%;
-}
-
+/* fixed */
+/* fixed */
+/* fixed */
 /* Profile popup avatar - larger decoration */
 .profile-avatar {
   position: relative !important;
   overflow: visible !important;
   z-index: 5;
 }
-.profile-avatar .avatar-deco-overlay {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 140px;
-  height: 140px;
-  max-width: none;
-  inset: auto;
-  z-index: 6;
-  pointer-events: none;
-  object-fit: contain;
-}
+/* fixed */
 .profile-avatar-wrapper {
   overflow: visible !important;
   z-index: 5;
@@ -1209,18 +1174,7 @@ img.profile-effect-overlay {
 #profile-avatar.has-deco {
   overflow: visible !important;
 }
-#profile-avatar .avatar-deco-overlay {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 150px !important;
-  height: 150px !important;
-  max-width: none !important;
-  z-index: 20 !important;
-  pointer-events: none !important;
-  object-fit: contain !important;
-}
+/* fixed */
 .profile-avatar-wrapper {
   overflow: visible !important;
   position: relative !important;
@@ -1262,21 +1216,9 @@ img.profile-effect-overlay {
   position: relative !important;
   overflow: visible !important;
   z-index: 31 !important;
-  border: 6px solid #111214 !important;
-}
-#profile-avatar .avatar-deco-overlay,
-.profile-avatar .avatar-deco-overlay {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 128px !important;
-  height: 128px !important;
-  max-width: unset !important;
-  max-height: unset !important;
-  z-index: 32 !important;
-  pointer-events: none !important;
-  object-fit: contain !important;
+  border-width: 6px !important;
+  border-style: solid !important;
+  /* border-color set by JS to match theme */
 }
 .profile-content {
   position: relative;
@@ -1298,17 +1240,7 @@ img.profile-effect-overlay {
   overflow: visible !important;
   z-index: 40 !important;
 }
-.profile-avatar-wrapper > .avatar-deco-overlay {
-  position: absolute !important;
-  left: 40px !important; /* center of 80px avatar */
-  top: 40px !important;
-  transform: translate(-50%, -50%) !important;
-  width: 120px !important;
-  height: 120px !important;
-  z-index: 5 !important;
-  pointer-events: none !important;
-  object-fit: contain !important;
-}
+/* fixed */
 .profile-avatar-wrapper > .profile-avatar {
   position: relative !important;
   z-index: 6 !important;
@@ -1647,18 +1579,7 @@ img.profile-effect-overlay {
   object-fit: cover;
   display: block;
 }
-.message-avatar .avatar-deco-overlay {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 60px !important;
-  height: 60px !important;
-  max-width: none !important;
-  z-index: 2 !important;
-  pointer-events: none !important;
-  object-fit: contain !important;
-}
+/* fixed */
 .message-body {
   flex: 1;
   min-width: 0;
@@ -2081,4 +2002,5501 @@ img.profile-effect-overlay {
   object-fit: cover !important;
   border-radius: 50% !important;
   display: block !important;
+}
+
+/* ===== PROFILE EDITOR (Discord-style) ===== */
+.pe-modal {
+  align-items: stretch;
+  justify-content: center;
+  padding: 24px;
+}
+.pe-panel {
+  position: relative;
+  z-index: 1;
+  width: min(980px, 96vw);
+  max-height: 92vh;
+  background: #313338;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+.pe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  background: #2b2d31;
+}
+.pe-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f2f3f5;
+}
+.pe-close {
+  background: none;
+  border: none;
+  color: #b5bac1;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.pe-close:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.pe-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.pe-sidebar {
+  width: 340px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 16px 18px 24px;
+  background: #2b2d31;
+  border-right: 1px solid rgba(0,0,0,0.25);
+}
+.pe-section {
+  margin-bottom: 22px;
+}
+.pe-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #b5bac1;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+.pe-sidebar input[type="text"],
+.pe-sidebar textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1e1f22;
+  border: none;
+  border-radius: 4px;
+  color: #dbdee1;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  resize: vertical;
+}
+.pe-theme-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.pe-color-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.pe-color-swatch input[type="color"] {
+  width: 64px;
+  height: 64px;
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+}
+.pe-color-swatch span {
+  font-size: 11px;
+  color: #b5bac1;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.pe-footer {
+  position: sticky;
+  bottom: 0;
+  padding-top: 12px;
+  background: linear-gradient(transparent, #2b2d31 30%);
+}
+.pe-save {
+  width: 100%;
+  padding: 12px;
+  background: #5865f2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.pe-save:hover { background: #4752c4; }
+
+.pe-preview-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 24px;
+  background: #1e1f22;
+  overflow-y: auto;
+  min-width: 0;
+}
+.pe-preview-label {
+  align-self: flex-start;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #b5bac1;
+  margin-bottom: 14px;
+}
+.pe-preview-card {
+  width: 340px;
+  max-width: 100%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+}
+.pe-preview-hint {
+  margin-top: 16px;
+  font-size: 12px;
+  color: #949ba4;
+  text-align: center;
+  max-width: 320px;
+  line-height: 1.4;
+}
+
+@media (max-width: 800px) {
+  .pe-body { flex-direction: column; }
+  .pe-sidebar {
+    width: 100%;
+    max-height: 50vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+  }
+  .pe-preview-wrap { padding: 16px; }
+}
+
+/* ===== Cleaner profile card + editor polish ===== */
+.profile-card {
+  /* background set by JS for theme colors — do not force black */
+  border-radius: 12px;
+  overflow: hidden;
+}
+.profile-banner {
+  height: 120px;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  flex-shrink: 0;
+}
+.profile-avatar {
+  border: 6px solid #111214;
+  box-shadow: none;
+}
+.profile-content {
+  padding: 12px 16px 16px;
+}
+.profile-name-row h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+.profile-handle {
+  color: #b5bac1;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.profile-status {
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+  color: #dbdee1;
+  font-size: 14px;
+}
+.profile-section {
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.profile-section h3 {
+  font-size: 11px;
+  font-weight: 700;
+  color: #b5bac1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 6px;
+}
+.profile-section p {
+  color: #dbdee1;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Editor polish */
+.pe-panel {
+  background: #1e1f22;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.pe-header {
+  background: #1e1f22;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.pe-sidebar {
+  background: #2b2d31;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.pe-section-title {
+  letter-spacing: 0.04em;
+}
+.pe-color-swatch input[type="color"] {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+.pe-color-swatch input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.pe-color-swatch input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+.pe-preview-wrap {
+  background: #111214;
+}
+.pe-preview-card {
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+}
+.pe-preview-hint {
+  opacity: 0.7;
+}
+.upload-preview.banner-preview {
+  width: 180px;
+  height: 64px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.effect-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.effect-option {
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: #1e1f22;
+  border: 1px solid transparent;
+  color: #dbdee1;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.effect-option:hover { background: #35373c; }
+.effect-option.active {
+  border-color: #5865f2;
+  background: rgba(88,101,242,0.15);
+  color: #fff;
+}
+.deco-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.deco-option {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  background: #1e1f22;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color .15s;
+}
+.deco-option:hover { border-color: rgba(255,255,255,0.2); }
+.deco-option.active { border-color: #5865f2; }
+.deco-option .deco-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.deco-preview.none {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4e5058;
+}
+
+/* ===== Discord-clean profile (no black gap) ===== */
+.profile-card {
+  background: #232428;
+  border-radius: 12px !important;
+  overflow: hidden;
+  width: 340px;
+}
+.profile-banner {
+  height: 120px;
+  width: 100%;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  position: relative;
+  z-index: 1;
+}
+.profile-avatar-wrapper {
+  position: relative;
+  margin-top: -44px;
+  margin-left: 16px;
+  margin-bottom: 0;
+  width: 92px;
+  height: 92px;
+  z-index: 5;
+  /* pas de fond = le dégradé de la carte se voit, plus de bande noire */
+  background: transparent !important;
+}
+.profile-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  border-width: 6px !important;
+  border-style: solid !important;
+  border-color: #232428;
+  box-sizing: content-box;
+  position: relative !important;
+  z-index: 5;
+  overflow: visible !important;
+}
+.profile-content {
+  padding: 8px 16px 16px !important;
+  margin-top: -8px;
+  background: transparent !important;
+  position: relative;
+  z-index: 2;
+}
+.profile-name-row {
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+.profile-name-row h2 {
+  color: #fff !important;
+  font-size: 20px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+}
+.profile-handle {
+  color: rgba(255,255,255,0.75) !important;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.profile-badges {
+  margin-bottom: 10px;
+  gap: 4px;
+}
+.profile-status {
+  background: rgba(0,0,0,0.4) !important;
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  color: #dbdee1 !important;
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.profile-section {
+  background: rgba(0,0,0,0.4) !important;
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.profile-section h3 {
+  color: rgba(255,255,255,0.7) !important;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+.profile-section p {
+  color: #fff !important;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.profile-actions {
+  margin-top: 4px;
+}
+.profile-actions button {
+  background: rgba(0,0,0,0.35) !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff !important;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 500;
+}
+.profile-actions button:hover {
+  background: rgba(0,0,0,0.5) !important;
+}
+
+/* Status dot on profile */
+.profile-status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  background: #23a559;
+  border: 3px solid #232428;
+  border-radius: 50%;
+  z-index: 6;
+}
+
+/* Preview card same rules */
+.pe-preview-card .profile-avatar-wrapper {
+  background: transparent !important;
+}
+.pe-preview-card .profile-content {
+  background: transparent !important;
+}
+
+
+/* ===== FINAL: theme colors + centered decos ===== */
+.profile-card {
+  /* allow inline gradient from JS */
+  background-color: #232428;
+}
+
+.profile-avatar.has-deco,
+#profile-avatar.has-deco,
+#edit-preview-avatar.has-deco {
+  overflow: visible !important;
+  position: relative !important;
+}
+.profile-avatar-wrapper {
+  overflow: visible !important;
+}
+/* avatar photo stays circular */
+.profile-avatar > img:not(.avatar-deco-overlay),
+#profile-avatar > img:not(.avatar-deco-overlay),
+#edit-preview-avatar > img:not(.avatar-deco-overlay) {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ===== STRUCTURE FIX: banner / avatar / body séparés ===== */
+.profile-card,
+.pe-preview-card {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #1e1f22 !important;
+  overflow: visible !important;
+  border-radius: 12px !important;
+  width: 340px;
+}
+.profile-banner,
+#edit-preview-banner,
+#profile-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+  width: 100% !important;
+  flex-shrink: 0 !important;
+  border-radius: 12px 12px 0 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+}
+.profile-avatar-wrapper {
+  position: relative !important;
+  margin-top: -40px !important;
+  margin-left: 16px !important;
+  margin-bottom: 0 !important;
+  width: 92px !important;
+  height: 92px !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+  z-index: 10 !important;
+  background: transparent !important;
+}
+.profile-avatar,
+#profile-avatar,
+#edit-preview-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border-radius: 50% !important;
+  border-width: 6px !important;
+  border-style: solid !important;
+  border-color: #1e1f22;
+  box-sizing: content-box !important;
+  position: relative !important;
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  z-index: 11 !important;
+  background-clip: padding-box !important;
+}
+/* Photo avatar reste ronde, déco par-dessus */
+.profile-avatar > img:not(.avatar-deco-overlay),
+#profile-avatar > img:not(.avatar-deco-overlay),
+#edit-preview-avatar > img:not(.avatar-deco-overlay) {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+}
+/* Déco centrée sur le cercle avatar */
+
+
+
+.profile-content,
+#edit-preview-content {
+  flex: 1 1 auto !important;
+  padding: 12px 16px 16px !important;
+  margin-top: -12px !important;
+  border-radius: 0 0 12px 12px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: visible !important;
+}
+/* preview zone */
+.pe-preview-wrap {
+  overflow: visible !important;
+}
+.pe-preview-card {
+  overflow: visible !important;
+}
+
+/* ===== NO BLACK BAND + DECO FIX (final) ===== */
+.profile-card,
+.pe-preview-card {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: visible !important;
+  border-radius: 12px !important;
+  position: relative !important;
+}
+.profile-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  flex-shrink: 0 !important;
+  border-radius: 12px 12px 0 0 !important;
+  z-index: 1 !important;
+}
+/* Avatar chevauche bannière, zone derrière = couleur thème (JS) */
+.profile-avatar-wrapper {
+  position: relative !important;
+  margin-top: -40px !important;
+  margin-left: 16px !important;
+  margin-bottom: 0 !important;
+  width: 92px !important;
+  height: 0 !important; /* ne prend pas de place verticale = pas de bande */
+  overflow: visible !important;
+  z-index: 20 !important;
+  background: transparent !important;
+}
+.profile-avatar,
+#profile-avatar,
+#edit-preview-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  border: 6px solid currentColor !important;
+  box-sizing: content-box !important;
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 21 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.profile-content,
+#edit-preview-content {
+  margin-top: 0 !important;
+  padding-top: 52px !important; /* place pour l'avatar qui chevauche */
+  border-radius: 0 0 12px 12px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  overflow: visible !important;
+}
+/* Déco : toujours centrée sur le cercle, jamais décalée */
+
+/* Annuler les vieux règles left:40px etc. */
+/* fixed */
+/* =========================================================
+   PROFILE LAYOUT — clean rewrite (wins over all previous)
+   ========================================================= */
+.profile-modal {
+  overflow: visible !important;
+}
+.profile-card,
+.pe-preview-card {
+  position: relative !important;
+  width: 340px !important;
+  border-radius: 12px !important;
+  overflow: visible !important;
+  display: block !important;
+  background: #232428 !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45) !important;
+  padding: 0 !important;
+}
+
+/* Banner: fixed top strip */
+.profile-card > .profile-banner,
+.pe-preview-card > .profile-banner,
+#profile-banner,
+#edit-preview-banner {
+  display: block !important;
+  height: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+  width: 100% !important;
+  border-radius: 12px 12px 0 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Avatar wrapper: absolute on the card so it doesn't create a gap */
+.profile-card > .profile-avatar-wrapper,
+.pe-preview-card > .profile-avatar-wrapper {
+  position: absolute !important;
+  top: 76px !important; /* 120 - 44 overlap */
+  left: 16px !important;
+  width: 92px !important;
+  height: 92px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+/* Avatar circle */
+.profile-card .profile-avatar,
+.pe-preview-card .profile-avatar,
+#profile-avatar,
+#edit-preview-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border-radius: 50% !important;
+  border: 6px solid #232428 !important;
+  box-sizing: content-box !important;
+  position: relative !important;
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 31 !important;
+  background-clip: padding-box !important;
+}
+
+.profile-card .profile-avatar > img:not(.avatar-deco-overlay),
+.pe-preview-card .profile-avatar > img:not(.avatar-deco-overlay),
+#profile-avatar > img:not(.avatar-deco-overlay),
+#edit-preview-avatar > img:not(.avatar-deco-overlay) {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Decoration: fixed size, perfectly centered on avatar */
+
+
+/* Hide any deco wrongly attached to wrapper */
+/* fixed */
+/* Content: padding-top clears the absolute avatar */
+.profile-card > .profile-content,
+.pe-preview-card > .profile-content,
+#edit-preview-content {
+  display: block !important;
+  position: relative !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+  padding: 52px 16px 16px 16px !important;
+  border-radius: 0 0 12px 12px !important;
+  overflow: visible !important;
+  min-height: 120px !important;
+}
+
+.profile-name-row h2 {
+  color: #fff !important;
+  margin: 0 0 2px 0 !important;
+}
+.profile-handle {
+  color: rgba(255,255,255,0.75) !important;
+  margin-bottom: 8px !important;
+}
+.profile-status,
+.profile-section {
+  background: rgba(0,0,0,0.35) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+.profile-status-dot {
+  position: absolute !important;
+  bottom: 2px !important;
+  right: 2px !important;
+  width: 16px !important;
+  height: 16px !important;
+  background: #23a559 !important;
+  border: 3px solid #232428 !important;
+  border-radius: 50% !important;
+  z-index: 33 !important;
+}
+
+/* Preview area allows deco overflow */
+.pe-preview-wrap {
+  overflow: visible !important;
+}
+.pe-body {
+  overflow: visible !important;
+}
+
+/* ===== AVATAR RING + DECO ON WRAPPER (final fix) ===== */
+.profile-card > .profile-avatar-wrapper,
+.pe-preview-card > .profile-avatar-wrapper {
+  position: absolute !important;
+  top: 76px !important;
+  left: 16px !important;
+  width: 92px !important;
+  height: 92px !important;
+  margin: 0 !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+/* Deco on wrapper: centered in the 92x92 box */
+/* fixed */
+.profile-card .profile-avatar,
+.pe-preview-card .profile-avatar {
+  z-index: 31 !important;
+  overflow: visible !important;
+}
+/* Banner always visible strip */
+.profile-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ============================================================
+   ZPC — isolated profile card (no conflicts)
+   ============================================================ */
+.zpc {
+  width: 340px;
+  border-radius: 12px;
+  overflow: visible;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  font-family: inherit;
+}
+.zpc-banner {
+  height: 120px;
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #5865f2;
+}
+.zpc-body {
+  position: relative;
+  border-radius: 0 0 12px 12px;
+  padding: 16px;
+  padding-top: 48px;
+  background: #232428;
+  min-height: 100px;
+}
+.zpc-avatar-wrap {
+  position: absolute;
+  top: -40px;
+  left: 16px;
+  width: 92px;
+  height: 92px;
+  z-index: 5;
+}
+.zpc-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 6px solid #232428;
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 600;
+  color: #fff;
+  background: #5865f2;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+.zpc-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+/* fixed */
+.zpc-online {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  background: #23a559;
+  border: 3px solid #232428;
+  border-radius: 50%;
+  z-index: 4;
+}
+.zpc-info {
+  position: relative;
+  z-index: 1;
+}
+.zpc-name {
+  margin: 0 0 2px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+.zpc-handle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 8px;
+}
+.zpc-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.zpc-status,
+.zpc-section {
+  background: rgba(0,0,0,0.35);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  color: #dbdee1;
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.zpc-section h3 {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.65);
+}
+.zpc-section p {
+  margin: 0;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.zpc-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.zpc-actions button {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+.zpc-actions button:hover {
+  background: rgba(0,0,0,0.5);
+}
+.pe-preview-wrap {
+  overflow: visible !important;
+}
+
+/* ===== Account status (Discord-style) ===== */
+.user-avatar-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.user-avatar-wrap .user-avatar {
+  width: 32px;
+  height: 32px;
+  overflow: visible !important;
+}
+.member-avatar-wrap {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: visible !important;
+}
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-secondary, #2b2d31);
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+#user-status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  z-index: 5;
+}
+.status-online { background: #23a559; }
+.status-idle { background: #f0b232; }
+.status-dnd { background: #f23f43; }
+.status-invisible { background: #80848e; }
+
+.user-status-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: #b5bac1;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+.user-status-btn:hover { color: #fff; }
+
+.user-panel {
+  position: relative;
+}
+.status-picker {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 8px;
+  width: 260px;
+  background: #111214;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  z-index: 200;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.status-picker.hidden { display: none; }
+.status-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  color: #dbdee1;
+  text-align: left;
+  font-family: inherit;
+}
+.status-option:hover { background: #2b2d31; }
+.status-option .status-dot {
+  margin-top: 3px;
+  width: 12px;
+  height: 12px;
+  border: none;
+}
+.status-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.status-option-text strong {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f2f3f5;
+}
+.status-option-text small {
+  font-size: 12px;
+  color: #949ba4;
+  line-height: 1.3;
+}
+
+/* Profile online dot colors */
+.zpc-online.status-online { background: #23a559 !important; }
+.zpc-online.status-idle { background: #f0b232 !important; }
+.zpc-online.status-dnd { background: #f23f43 !important; }
+.zpc-online.status-invisible { background: #80848e !important; }
+
+/* Member list status dots */
+.member-avatar .status-dot,
+.member-status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 3px solid var(--bg-secondary, #2b2d31);
+  z-index: 2;
+}
+
+/* Deco MUST be above avatar */
+/* fixed */
+.zpc-avatar {
+  z-index: 1 !important;
+}
+/* Status dot on profile - Discord style */
+.zpc-online {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  border: 4px solid #232428 !important;
+  z-index: 110 !important;
+  box-sizing: border-box !important;
+  background: #23a559;
+}
+.zpc-online.status-online { background: #23a559 !important; }
+.zpc-online.status-idle { background: #f0b232 !important; }
+.zpc-online.status-dnd {
+  background: #f23f43 !important;
+  /* DND looks like a circle with a bar - keep simple solid for now */
+}
+.zpc-online.status-invisible { background: #80848e !important; }
+
+/* Pencil edit overlays (Discord-style) */
+.zpc-banner {
+  position: relative;
+}
+.zpc-edit-btn {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  z-index: 20;
+  padding: 0;
+}
+.zpc-banner:hover .zpc-edit-banner,
+.zpc-avatar-wrap:hover .zpc-edit-avatar {
+  display: flex;
+}
+.zpc-edit-banner {
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+}
+.zpc-edit-avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  z-index: 120;
+}
+.zpc-edit-avatar svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Friends list Discord-style */
+.friend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 2px 4px;
+}
+.friend-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+.friend-row-av {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.friend-row-av img,
+.friend-row-av .friend-av-fallback {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.friend-row-av .friend-av-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+.friend-row-av .status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #2b2d31;
+}
+.friend-row-info {
+  flex: 1;
+  min-width: 0;
+}
+.friend-row-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f2f3f5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.friend-row-status {
+  font-size: 12px;
+  color: #949ba4;
+}
+.friend-row-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+}
+.friend-row:hover .friend-row-actions {
+  opacity: 1;
+}
+.friend-row-actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #1e1f22;
+  color: #b5bac1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.friend-row-actions button:hover {
+  color: #fff;
+  background: #35373c;
+}
+
+/* ===== Friends main panel (Discord-style) ===== */
+.friends-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #313338;
+  overflow: hidden;
+  min-height: 0;
+}
+.friends-panel.hidden { display: none !important; }
+.friends-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  min-height: 48px;
+}
+.friends-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.friends-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #f2f3f5;
+}
+.friends-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+.friends-tab {
+  background: none;
+  border: none;
+  color: #b5bac1;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.friends-tab:hover { background: rgba(255,255,255,0.04); color: #dbdee1; }
+.friends-tab.active { background: rgba(255,255,255,0.08); color: #fff; }
+.friends-tab-add {
+  background: #248046 !important;
+  color: #fff !important;
+}
+.friends-tab-add:hover { background: #1a6334 !important; }
+.friends-tab-add.active { background: #248046 !important; }
+.friends-badge {
+  background: #f23f43;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 5px;
+  border-radius: 8px;
+  min-width: 16px;
+  text-align: center;
+}
+.friends-badge.hidden { display: none; }
+.friends-search-wrap {
+  padding: 16px 20px 8px;
+}
+.friends-search {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1e1f22;
+  border: none;
+  border-radius: 8px;
+  color: #dbdee1;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+.friends-main-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px 20px;
+}
+.friends-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #949ba4;
+  padding: 16px 10px 8px;
+  letter-spacing: 0.02em;
+}
+.friends-main-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.friends-main-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+.friends-main-row .friend-row-av {
+  width: 32px;
+  height: 32px;
+}
+.friends-main-row .friend-row-av img,
+.friends-main-row .friend-av-fallback {
+  width: 32px;
+  height: 32px;
+}
+.friends-main-row .friend-row-actions {
+  opacity: 0;
+}
+.friends-main-row:hover .friend-row-actions {
+  opacity: 1;
+}
+.friends-add-panel {
+  padding: 20px 40px;
+}
+.friends-add-panel.hidden { display: none; }
+.friends-add-panel h3 {
+  color: #f2f3f5;
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+.friends-add-panel p {
+  color: #b5bac1;
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+.friends-add-row {
+  display: flex;
+  gap: 12px;
+  background: #1e1f22;
+  border-radius: 8px;
+  padding: 10px 12px;
+  align-items: center;
+}
+.friends-add-row input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #dbdee1;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+}
+.friends-add-btn {
+  background: #5865f2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.friends-add-btn:hover { background: #4752c4; }
+.friends-empty {
+  text-align: center;
+  color: #949ba4;
+  padding: 40px 20px;
+  font-size: 14px;
+}
+
+/* Server icon with image */
+.servers-sidebar .server-icon {
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  overflow: hidden;
+}
+.servers-sidebar .server-icon span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  font-size: 14px;
+}
+/* Deco on profile - final */
+/* fixed */
+.member-avatar::after { display: none !important; content: none !important; }
+.member-avatar-wrap .member-status-dot { display: block !important; z-index: 10 !important; }
+
+/* ===== DECO OVERLAYS — sizes context-aware ===== */
+/* Base styles (JS sets size/position for small avatars: user-panel + members) */
+.avatar-deco-overlay {
+  position: absolute !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 4 !important;
+  right: auto !important;
+  bottom: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+/* Small avatars (user panel + member list): keep JS-controlled size (~44px) */
+.user-avatar .avatar-deco-overlay,
+.member-avatar .avatar-deco-overlay,
+.user-avatar-wrap .avatar-deco-overlay,
+.member-avatar-wrap .avatar-deco-overlay {
+  width: 44px !important;
+  height: 44px !important;
+  max-width: 44px !important;
+  max-height: 44px !important;
+  z-index: 4 !important;
+}
+
+/* Profile / large avatars: 100px deco centered on 92px avatar */
+.zpc, .zpc-body, .pe-preview-wrap, .profile-card {
+  overflow: visible !important;
+}
+.zpc-body {
+  position: relative !important;
+}
+.zpc-avatar-wrap {
+  position: absolute !important;
+  top: -40px !important;
+  left: 16px !important;
+  width: 92px !important;
+  height: 92px !important;
+  overflow: visible !important;
+  z-index: 50 !important;
+}
+.zpc-avatar-wrap > .avatar-deco-overlay,
+.profile-avatar-wrapper > .avatar-deco-overlay,
+.zpc-body > .avatar-deco-overlay,
+.profile-card .avatar-deco-overlay {
+  width: 100px !important;
+  height: 100px !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+  left: -4px !important;
+  top: -4px !important;
+  transform: none !important;
+  z-index: 100 !important;
+}
+/* fallback when deco is placed on body (legacy path) */
+.zpc-body > img.avatar-deco-overlay {
+  left: 12px !important;
+  top: -44px !important;
+  transform: none !important;
+  width: 100px !important;
+  height: 100px !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+  z-index: 100 !important;
+}
+
+/* Ensure status dots stay above deco on small avatars */
+#user-status-dot,
+.member-status-dot,
+.user-avatar-wrap .status-dot {
+  z-index: 10 !important;
+}
+
+/* ===== Discord-style User Account Menu ===== */
+.user-custom-status {
+  font-size: 12px;
+  color: var(--text-muted, #949ba4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  display: block;
+  line-height: 1.2;
+}
+.user-custom-status:empty { display: none; }
+
+.user-account-menu {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 8px;
+  width: 320px;
+  background: #111214;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+  z-index: 300;
+  color: #dbdee1;
+  overflow: visible;
+}
+.user-account-menu.hidden { display: none; }
+
+/* Header card */
+.uam-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 16px 14px;
+  background: linear-gradient(180deg, #1e1f22 0%, #111214 100%);
+}
+.uam-avatar-wrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+.uam-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: #fff;
+  background: #5865f2;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px #111214;
+}
+.uam-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+#uam-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  border: 3px solid #111214;
+  border-radius: 50%;
+  z-index: 5;
+  box-sizing: border-box;
+}
+.uam-header-info { min-width: 0; flex: 1; }
+.uam-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.uam-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f2f3f5;
+  letter-spacing: 0.2px;
+}
+.uam-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.uam-badges .badge {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+}
+.uam-badges .badge img,
+.uam-badges .badge svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+.uam-custom-status {
+  font-size: 13px;
+  color: #b5bac1;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.uam-custom-status:empty { display: none; }
+
+.uam-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 0 12px;
+}
+
+/* Menu body */
+.uam-body {
+  padding: 8px;
+}
+
+.uam-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #dbdee1;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.1s ease;
+}
+.uam-item:hover {
+  background: #2b2d31;
+  color: #fff;
+}
+.uam-item svg:first-child {
+  flex-shrink: 0;
+  opacity: 0.85;
+  width: 18px;
+  height: 18px;
+}
+.uam-chevron {
+  margin-left: auto;
+  opacity: 0.55;
+  width: 16px;
+  height: 16px;
+}
+
+/* Status row */
+.uam-status-row {
+  position: relative;
+}
+.uam-status-btn .status-dot {
+  width: 12px;
+  height: 12px;
+  border: none;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+.uam-status-submenu {
+  position: absolute;
+  left: calc(100% + 8px);
+  bottom: 0;
+  width: 260px;
+  background: #111214;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
+  z-index: 310;
+}
+.uam-status-submenu.hidden { display: none; }
+.uam-status-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #dbdee1;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.1s ease;
+}
+.uam-status-option:hover { background: #2b2d31; }
+.uam-status-option .status-dot {
+  margin-top: 3px;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.uam-status-option span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.uam-status-option strong {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f2f3f5;
+}
+.uam-status-option small {
+  font-size: 12px;
+  color: #949ba4;
+  line-height: 1.35;
+}
+
+/* Accounts submenu */
+.uam-accounts-submenu {
+  margin: 4px 0 0;
+  background: #1e1f22;
+  border-radius: 8px;
+  padding: 4px;
+}
+.uam-accounts-submenu.hidden { display: none; }
+.uam-account-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  color: #dbdee1;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.1s ease;
+}
+.uam-account-item:hover { background: #2b2d31; }
+.uam-account-item .uam-acc-av {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.uam-account-item .uam-acc-av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.uam-account-item.active { color: #fff; }
+.uam-account-item .uam-check {
+  margin-left: auto;
+  color: #23a559;
+  font-size: 14px;
+}
+.uam-manage {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  margin-top: 4px;
+  border-radius: 0 0 6px 6px;
+  color: #f23f43 !important;
+}
+.uam-manage:hover {
+  background: rgba(242,63,67,0.12) !important;
+  color: #f23f43 !important;
+}
+
+/* status colors */
+.status-online { background: #23a559; }
+.status-idle { background: #f0b232; }
+.status-dnd { background: #f23f43; }
+.status-invisible { background: #80848e; }
+
+/* Slight polish on bottom user panel */
+.user-panel {
+  height: 52px;
+  background: #232428;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  overflow: visible;
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  transition: background 0.1s ease;
+}
+.user-info:hover { background: rgba(79,84,92,0.4); }
+.user-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f2f3f5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.user-controls {
+  display: flex;
+  gap: 2px;
+}
+.user-controls button {
+  background: none;
+  border: none;
+  color: #b5bac1;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s, color 0.1s;
+}
+.user-controls button:hover {
+  background: rgba(79,84,92,0.4);
+  color: #fff;
+}
+
+
+/* ===== Discord-like status icons ===== */
+.uam-status-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.uam-status-icon.status-online {
+  background: #23a559;
+}
+.uam-status-icon.status-idle {
+  background: #f0b232;
+}
+/* crescent moon effect for idle */
+.uam-status-icon.status-idle::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #111214;
+}
+.uam-status-icon.status-dnd {
+  background: #f23f43;
+}
+/* horizontal bar for DND */
+.uam-status-icon.status-dnd::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  background: #111214;
+}
+.uam-status-icon.status-invisible {
+  background: transparent;
+  border: 2.5px solid #80848e;
+}
+
+/* Status button in main menu */
+.uam-status-btn .uam-status-icon {
+  width: 12px;
+  height: 12px;
+}
+.uam-status-btn .uam-status-icon.status-idle::after {
+  width: 10px;
+  height: 10px;
+  top: -1px;
+  left: -2px;
+}
+.uam-status-btn .uam-status-icon.status-dnd::after {
+  width: 7px;
+  height: 2px;
+}
+
+/* Submenu refined */
+.uam-status-submenu {
+  position: absolute;
+  left: calc(100% + 8px);
+  bottom: -4px;
+  width: 280px;
+  background: #111214;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+  z-index: 320;
+}
+.uam-status-submenu.hidden { display: none !important; }
+.uam-status-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  color: #dbdee1;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.1s ease;
+}
+.uam-status-option:hover { background: #2b2d31; }
+.uam-status-option .uam-status-icon {
+  margin-top: 2px;
+}
+.uam-status-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.uam-status-text strong {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f2f3f5;
+}
+.uam-status-text small {
+  font-size: 12px;
+  color: #949ba4;
+  line-height: 1.35;
+}
+
+/* Keep status row relative for submenu positioning */
+.uam-status-row {
+  position: relative;
+}
+
+
+/* ===== STATUS DROPDOWN — force working internal expand ===== */
+.uam-status-row {
+  position: relative !important;
+}
+.uam-status-submenu {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  margin: 2px 0 4px !important;
+  padding: 4px !important;
+  background: #1e1f22 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  z-index: 10 !important;
+  display: block !important;
+}
+.uam-status-submenu.hidden {
+  display: none !important;
+}
+.uam-status-option {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  background: none !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  cursor: pointer !important;
+  color: #dbdee1 !important;
+  text-align: left !important;
+  font-family: inherit !important;
+}
+.uam-status-option:hover {
+  background: #2b2d31 !important;
+}
+.uam-status-option .uam-status-icon {
+  margin-top: 2px !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+}
+.uam-status-text {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+.uam-status-text strong {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #f2f3f5 !important;
+}
+.uam-status-text small {
+  font-size: 12px !important;
+  color: #949ba4 !important;
+  line-height: 1.35 !important;
+}
+/* Rotate chevron when open */
+.uam-status-btn.open .uam-chevron {
+  transform: rotate(90deg);
+}
+.uam-chevron {
+  transition: transform 0.15s ease;
+}
+
+
+/* ===== Profile header + badges — plus lisibles ===== */
+.user-account-menu {
+  width: 340px !important;
+}
+.uam-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+  padding: 16px 16px 14px !important;
+  background: #1e1f22 !important;
+}
+.uam-avatar-wrap {
+  width: 64px !important;
+  height: 64px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+}
+.uam-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  font-size: 24px !important;
+  box-shadow: 0 0 0 4px #111214 !important;
+}
+#uam-status-dot {
+  width: 18px !important;
+  height: 18px !important;
+  border: 4px solid #1e1f22 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+.uam-header-info {
+  min-width: 0 !important;
+  flex: 1 !important;
+  padding-top: 4px !important;
+}
+.uam-name-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+.uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #f2f3f5 !important;
+  line-height: 1.2 !important;
+}
+.uam-badges {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex-wrap: wrap !important;
+  margin-top: 2px !important;
+}
+.uam-badges .badge {
+  display: inline-flex !important;
+  width: 22px !important;
+  height: 22px !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.uam-badges .badge img,
+.uam-badges .badge svg {
+  width: 22px !important;
+  height: 22px !important;
+  display: block !important;
+}
+.uam-custom-status {
+  font-size: 14px !important;
+  color: #b5bac1 !important;
+  margin-top: 6px !important;
+  line-height: 1.3 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  max-width: none !important;
+}
+.uam-custom-status:empty {
+  display: none !important;
+}
+
+/* Bottom bar: show custom status more clearly */
+.user-custom-status {
+  font-size: 12px !important;
+  color: #949ba4 !important;
+  max-width: 140px !important;
+}
+
+/* ===== Discord Profile Popout style for account menu ===== */
+.user-account-menu {
+  position: absolute !important;
+  bottom: calc(100% + 12px) !important;
+  left: 8px !important;
+  width: 340px !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.06) !important;
+  z-index: 300 !important;
+  overflow: visible !important;
+  color: #dbdee1 !important;
+}
+.user-account-menu.hidden { display: none !important; }
+
+.uam-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  width: 100% !important;
+  border-radius: 8px 8px 0 0 !important;
+  background-color: #5865f2;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.uam-profile-body {
+  position: relative !important;
+  padding: 0 16px 16px !important;
+  background: #111214 !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+.uam-profile-body > .uam-avatar-wrap {
+  position: absolute !important;
+  top: -40px !important;
+  left: 16px !important;
+  width: 92px !important;
+  height: 92px !important;
+  z-index: 5 !important;
+}
+
+.uam-profile-body .uam-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  background: #5865f2 !important;
+}
+
+.uam-profile-body .uam-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+.uam-profile-body #uam-status-dot {
+  position: absolute !important;
+  bottom: 4px !important;
+  right: 4px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border: 4px solid #111214 !important;
+  border-radius: 50% !important;
+  z-index: 10 !important;
+  box-sizing: border-box !important;
+}
+
+.uam-user-card {
+  background: #1e1f22 !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  margin-top: 52px !important;
+  margin-bottom: 12px !important;
+}
+
+.uam-user-card .uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #f2f3f5 !important;
+  display: block !important;
+  line-height: 1.25 !important;
+}
+
+.uam-user-card .uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin-top: 6px !important;
+  align-items: center !important;
+}
+
+.uam-user-card .uam-badges .badge {
+  width: 22px !important;
+  height: 22px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.uam-user-card .uam-badges .badge img,
+.uam-user-card .uam-badges .badge svg {
+  width: 22px !important;
+  height: 22px !important;
+  display: block !important;
+}
+
+.uam-user-card .uam-custom-status {
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  margin-top: 8px !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+}
+
+.uam-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.uam-actions .uam-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  background: #1e1f22 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  cursor: pointer !important;
+  color: #dbdee1 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: inherit !important;
+  text-align: left !important;
+  margin-bottom: 4px !important;
+}
+
+.uam-actions .uam-item:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+
+.uam-actions .uam-chevron {
+  margin-left: auto !important;
+  opacity: 0.6 !important;
+}
+
+.uam-status-submenu {
+  position: static !important;
+  width: 100% !important;
+  margin: 0 0 4px !important;
+  background: #1e1f22 !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.uam-status-submenu.hidden { display: none !important; }
+
+.uam-accounts-submenu {
+  background: #1e1f22 !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+  margin-bottom: 4px !important;
+}
+.uam-accounts-submenu.hidden { display: none !important; }
+
+
+/* ===== FINAL Discord popout fix — larger + name visible + no clip ===== */
+.user-account-menu {
+  position: absolute !important;
+  bottom: calc(100% + 8px) !important;
+  left: 8px !important;
+  width: 300px !important;
+  max-height: calc(100vh - 80px) !important;
+  overflow-y: auto !important;
+  overflow-x: visible !important;
+  background: #232428 !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7) !important;
+  z-index: 9999 !important;
+}
+
+.uam-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  width: 100% !important;
+  border-radius: 8px 8px 0 0 !important;
+  background-color: #5865f2;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.uam-profile-body {
+  position: relative !important;
+  padding: 0 12px 12px !important;
+  background: #232428 !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+.uam-profile-body > .uam-avatar-wrap {
+  position: absolute !important;
+  top: -40px !important;
+  left: 12px !important;
+  width: 80px !important;
+  height: 80px !important;
+  z-index: 5 !important;
+}
+
+.uam-profile-body .uam-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
+  border: 6px solid #232428 !important;
+  box-sizing: content-box !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.uam-profile-body #uam-status-dot {
+  position: absolute !important;
+  bottom: 2px !important;
+  right: 2px !important;
+  width: 18px !important;
+  height: 18px !important;
+  border: 4px solid #232428 !important;
+  border-radius: 50% !important;
+  z-index: 10 !important;
+}
+
+.uam-user-card {
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  margin-top: 48px !important;
+  margin-bottom: 10px !important;
+  min-height: 60px !important;
+}
+
+.uam-user-card .uam-name-row {
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+.uam-user-card .uam-name,
+#uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #f2f3f5 !important;
+  display: block !important;
+  line-height: 1.3 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.uam-user-card .uam-badges,
+#uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin-top: 6px !important;
+  align-items: center !important;
+  min-height: 22px !important;
+}
+
+.uam-user-card .uam-badges .badge {
+  width: 22px !important;
+  height: 22px !important;
+  display: inline-flex !important;
+}
+
+.uam-user-card .uam-badges .badge img,
+.uam-user-card .uam-badges .badge svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.uam-user-card .uam-custom-status,
+#uam-custom-status {
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  margin-top: 6px !important;
+  display: block !important;
+}
+
+.uam-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.uam-actions .uam-item {
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  text-align: left !important;
+}
+
+.uam-actions .uam-item:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+
+/* Prevent clipping of account menu */
+.channels-sidebar,
+.user-panel,
+.sidebar,
+#app {
+  overflow: visible !important;
+}
+.channels-section {
+  overflow-y: auto !important;
+  overflow-x: visible !important;
+}
+
+/* Banner 120px + avatar overlap spacing */
+.uam-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+}
+.uam-profile-body > .uam-avatar-wrap {
+  top: -46px !important;
+  left: 16px !important;
+  width: 92px !important;
+  height: 92px !important;
+}
+.uam-profile-body .uam-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border: 6px solid #232428 !important;
+  box-sizing: content-box !important;
+}
+.uam-user-card {
+  margin-top: 48px !important;
+}
+
+
+/* ===== Pseudo + badges style Discord ===== */
+.uam-user-card {
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 12px 14px 14px !important;
+  margin-top: 48px !important;
+  margin-bottom: 10px !important;
+}
+
+.uam-user-card .uam-name-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 2px !important;
+}
+
+#uam-name,
+.uam-user-card .uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  display: inline !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* handle / display name under username */
+#uam-handle {
+  display: block !important;
+  font-size: 14px !important;
+  color: #b5bac1 !important;
+  margin-top: 2px !important;
+  font-weight: 400 !important;
+}
+
+.uam-user-card .uam-badges,
+#uam-badges {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 8px !important;
+  min-height: 24px !important;
+}
+
+.uam-user-card .uam-badges .badge {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.uam-user-card .uam-badges .badge img,
+.uam-user-card .uam-badges .badge svg {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+.uam-user-card .uam-custom-status {
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  margin-top: 8px !important;
+  line-height: 1.35 !important;
+}
+
+/* Name + badges on same line */
+.uam-user-card .uam-name-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 2px !important;
+}
+.uam-user-card .uam-name,
+#uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  display: inline-block !important;
+  line-height: 1.2 !important;
+  flex-shrink: 0 !important;
+}
+.uam-user-card .uam-badges,
+#uam-badges {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 0 !important;
+  margin-left: 0 !important;
+}
+.uam-user-card .uam-badges .badge {
+  width: 22px !important;
+  height: 22px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.uam-user-card .uam-badges .badge img,
+.uam-user-card .uam-badges .badge svg {
+  width: 22px !important;
+  height: 22px !important;
+  display: block !important;
+}
+#uam-handle {
+  display: block !important;
+  font-size: 14px !important;
+  color: #b5bac1 !important;
+  margin-top: 2px !important;
+}
+
+/* Final: name on top, handle, badges below — Discord style */
+.uam-user-card {
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 14px 16px !important;
+  margin-top: 48px !important;
+  margin-bottom: 10px !important;
+}
+.uam-user-card .uam-name,
+#uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  display: block !important;
+  line-height: 1.25 !important;
+  margin: 0 0 2px 0 !important;
+}
+.uam-user-card .uam-handle,
+#uam-handle {
+  display: block !important;
+  font-size: 14px !important;
+  color: #b5bac1 !important;
+  font-weight: 400 !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.3 !important;
+}
+.uam-user-card .uam-badges,
+#uam-badges {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.uam-user-card .uam-badges .badge {
+  width: 22px !important;
+  height: 22px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.uam-user-card .uam-badges .badge img,
+.uam-user-card .uam-badges .badge svg {
+  width: 22px !important;
+  height: 22px !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+.uam-user-card .uam-custom-status {
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  margin-top: 8px !important;
+}
+
+/* Edit preview badges */
+#edit-preview-badges,
+.zpc-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  align-items: center !important;
+  margin: 6px 0 8px 0 !important;
+}
+#edit-preview-badges .badge,
+.zpc-badges .badge {
+  width: 22px !important;
+  height: 22px !important;
+  display: inline-flex !important;
+}
+#edit-preview-badges .badge img,
+.zpc-badges .badge img {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Force menu display name visible */
+#uam-name.uam-name,
+.uam-user-card > #uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-height: 24px !important;
+  line-height: 1.25 !important;
+  margin: 0 0 2px 0 !important;
+}
+.uam-user-card > #uam-handle {
+  font-size: 14px !important;
+  color: #b5bac1 !important;
+  display: block !important;
+  margin: 0 0 8px 0 !important;
+}
+.uam-user-card > #uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin: 0 !important;
+}
+
+
+/* ===== Account menu — final layout fix ===== */
+.user-account-menu {
+  width: 300px !important;
+  overflow: visible !important;
+}
+.uam-banner {
+  height: 70px !important;
+  min-height: 70px !important;
+  max-height: 70px !important;
+}
+.uam-profile-body {
+  padding: 0 12px 12px !important;
+  position: relative !important;
+}
+.uam-profile-body > .uam-avatar-wrap {
+  position: absolute !important;
+  top: -36px !important;
+  left: 14px !important;
+  width: 72px !important;
+  height: 72px !important;
+  z-index: 5 !important;
+}
+.uam-profile-body .uam-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border: 6px solid #232428 !important;
+  box-sizing: content-box !important;
+  font-size: 26px !important;
+}
+.uam-profile-body #uam-status-dot {
+  width: 16px !important;
+  height: 16px !important;
+  border: 3px solid #232428 !important;
+  bottom: 2px !important;
+  right: 2px !important;
+}
+.uam-user-card {
+  margin-top: 40px !important;
+  padding: 12px 14px !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+  min-height: auto !important;
+}
+/* Display name MUST show */
+.uam-user-card #uam-name,
+#uam-name {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 22px !important;
+  max-height: none !important;
+  line-height: 1.3 !important;
+  margin: 0 0 2px 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  position: static !important;
+  width: auto !important;
+}
+.uam-user-card #uam-handle,
+#uam-handle {
+  font-size: 13px !important;
+  color: #b5bac1 !important;
+  display: block !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.3 !important;
+}
+.uam-user-card #uam-badges,
+#uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 3px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+/* CRITICAL: text must clear the overlapping avatar */
+.uam-user-card {
+  margin-top: 12px !important;
+  padding: 12px 14px 12px 14px !important;
+  /* no left padding needed if name is below avatar fully */
+}
+/* Avatar sits on banner; card starts BELOW avatar bottom */
+.uam-profile-body > .uam-avatar-wrap {
+  top: -36px !important;
+  left: 14px !important;
+}
+.uam-user-card {
+  margin-top: 44px !important; /* enough to clear 64px avatar + border that hangs to ~28px into body */
+  padding-top: 8px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  padding-bottom: 12px !important;
+}
+/* Name fully visible, not under avatar */
+.uam-user-card #uam-name {
+  position: relative !important;
+  z-index: 2 !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  display: block !important;
+}
+
+/* Ensure card is fully BELOW avatar so name is never covered */
+.uam-profile-body > .uam-avatar-wrap {
+  top: -40px !important;
+  left: 16px !important;
+  width: 72px !important;
+  height: 72px !important;
+}
+.uam-profile-body .uam-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border: 6px solid #232428 !important;
+  box-sizing: content-box !important;
+}
+.uam-user-card {
+  margin-top: 48px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+.uam-banner {
+  height: 70px !important;
+  min-height: 70px !important;
+}
+
+
+/* ===== FINAL: name NEXT TO avatar (never covered) ===== */
+.uam-banner {
+  height: 70px !important;
+  min-height: 70px !important;
+}
+.uam-profile-body {
+  padding: 0 12px 12px !important;
+  position: relative !important;
+}
+.uam-top-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  gap: 12px !important;
+  margin-top: -36px !important;
+  margin-bottom: 12px !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+.uam-top-row .uam-avatar-wrap {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 72px !important;
+  height: 72px !important;
+  flex-shrink: 0 !important;
+}
+.uam-top-row .uam-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border: 6px solid #232428 !important;
+  box-sizing: content-box !important;
+  border-radius: 50% !important;
+  font-size: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+.uam-top-row #uam-status-dot {
+  position: absolute !important;
+  bottom: 2px !important;
+  right: 2px !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: 3px solid #232428 !important;
+  border-radius: 50% !important;
+  z-index: 10 !important;
+}
+.uam-top-info {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding-bottom: 4px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+.uam-top-info #uam-name {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  line-height: 1.25 !important;
+  display: block !important;
+  margin: 0 !important;
+}
+.uam-top-info #uam-handle {
+  font-size: 13px !important;
+  color: #b5bac1 !important;
+  display: block !important;
+  margin: 0 !important;
+}
+.uam-top-info #uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 3px !important;
+  margin-top: 4px !important;
+}
+.uam-top-info #uam-badges .badge {
+  width: 20px !important;
+  height: 20px !important;
+  display: inline-flex !important;
+}
+.uam-top-info #uam-badges .badge img,
+.uam-top-info #uam-badges .badge svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+.uam-user-card {
+  margin-top: 0 !important;
+  padding: 10px 12px !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+}
+.uam-user-card:empty,
+.uam-user-card:has(#uam-custom-status[style*="display: none"]),
+.uam-user-card:has(#uam-custom-status:empty) {
+  display: none !important;
+}
+
+/* ===== Discord-style Shop ===== */
+.shop-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.shop-modal.hidden { display: none !important; }
+.shop-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,0.7) !important;
+}
+.shop-panel-discord {
+  position: relative !important;
+  width: min(920px, 94vw) !important;
+  height: min(620px, 88vh) !important;
+  background: #1e1f22 !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5) !important;
+  z-index: 1 !important;
+}
+.shop-panel-discord .shop-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 20px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.shop-panel-discord .shop-header h2 {
+  margin: 0 !important;
+  font-size: 20px !important;
+  color: #fff !important;
+}
+.shop-body-discord {
+  display: flex !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+.shop-catalog {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  overflow: hidden !important;
+}
+.shop-tabs {
+  display: flex !important;
+  gap: 8px !important;
+  padding: 12px 16px !important;
+}
+.shop-tab {
+  background: #2b2d31 !important;
+  border: none !important;
+  color: #b5bac1 !important;
+  padding: 8px 14px !important;
+  border-radius: 16px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  font-family: inherit !important;
+}
+.shop-tab.active, .shop-tab:hover {
+  background: #5865f2 !important;
+  color: #fff !important;
+}
+.shop-grid {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 8px 16px 20px !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+  gap: 12px !important;
+  align-content: start !important;
+}
+.shop-card {
+  background: #2b2d31 !important;
+  border-radius: 12px !important;
+  padding: 12px !important;
+  cursor: pointer !important;
+  transition: background 0.15s !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.shop-card:hover { background: #35373c !important; }
+.shop-card-preview {
+  width: 100% !important;
+  aspect-ratio: 1 !important;
+  background: #1e1f22 !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+.shop-card-avatar-wrap {
+  position: relative !important;
+  width: 72px !important;
+  height: 72px !important;
+}
+.shop-card-avatar {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-size: 24px !important;
+  overflow: hidden !important;
+  margin: 4px !important;
+}
+.shop-card-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.shop-card-deco {
+  position: absolute !important;
+  inset: -8px !important;
+  width: calc(100% + 16px) !important;
+  height: calc(100% + 16px) !important;
+  pointer-events: none !important;
+  object-fit: contain !important;
+}
+.shop-card-effect {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  opacity: 0.5 !important;
+}
+.shop-card-name {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #f2f3f5 !important;
+  text-align: center !important;
+}
+.shop-card-btn {
+  width: 100% !important;
+  background: #5865f2 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+}
+.shop-card.owned .shop-card-btn {
+  background: #2b2d31 !important;
+  color: #23a559 !important;
+  border: 1px solid #23a559 !important;
+}
+.shop-detail {
+  width: 340px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #111214 !important;
+  overflow-y: auto !important;
+}
+.shop-detail-empty {
+  color: #949ba4 !important;
+  text-align: center !important;
+  padding: 40px 20px !important;
+  margin: auto !important;
+}
+.shop-detail-preview {
+  height: 180px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+}
+.shop-detail-card {
+  background: #2b2d31 !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  min-width: 160px !important;
+}
+.shop-detail-av-wrap {
+  position: relative !important;
+  width: 80px !important;
+  height: 80px !important;
+  margin-bottom: 8px !important;
+}
+.shop-detail-av-wrap.big {
+  width: 120px !important;
+  height: 120px !important;
+  margin: 0 auto 16px !important;
+}
+.shop-detail-av {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  overflow: hidden !important;
+  margin: 4px !important;
+}
+.shop-detail-av-wrap.big .shop-detail-av {
+  width: 110px !important;
+  height: 110px !important;
+  font-size: 40px !important;
+}
+.shop-detail-av img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.shop-detail-deco {
+  position: absolute !important;
+  inset: -10px !important;
+  width: calc(100% + 20px) !important;
+  height: calc(100% + 20px) !important;
+  pointer-events: none !important;
+  object-fit: contain !important;
+}
+.shop-detail-uname {
+  font-weight: 700 !important;
+  color: #fff !important;
+  font-size: 16px !important;
+}
+.shop-detail-info {
+  padding: 20px !important;
+}
+.shop-detail-title {
+  margin: 0 0 8px !important;
+  font-size: 22px !important;
+  color: #fff !important;
+}
+.shop-detail-desc {
+  color: #b5bac1 !important;
+  font-size: 14px !important;
+  margin: 0 0 16px !important;
+}
+.shop-detail-price {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  margin-bottom: 12px !important;
+}
+.shop-detail-buy {
+  width: 100% !important;
+  background: #5865f2 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+}
+.shop-detail-buy:hover { background: #4752c4 !important; }
+
+
+/* Banner a bit larger */
+.uam-banner {
+  height: 100px !important;
+  min-height: 100px !important;
+  max-height: 100px !important;
+}
+.uam-top-row {
+  margin-top: -40px !important;
+}
+
+/* ===== Discord Shop full grid ===== */
+.shop-panel-discord {
+  width: min(1100px, 96vw) !important;
+  height: min(720px, 92vh) !important;
+  background: #1a1b1e !important;
+}
+.shop-body-discord {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+.shop-catalog {
+  flex: 1 !important;
+  border-right: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+.shop-detail {
+  display: none !important; /* hide side panel for full grid look */
+}
+.shop-tabs {
+  padding: 12px 24px !important;
+  gap: 8px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.shop-grid {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+  gap: 16px !important;
+  padding: 20px 24px 28px !important;
+}
+.shop-card {
+  background: #2b2d31 !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  gap: 0 !important;
+  align-items: stretch !important;
+}
+.shop-card-preview {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  background: #1e1f22 !important;
+  border-radius: 0 !important;
+  position: relative !important;
+}
+.shop-card-avatar-wrap {
+  width: 100px !important;
+  height: 100px !important;
+}
+.shop-card-avatar {
+  width: 88px !important;
+  height: 88px !important;
+  margin: 6px !important;
+  font-size: 32px !important;
+  background: #5865f2 !important;
+}
+.shop-card-deco {
+  inset: -12px !important;
+  width: calc(100% + 24px) !important;
+  height: calc(100% + 24px) !important;
+}
+.shop-card-footer {
+  padding: 12px 14px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+.shop-card-name {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #f2f3f5 !important;
+  text-align: left !important;
+}
+.shop-card-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+.shop-card-price {
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  font-weight: 500 !important;
+}
+.shop-card-btn {
+  width: auto !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  border-radius: 16px !important;
+}
+
+/* Shop cards — force footer + price visible */
+.shop-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+  gap: 16px !important;
+  padding: 20px 24px 28px !important;
+  overflow-y: auto !important;
+  align-content: start !important;
+}
+.shop-card {
+  background: #2b2d31 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  cursor: pointer !important;
+  min-height: 220px !important;
+}
+.shop-card-preview {
+  flex: 1 !important;
+  min-height: 140px !important;
+  aspect-ratio: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #1e1f22 !important;
+  position: relative !important;
+}
+.shop-card-avatar-wrap {
+  position: relative !important;
+  width: 90px !important;
+  height: 90px !important;
+}
+.shop-card-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  margin: 5px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  overflow: hidden !important;
+}
+.shop-card-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.shop-card-deco {
+  position: absolute !important;
+  inset: -10px !important;
+  width: calc(100% + 20px) !important;
+  height: calc(100% + 20px) !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+}
+.shop-card-effect {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  opacity: 0.55 !important;
+  border-radius: 8px !important;
+}
+.shop-card-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  padding: 12px 14px 14px !important;
+  background: #2b2d31 !important;
+  flex-shrink: 0 !important;
+}
+.shop-card-name {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #f2f3f5 !important;
+  text-align: left !important;
+}
+.shop-card-meta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+.shop-card-price {
+  font-size: 14px !important;
+  color: #dbdee1 !important;
+  font-weight: 500 !important;
+}
+.shop-card-btn {
+  background: #5865f2 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  white-space: nowrap !important;
+}
+.shop-card-btn:hover { background: #4752c4 !important; }
+.shop-card.owned .shop-card-btn {
+  background: transparent !important;
+  color: #23a559 !important;
+  border: 1px solid #23a559 !important;
+}
+.shop-nitro-preview {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.shop-nitro-logo {
+  width: 80px !important;
+  height: 80px !important;
+  object-fit: contain !important;
+}
+
+
+/* Larger account menu + banner + profile effect */
+.user-account-menu {
+  width: 340px !important;
+  position: absolute !important;
+  overflow: hidden !important;
+}
+.uam-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+}
+.uam-top-row {
+  margin-top: -44px !important;
+  gap: 14px !important;
+}
+.uam-top-row .uam-avatar-wrap {
+  width: 80px !important;
+  height: 80px !important;
+}
+.uam-top-row .uam-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  font-size: 28px !important;
+  border: 6px solid #232428 !important;
+}
+.uam-top-info #uam-name {
+  font-size: 20px !important;
+}
+.uam-top-info #uam-handle {
+  font-size: 14px !important;
+}
+.uam-top-info #uam-badges .badge {
+  width: 22px !important;
+  height: 22px !important;
+}
+.uam-top-info #uam-badges .badge img,
+.uam-top-info #uam-badges .badge svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+.uam-actions .uam-item {
+  padding: 12px 14px !important;
+  font-size: 15px !important;
+}
+/* Effect overlay on account menu */
+#user-account-menu .profile-effect-overlay,
+#user-account-menu img.profile-effect-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  border-radius: 8px !important;
+  opacity: 0.85 !important;
+  mix-blend-mode: screen !important;
+}
+#user-account-menu .uam-profile-body,
+#user-account-menu .uam-banner {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+/* Discord-like taller account menu */
+.user-account-menu {
+  width: 300px !important;
+  min-height: 380px !important;
+}
+.uam-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  max-height: 120px !important;
+}
+.uam-profile-body {
+  padding: 0 16px 16px !important;
+  min-height: 260px !important;
+}
+.uam-top-row {
+  margin-top: -48px !important;
+  margin-bottom: 16px !important;
+  gap: 14px !important;
+  align-items: flex-end !important;
+}
+.uam-top-row .uam-avatar-wrap {
+  width: 92px !important;
+  height: 92px !important;
+}
+.uam-top-row .uam-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border: 7px solid #232428 !important;
+  font-size: 30px !important;
+  box-sizing: content-box !important;
+}
+.uam-top-row #uam-status-dot {
+  width: 18px !important;
+  height: 18px !important;
+  border: 4px solid #232428 !important;
+  bottom: 4px !important;
+  right: 4px !important;
+}
+.uam-top-info {
+  padding-bottom: 8px !important;
+  padding-top: 36px !important; /* name sits lower next to big avatar */
+}
+.uam-top-info #uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+.uam-top-info #uam-handle {
+  font-size: 14px !important;
+  margin-top: 2px !important;
+}
+.uam-top-info #uam-badges {
+  margin-top: 8px !important;
+  gap: 4px !important;
+}
+.uam-user-card {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+  padding: 12px 14px !important;
+  min-height: 48px !important;
+}
+.uam-actions {
+  gap: 6px !important;
+  margin-top: 4px !important;
+}
+.uam-actions .uam-item {
+  padding: 14px 16px !important;
+  font-size: 15px !important;
+  border-radius: 8px !important;
+  min-height: 48px !important;
+}
+
+
+/* Banner a bit larger + themed body */
+.uam-banner {
+  height: 140px !important;
+  min-height: 140px !important;
+  max-height: 140px !important;
+}
+.uam-top-row {
+  margin-top: -52px !important;
+}
+.user-account-menu {
+  width: 320px !important;
+  min-height: 420px !important;
+}
+.uam-profile-body {
+  min-height: 280px !important;
+}
+/* Readable text on gradient */
+.uam-top-info #uam-name {
+  color: #fff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+}
+.uam-top-info #uam-handle {
+  color: rgba(255,255,255,0.85) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4) !important;
+}
+.uam-add-account {
+  margin-top: 4px !important;
+  color: #00a8fc !important;
+}
+.uam-accounts-submenu {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  padding: 6px !important;
+  background: rgba(0,0,0,0.4) !important;
+  border-radius: 8px !important;
+  margin-bottom: 6px !important;
+}
+.uam-accounts-submenu.hidden { display: none !important; }
+.uam-account-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 10px 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  color: #fff !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  text-align: left !important;
+}
+.uam-account-item:hover { background: rgba(255,255,255,0.08) !important; }
+.uam-acc-av {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+.uam-acc-av img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+
+/* Discord-style account switcher popup */
+.uam-status-row,
+.uam-actions {
+  position: relative !important;
+}
+#uam-accounts-submenu.uam-accounts-submenu {
+  position: absolute !important;
+  left: calc(100% + 8px) !important;
+  bottom: 0 !important;
+  width: 240px !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 6px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) !important;
+  z-index: 50 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  max-height: 360px !important;
+  overflow-y: auto !important;
+}
+#uam-accounts-submenu.hidden {
+  display: none !important;
+}
+#uam-accounts-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+.uam-account-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 8px 10px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+  color: #dbdee1 !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-align: left !important;
+}
+.uam-account-item:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+.uam-account-item.active {
+  background: transparent !important;
+}
+.uam-acc-av {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+.uam-acc-av img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+.uam-acc-name {
+  flex: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.uam-check {
+  color: #23a559 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  margin-left: auto !important;
+}
+.uam-accounts-sep {
+  height: 1px !important;
+  background: rgba(255,255,255,0.08) !important;
+  margin: 4px 6px !important;
+}
+.uam-manage-accounts {
+  display: block !important;
+  width: 100% !important;
+  padding: 10px 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+  color: #dbdee1 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: inherit !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+.uam-manage-accounts:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+/* Keep menu overflow visible so side panel isn't clipped */
+.user-account-menu {
+  overflow: visible !important;
+}
+.uam-actions {
+  overflow: visible !important;
+}
+
+
+/* ===== Exact Discord account popout size & layout ===== */
+.user-account-menu {
+  width: 340px !important;
+  min-width: 340px !important;
+  max-width: 340px !important;
+  border-radius: 8px !important;
+  overflow: visible !important;
+  background: #111214 !important;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.24) !important;
+  padding: 0 !important;
+}
+.uam-banner {
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+.uam-profile-body {
+  padding: 0 16px 16px !important;
+  min-height: auto !important;
+  border-radius: 0 0 8px 8px !important;
+}
+.uam-top-row {
+  margin-top: -20px !important;
+  margin-bottom: 12px !important;
+  gap: 12px !important;
+  align-items: flex-end !important;
+}
+.uam-top-row .uam-avatar-wrap {
+  width: 80px !important;
+  height: 80px !important;
+}
+.uam-top-row .uam-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+  font-size: 28px !important;
+}
+/* When body has gradient, match border to primary - set via JS */
+.uam-top-info {
+  padding-top: 28px !important;
+  padding-bottom: 0 !important;
+  flex: 1 !important;
+}
+.uam-top-info #uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+.uam-top-info #uam-handle {
+  font-size: 14px !important;
+  margin-top: 2px !important;
+  opacity: 1 !important;
+}
+.uam-top-info #uam-badges {
+  margin-top: 6px !important;
+  gap: 2px !important;
+}
+.uam-top-info #uam-badges .badge {
+  width: 20px !important;
+  height: 20px !important;
+}
+.uam-top-info #uam-badges .badge img,
+.uam-top-info #uam-badges .badge svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+.uam-user-card {
+  display: none !important; /* status already in handle line */
+}
+.uam-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  margin-top: 8px !important;
+}
+.uam-actions .uam-item {
+  background: rgba(0,0,0,0.3) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 8px !important;
+  padding: 12px 12px !important;
+  min-height: 40px !important;
+  margin-bottom: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #fff !important;
+  gap: 12px !important;
+}
+.uam-actions .uam-item:last-child {
+  margin-bottom: 0 !important;
+}
+.uam-actions .uam-item:hover {
+  background: rgba(0,0,0,0.45) !important;
+}
+.uam-actions .uam-chevron {
+  margin-left: auto !important;
+  opacity: 0.7 !important;
+}
+.uam-status-row {
+  margin-bottom: 8px !important;
+}
+.uam-status-row .uam-item {
+  margin-bottom: 0 !important;
+}
+
+/* ===== FIX placement PDP + bannière comme Discord ===== */
+.user-account-menu {
+  width: 340px !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  background: #1e1f22 !important;
+  border-radius: 8px !important;
+}
+.uam-banner {
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  width: 100% !important;
+  border-radius: 8px 8px 0 0 !important;
+  display: block !important;
+}
+.uam-profile-body {
+  padding: 48px 16px 16px !important; /* space for avatar that hangs from banner */
+  margin: 0 !important;
+  min-height: 0 !important;
+  position: relative !important;
+  border-radius: 0 0 8px 8px !important;
+  background: #1e1f22 !important;
+}
+/* Avatar: half on banner, half on body — classic Discord */
+.uam-top-row {
+  position: absolute !important;
+  top: -40px !important; /* 40px into the banner (banner is 60px) */
+  left: 16px !important;
+  right: 16px !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  gap: 12px !important;
+  z-index: 10 !important;
+}
+.uam-top-row .uam-avatar-wrap {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 80px !important;
+  height: 80px !important;
+  flex-shrink: 0 !important;
+}
+.uam-top-row .uam-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border: 6px solid #1e1f22 !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  font-size: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+.uam-top-row #uam-status-dot {
+  width: 16px !important;
+  height: 16px !important;
+  border: 3px solid #1e1f22 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+.uam-top-info {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 0 0 4px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  gap: 2px !important;
+}
+.uam-top-info #uam-name {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  text-shadow: none !important;
+}
+.uam-top-info #uam-handle {
+  font-size: 14px !important;
+  color: #b5bac1 !important;
+  margin: 0 !important;
+  text-shadow: none !important;
+}
+.uam-top-info #uam-badges {
+  margin-top: 4px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 2px !important;
+}
+.uam-user-card {
+  display: none !important;
+}
+.uam-actions {
+  margin-top: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  padding: 0 !important;
+}
+.uam-actions .uam-item {
+  margin: 0 !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  min-height: 42px !important;
+  color: #dbdee1 !important;
+  font-size: 14px !important;
+}
+.uam-actions .uam-item:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+/* remove forced min-heights that created empty space */
+.user-account-menu,
+.uam-profile-body {
+  min-height: 0 !important;
+}
+
+/* Discord-style server context menu (boost / invite) */
+.server-context-menu {
+  position: fixed;
+  z-index: 5000;
+  min-width: 240px;
+  background: #111214;
+  border-radius: 8px;
+  padding: 6px 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  border: 1px solid #1e1f22;
+}
+.scm-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #dbdee1;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+}
+.scm-item:hover {
+  background: #5865f2;
+  color: #fff;
+}
+.scm-item.scm-boost:hover {
+  background: #f47fff22;
+  color: #f47fff;
+}
+.scm-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+.scm-lock {
+  margin-left: auto;
+  font-size: 11px;
+  color: #f0b232;
+  font-weight: 600;
+}
+
+/* Stronger Discord layout fidelity */
+.app {
+  background: #1e1f22;
+}
+.servers-bar {
+  background: #1e1f22 !important;
+}
+.sidebar {
+  background: #2b2d31 !important;
+}
+.chat-area {
+  background: #313338 !important;
+}
+.members-sidebar {
+  background: #2b2d31 !important;
+}
+.user-panel {
+  background: #232428 !important;
+}
+.message:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+/* Gérer les comptes — Discord style */
+.accounts-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.accounts-modal.hidden { display: none !important; }
+.accounts-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+}
+.accounts-panel {
+  position: relative;
+  z-index: 1;
+  width: 90%;
+  max-width: 440px;
+  background: #313338;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+.accounts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+.accounts-header h2 {
+  color: #f2f3f5;
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+.accounts-header p {
+  color: #b5bac1;
+  font-size: 13px;
+  margin: 0;
+}
+.accounts-close {
+  background: transparent;
+  border: none;
+  color: #b5bac1;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.accounts-close:hover { color: #fff; }
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+.acc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #2b2d31;
+  border-radius: 8px;
+}
+.acc-row.active {
+  background: #1e1f22;
+}
+.acc-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.acc-av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.acc-info { flex: 1; min-width: 0; }
+.acc-name {
+  color: #f2f3f5;
+  font-weight: 600;
+  font-size: 15px;
+}
+.acc-active {
+  color: #23a559;
+  font-size: 12px;
+  font-weight: 500;
+}
+.acc-switch {
+  padding: 6px 14px;
+  background: #4e5058;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.acc-switch:hover { background: #6d6f78; }
+.acc-more {
+  background: transparent;
+  border: none;
+  color: #b5bac1;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+}
+.acc-more:hover { color: #fff; }
+.acc-more-menu {
+  position: fixed;
+  z-index: 5000;
+  background: #111214;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  min-width: 130px;
+}
+.acc-logout-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  color: #f23f43;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.acc-logout-btn:hover { background: #f23f4322; }
+.accounts-add {
+  width: 100%;
+  padding: 12px;
+  background: #4e5058;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.accounts-add:hover { background: #6d6f78; }
+
+/* ===== Discord-like profile popout ===== */
+.profile-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+}
+.profile-modal.hidden { display: none !important; }
+
+.zpc, #profile-card-main {
+  width: 340px !important;
+  max-width: 92vw;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: #111214 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55) !important;
+  position: relative;
+  border: none !important;
+}
+
+.zpc-banner, #profile-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  background-size: cover !important;
+  background-position: center !important;
+  position: relative;
+}
+
+.zpc-body, #profile-body {
+  padding: 16px 16px 16px !important;
+  padding-top: 52px !important;
+  position: relative;
+  min-height: 200px;
+}
+
+.zpc-avatar-wrap, #profile-avatar-wrap {
+  position: absolute !important;
+  top: -46px !important;
+  left: 16px !important;
+  width: 92px !important;
+  height: 92px !important;
+  z-index: 20 !important;
+  overflow: visible !important;
+}
+
+.zpc-avatar, #profile-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border-radius: 50% !important;
+  border: 6px solid #111214 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 32px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  position: relative;
+  box-sizing: content-box !important;
+}
+.zpc-avatar img, #profile-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50%;
+}
+
+.zpc-online, #profile-status-dot {
+  position: absolute !important;
+  bottom: 4px !important;
+  right: 4px !important;
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 50% !important;
+  border: 4px solid #111214 !important;
+  z-index: 25 !important;
+}
+
+.zpc-name, #profile-username {
+  color: #f2f3f5 !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  margin: 0 0 2px !important;
+  line-height: 1.2 !important;
+}
+.zpc-handle, #profile-handle {
+  color: #b5bac1 !important;
+  font-size: 14px !important;
+  margin-bottom: 8px !important;
+}
+.zpc-badges, #profile-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin-bottom: 12px !important;
+}
+.zpc-badges .badge img, #profile-badges .badge img {
+  width: 20px !important;
+  height: 20px !important;
+  display: block;
+}
+
+.zpc-section {
+  background: #2b2d31 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  margin-bottom: 10px !important;
+}
+.zpc-section h3 {
+  color: #b5bac1 !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  margin: 0 0 6px !important;
+}
+.zpc-section p, .zpc-status {
+  color: #dbdee1 !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.zpc-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+.zpc-actions button {
+  width: 100%;
+  padding: 10px 12px;
+  background: #4e5058;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+}
+.zpc-actions button:hover {
+  background: #6d6f78;
+}
+
+/* ===== FORCE Discord-style account menu + profile ===== */
+.user-account-menu {
+  position: absolute !important;
+  bottom: 60px !important;
+  left: 70px !important;
+  width: 300px !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+  z-index: 2000 !important;
+  padding: 0 !important;
+}
+
+.uam-banner {
+  height: 60px !important;
+  min-height: 60px !important;
+  background-size: cover !important;
+  background-position: center !important;
+  position: relative !important;
+}
+
+.uam-profile-body {
+  padding: 0 12px 12px !important;
+  position: relative !important;
+  background: #111214 !important;
+}
+
+.uam-top-row {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 12px !important;
+  margin-top: -28px !important;
+  margin-bottom: 8px !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.uam-avatar-wrap {
+  position: relative !important;
+  width: 56px !important;
+  height: 56px !important;
+  flex-shrink: 0 !important;
+}
+
+.uam-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  border: 5px solid #111214 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  box-sizing: content-box !important;
+}
+.uam-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50%;
+}
+
+#uam-status-dot {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  border: 3px solid #111214 !important;
+  background: #23a559 !important;
+}
+
+.uam-top-info {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding-bottom: 4px !important;
+}
+.uam-name {
+  color: #f2f3f5 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+}
+.uam-handle {
+  color: #b5bac1 !important;
+  font-size: 12px !important;
+}
+.uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 3px !important;
+  margin-top: 4px !important;
+}
+.uam-badges .badge img {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.uam-user-card {
+  background: #2b2d31 !important;
+  border-radius: 8px !important;
+  padding: 8px 10px !important;
+  margin-bottom: 8px !important;
+  min-height: 0 !important;
+}
+.uam-custom-status {
+  color: #dbdee1 !important;
+  font-size: 13px !important;
+}
+.uam-custom-status:empty {
+  display: none !important;
+}
+
+.uam-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  background: transparent !important;
+}
+.uam-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 8px 10px !important;
+  background: #2b2d31 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  color: #dbdee1 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  margin-bottom: 2px !important;
+}
+.uam-item:hover {
+  background: #393c43 !important;
+  color: #fff !important;
+}
+
+/* Full profile modal Discord-like */
+#profile-modal.profile-modal {
+  background: rgba(0,0,0,0.6) !important;
+}
+#profile-card-main.zpc {
+  width: 300px !important;
+  border-radius: 8px !important;
+  overflow: visible !important;
+  background: #111214 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+}
+#profile-banner.zpc-banner {
+  height: 60px !important;
+  min-height: 60px !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+#profile-body.zpc-body {
+  padding: 12px !important;
+  padding-top: 0 !important;
+  background: #111214 !important;
+  border-radius: 0 0 8px 8px !important;
+}
+#profile-avatar-wrap {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  margin-top: -30px !important;
+  margin-left: 4px !important;
+  width: 72px !important;
+  height: 72px !important;
+}
+#profile-avatar.zpc-avatar {
+  width: 60px !important;
+  height: 60px !important;
+  border: 6px solid #111214 !important;
+  font-size: 24px !important;
+}
+#profile-username.zpc-name {
+  margin-top: 8px !important;
+  font-size: 18px !important;
+}
+.zpc-section {
+  background: #2b2d31 !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  margin: 8px 0 !important;
+}
+.zpc-section h3 {
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  color: #b5bac1 !important;
+  margin: 0 0 4px !important;
+}
+.zpc-actions button {
+  background: #2b2d31 !important;
+  border-radius: 4px !important;
+  margin-bottom: 4px !important;
+}
+
+
+/* ===== FIX cadrage menu compte (avatar + nom non coupés) ===== */
+.user-account-menu {
+  width: 320px !important;
+  overflow: visible !important;
+  border-radius: 8px !important;
+  background: #111214 !important;
+}
+.user-account-menu .uam-banner {
+  height: 60px !important;
+  border-radius: 8px 8px 0 0 !important;
+  overflow: hidden !important;
+}
+.user-account-menu .uam-profile-body {
+  padding: 0 12px 12px !important;
+  overflow: visible !important;
+  background: #111214 !important;
+  border-radius: 0 0 8px 8px !important;
+}
+/* Avatar déborde de la bannière sans couper le nom */
+.user-account-menu .uam-top-row {
+  display: grid !important;
+  grid-template-columns: 64px 1fr !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 10px !important;
+  margin-top: -32px !important;
+  margin-bottom: 10px !important;
+  align-items: end !important;
+  overflow: visible !important;
+}
+.user-account-menu .uam-avatar-wrap {
+  grid-row: 1 / 3 !important;
+  grid-column: 1 !important;
+  width: 60px !important;
+  height: 60px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  z-index: 10 !important;
+}
+.user-account-menu .uam-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+  border-radius: 50% !important;
+}
+.user-account-menu .uam-top-info {
+  grid-column: 2 !important;
+  grid-row: 1 / 3 !important;
+  padding-top: 36px !important; /* nom sous la bannière, pas dedans */
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+}
+.user-account-menu .uam-name {
+  color: #f2f3f5 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  line-height: 1.25 !important;
+}
+.user-account-menu .uam-handle {
+  color: #b5bac1 !important;
+  font-size: 12px !important;
+  margin-top: 1px !important;
+}
+.user-account-menu .uam-badges {
+  margin-top: 6px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+}
+.user-account-menu .uam-actions {
+  margin-top: 4px !important;
+}
+.user-account-menu .uam-item {
+  background: transparent !important;
+  border-radius: 4px !important;
+  padding: 8px 10px !important;
+  color: #dbdee1 !important;
+}
+.user-account-menu .uam-item:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+
+/* Auth panels */
+.auth-error {
+  color: #f23f43;
+  font-size: 13px;
+  margin-top: 12px;
+  text-align: center;
+}
+.auth-error.hidden { display: none !important; }
+.verify-code-display {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 8px;
+  text-align: center;
+  color: #fff;
+  background: #1e1f22;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0 8px;
+  font-family: monospace;
+}
+.login-hint {
+  color: #b5bac1;
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.login-box label {
+  display: block;
+  color: #b5bac1;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 12px 0 6px;
+  text-transform: uppercase;
+}
+.login-box input[type="email"],
+.login-box input[type="password"],
+.login-box input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  background: #1e1f22;
+  border: none;
+  border-radius: 4px;
+  color: #dbdee1;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Bannière menu compte — taille Discord correcte */
+.user-account-menu .uam-banner {
+  height: 105px !important;
+  min-height: 105px !important;
+  max-height: 105px !important;
+}
+.user-account-menu .uam-top-row {
+  margin-top: -40px !important;
+}
+.user-account-menu .uam-avatar {
+  width: 72px !important;
+  height: 72px !important;
+  border: 6px solid #111214 !important;
+}
+.user-account-menu .uam-avatar-wrap {
+  width: 84px !important;
+  height: 84px !important;
+}
+.user-account-menu .uam-top-info {
+  padding-top: 48px !important;
+}
+#profile-banner.zpc-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+}
+
+
+/* ========== UAM FINAL — structure Discord clean ========== */
+#user-account-menu.user-account-menu {
+  position: absolute !important;
+  bottom: 64px !important;
+  left: 8px !important;
+  width: 300px !important;
+  background: #111214 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.55) !important;
+  z-index: 3000 !important;
+  padding: 0 !important;
+}
+
+#user-account-menu .uam-header-block {
+  position: relative !important;
+  height: 100px !important;
+  margin-bottom: 0 !important;
+}
+
+#user-account-menu .uam-banner {
+  position: absolute !important;
+  inset: 0 !important;
+  height: 100px !important;
+  min-height: 100px !important;
+  max-height: 100px !important;
+  background-size: cover !important;
+  background-position: center !important;
+  border-radius: 8px 8px 0 0 !important;
+  margin: 0 !important;
+}
+
+#user-account-menu .uam-avatar-wrap {
+  position: absolute !important;
+  left: 14px !important;
+  bottom: -36px !important;
+  width: 72px !important;
+  height: 72px !important;
+  z-index: 5 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+#user-account-menu .uam-avatar {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  overflow: hidden !important;
+  background: #5865f2 !important;
+}
+#user-account-menu .uam-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+}
+
+#user-account-menu #uam-status-dot {
+  position: absolute !important;
+  bottom: 2px !important;
+  right: 2px !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: 4px solid #111214 !important;
+  border-radius: 50% !important;
+  background: #23a559 !important;
+  z-index: 6 !important;
+}
+
+#user-account-menu .uam-profile-body {
+  padding: 48px 14px 12px 14px !important;
+  background: #111214 !important;
+  margin: 0 !important;
+}
+
+#user-account-menu .uam-top-info {
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+#user-account-menu .uam-name {
+  color: #f2f3f5 !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  position: static !important;
+}
+
+#user-account-menu .uam-handle {
+  color: #b5bac1 !important;
+  font-size: 13px !important;
+  margin: 2px 0 6px 0 !important;
+  position: static !important;
+}
+
+#user-account-menu .uam-badges {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  position: static !important;
+}
+
+#user-account-menu .uam-user-card {
+  background: #2b2d31 !important;
+  border-radius: 8px !important;
+  padding: 8px 10px !important;
+  margin-bottom: 8px !important;
+}
+#user-account-menu .uam-custom-status:empty { display: none !important; }
+
+#user-account-menu .uam-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+#user-account-menu .uam-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  padding: 8px 10px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+  color: #dbdee1 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  text-align: left !important;
+}
+#user-account-menu .uam-item:hover {
+  background: #2b2d31 !important;
+  color: #fff !important;
+}
+
+/* Avatar UAM — position exacte Discord (moitié bannière / moitié corps) */
+#user-account-menu.user-account-menu {
+  overflow: visible !important;
+}
+#user-account-menu .uam-header-block {
+  height: 60px !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+#user-account-menu .uam-banner {
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  border-radius: 8px 8px 0 0 !important;
+  overflow: hidden !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  position: absolute !important;
+  left: 16px !important;
+  bottom: -38px !important;
+  width: 80px !important;
+  height: 80px !important;
+  z-index: 10 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+#user-account-menu .uam-avatar {
+  width: 68px !important;
+  height: 68px !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+  border-radius: 50% !important;
+  pointer-events: auto !important;
+}
+#user-account-menu #uam-status-dot {
+  bottom: 4px !important;
+  right: 4px !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: 4px solid #111214 !important;
+  pointer-events: none !important;
+}
+#user-account-menu .uam-profile-body {
+  padding-top: 52px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  border-radius: 0 0 8px 8px !important;
+  overflow: hidden !important;
+}
+/* coin arrondi du menu sans couper l'avatar */
+#user-account-menu.user-account-menu {
+  border-radius: 8px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+#user-account-menu .uam-banner {
+  box-shadow: 0 -2px 0 transparent;
+}
+#user-account-menu .uam-profile-body {
+  background: #111214 !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.55) !important;
+}
+#user-account-menu .uam-banner {
+  box-shadow: 0 0 0 0 transparent;
+}
+
+/* Bannière un peu plus grande */
+#user-account-menu .uam-header-block {
+  height: 90px !important;
+}
+#user-account-menu .uam-banner {
+  height: 90px !important;
+  min-height: 90px !important;
+  max-height: 90px !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  bottom: -36px !important;
+}
+#user-account-menu .uam-profile-body {
+  padding-top: 48px !important;
+}
+
+
+/* Effet de profil sur le menu compte (pas de changement de taille) */
+#user-account-menu {
+  position: absolute !important;
+}
+#user-account-menu .profile-effect-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  border-radius: 8px !important;
+  opacity: 1 !important;
+}
+#user-account-menu .uam-header-block,
+#user-account-menu .uam-profile-body {
+  position: relative !important;
+  z-index: 2 !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  z-index: 12 !important;
+}
+/* Laisse le JS appliquer le dégradé de couleurs */
+#user-account-menu .uam-profile-body {
+  /* background géré en JS via setProperty important */
+}
+
+
+/* UAM — bannière un peu plus grande + avatar + déco + effet */
+#user-account-menu .uam-header-block {
+  height: 105px !important;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 4 !important;
+}
+#user-account-menu .uam-banner {
+  height: 105px !important;
+  min-height: 105px !important;
+  max-height: 105px !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  left: 16px !important;
+  bottom: -40px !important;
+  width: 80px !important;
+  height: 80px !important;
+  overflow: visible !important;
+  z-index: 20 !important;
+}
+#user-account-menu .uam-avatar {
+  width: 68px !important;
+  height: 68px !important;
+  border: 6px solid #111214 !important;
+}
+#user-account-menu .uam-profile-body {
+  padding-top: 52px !important;
+  z-index: 3 !important;
+  overflow: visible !important;
+}
+#user-account-menu .uam-avatar-wrap .avatar-deco-overlay {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 96px !important;
+  height: 96px !important;
+  max-width: 96px !important;
+  max-height: 96px !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 15 !important;
+}
+#user-account-menu .profile-effect-overlay {
+  pointer-events: none !important;
+}
+#user-account-menu .uam-top-info,
+#user-account-menu .uam-actions,
+#user-account-menu .uam-user-card {
+  position: relative !important;
+  z-index: 4 !important;
+}
+
+
+/* Pas de cercle noir autour de la PDP du menu compte */
+#user-account-menu .uam-avatar {
+  border: none !important;
+  border-width: 0 !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.35) !important;
+}
+/* Effet de profil plus visible partout (bannière + corps) */
+#user-account-menu .profile-effect-overlay {
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+#user-account-menu .uam-header-block .profile-effect-overlay {
+  z-index: 2 !important;
+}
+#user-account-menu .uam-profile-body .profile-effect-overlay {
+  z-index: 1 !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  z-index: 25 !important;
+}
+#user-account-menu .uam-top-info,
+#user-account-menu .uam-actions,
+#user-account-menu .uam-user-card {
+  z-index: 5 !important;
+}
+
+
+/* Effet AU-DESSUS de la bannière — bien visible */
+#user-account-menu .uam-banner {
+  position: relative !important;
+  overflow: hidden !important;
+}
+#user-account-menu .uam-banner .profile-effect-overlay {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 5 !important;
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+}
+#user-account-menu .uam-header-block > .profile-effect-overlay {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 4 !important;
+  opacity: 1 !important;
+  mix-blend-mode: lighten !important;
+  pointer-events: none !important;
+}
+#user-account-menu .uam-profile-body > .profile-effect-overlay {
+  z-index: 1 !important;
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+}
+
+
+/* UN seul effet de profil sur tout le menu compte */
+#user-account-menu {
+  overflow: visible !important;
+  border-radius: 8px !important;
+}
+#user-account-menu > .profile-effect-overlay {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 4 !important;
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+  border-radius: 8px !important;
+}
+/* Masquer d'éventuels anciens overlays enfants */
+#user-account-menu .uam-banner > .profile-effect-overlay,
+#user-account-menu .uam-header-block > .profile-effect-overlay,
+#user-account-menu .uam-profile-body > .profile-effect-overlay {
+  display: none !important;
+}
+#user-account-menu .uam-header-block,
+#user-account-menu .uam-profile-body {
+  position: relative !important;
+  z-index: 5 !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  z-index: 30 !important;
+}
+
+
+/* === PDP bien placée + effet unique visible === */
+#user-account-menu {
+  overflow: visible !important;
+  border-radius: 8px !important;
+}
+#user-account-menu .uam-header-block {
+  position: relative !important;
+  height: 105px !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+}
+#user-account-menu .uam-banner {
+  position: absolute !important;
+  inset: 0 !important;
+  height: 105px !important;
+  z-index: 1 !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  position: absolute !important;
+  left: 16px !important;
+  bottom: -40px !important;
+  width: 80px !important;
+  height: 80px !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  top: auto !important;
+  right: auto !important;
+}
+#user-account-menu .uam-avatar {
+  width: 68px !important;
+  height: 68px !important;
+  border: none !important;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.3) !important;
+}
+#user-account-menu .uam-profile-body {
+  position: relative !important;
+  z-index: 1 !important;
+  padding-top: 52px !important;
+}
+#user-account-menu > .profile-effect-overlay {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  z-index: 8 !important;
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+  border-radius: 8px !important;
+}
+#user-account-menu .uam-top-info,
+#user-account-menu .uam-actions,
+#user-account-menu .uam-user-card {
+  position: relative !important;
+  z-index: 12 !important;
+}
+
+/* PDP menu compte — position finale non coupée */
+#user-account-menu {
+  overflow: visible !important;
+}
+#user-account-menu .uam-header-block {
+  height: 105px !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+#user-account-menu .uam-banner {
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  position: absolute !important;
+  left: 16px !important;
+  top: 68px !important;   /* 105 - 37 ≈ milieu bas de bannière */
+  bottom: auto !important;
+  width: 80px !important;
+  height: 80px !important;
+  z-index: 40 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+#user-account-menu .uam-avatar {
+  width: 68px !important;
+  height: 68px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  pointer-events: auto !important;
+}
+#user-account-menu .uam-profile-body {
+  overflow: visible !important;
+  padding-top: 52px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+/* effet sous la pdp */
+#user-account-menu > .profile-effect-overlay {
+  z-index: 8 !important;
+}
+
+
+/* PDP = enfant direct du menu → au-dessus de bannière ET corps */
+#user-account-menu {
+  position: absolute !important;
+  overflow: visible !important;
+}
+#user-account-menu .uam-header-block {
+  position: relative !important;
+  height: 105px !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+}
+#user-account-menu > .uam-avatar-wrap {
+  position: absolute !important;
+  left: 16px !important;
+  top: 70px !important;
+  bottom: auto !important;
+  width: 80px !important;
+  height: 80px !important;
+  z-index: 50 !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#user-account-menu > .uam-avatar-wrap .uam-avatar {
+  width: 68px !important;
+  height: 68px !important;
+  border-radius: 50% !important;
+  border: none !important;
+}
+#user-account-menu .uam-profile-body {
+  position: relative !important;
+  z-index: 2 !important;
+  padding-top: 48px !important;
+  overflow: visible !important;
+}
+#user-account-menu > .profile-effect-overlay {
+  z-index: 8 !important;
+}
+
+/* Grille d'effets possédés (style Discord) */
+.effect-grid-owned {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)) !important;
+  gap: 10px !important;
+}
+.effect-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: #1e1f22;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #dbdee1;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+.effect-tile:hover {
+  background: #2b2d31;
+}
+.effect-tile.active {
+  border-color: #5865f2;
+  background: #2b2d31;
+}
+.effect-tile-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111214;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.effect-tile-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.effect-tile-none {
+  font-size: 22px;
+  color: #b5bac1;
+}
+.effect-owned-hint {
+  color: #b5bac1;
+  font-size: 13px;
+  padding: 8px 0;
+  grid-column: 1 / -1;
+}
+
+
+/* Qualité max des effets de profil */
+.profile-effect-overlay,
+#user-account-menu > .profile-effect-overlay,
+.zpc .profile-effect-overlay,
+.profile-card .profile-effect-overlay {
+  image-rendering: auto !important;
+  -ms-interpolation-mode: bicubic !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 1 !important;
+  mix-blend-mode: screen !important;
+  pointer-events: none !important;
+}
+/* Aperçu boutique effets plus net */
+.shop-card-effect {
+  object-fit: cover !important;
+  image-rendering: auto !important;
+  opacity: 1 !important;
+}
+
+
+/* Discord-style picker modal */
+.picker-modal {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+}
+.picker-modal.hidden { display: none !important; }
+.picker-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+}
+.picker-panel {
+  position: relative; z-index: 1;
+  width: min(720px, 94vw); max-height: 86vh;
+  background: #313338; border-radius: 12px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+.picker-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 16px 20px; border-bottom: 1px solid #3f4147;
+}
+.picker-header h2 { margin: 0; font-size: 18px; color: #f2f3f5; }
+.picker-sub { margin: 4px 0 0; color: #b5bac1; font-size: 13px; }
+.picker-x {
+  background: transparent; border: 0; color: #b5bac1;
+  font-size: 24px; cursor: pointer; line-height: 1;
+}
+.picker-body {
+  display: grid; grid-template-columns: 1fr 260px;
+  gap: 16px; padding: 16px 20px; overflow: auto; flex: 1;
+}
+.picker-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; align-content: start; max-height: 50vh; overflow: auto;
+}
+.picker-tile {
+  background: #1e1f22; border: 2px solid transparent; border-radius: 10px;
+  padding: 8px; cursor: pointer; color: #dbdee1; font-size: 11px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.picker-tile:hover { background: #2b2d31; }
+.picker-tile.active { border-color: #5865f2; }
+.picker-tile-inner {
+  width: 72px; height: 72px; border-radius: 8px; overflow: hidden;
+  background: #111214; display: flex; align-items: center; justify-content: center;
+}
+.picker-tile-inner img { width: 100%; height: 100%; object-fit: cover; }
+.picker-tile-inner.none, .picker-tile-inner.shop { font-size: 22px; color: #b5bac1; }
+.picker-preview-col { display: flex; flex-direction: column; gap: 12px; }
+.picker-preview-card {
+  position: relative; height: 280px; border-radius: 12px; overflow: hidden;
+  background: #1e1f22;
+}
+.picker-preview-fx {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; mix-blend-mode: screen; pointer-events: none;
+}
+.picker-preview-av {
+  position: absolute; left: 16px; bottom: 80px;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: #5865f2; color: #fff; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
+  z-index: 2; border: 4px solid #1e1f22;
+}
+.picker-preview-deco {
+  display: flex; align-items: center; justify-content: center;
+  background: #1e1f22;
+}
+.picker-deco-av-wrap {
+  position: relative; width: 120px; height: 120px;
+}
+.picker-deco-av-wrap .picker-preview-av {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  bottom: auto; left: auto; border: none; font-size: 40px;
+}
+.picker-deco-overlay {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  width: 150px; height: 150px; object-fit: contain; pointer-events: none;
+}
+.picker-item-name { color: #f2f3f5; font-weight: 600; font-size: 16px; }
+.picker-footer {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid #3f4147;
+}
+.link-btn {
+  background: transparent; border: 0; color: #00a8fc;
+  cursor: pointer; font-size: 13px; font-weight: 500; margin-left: 8px;
+}
+.link-btn:hover { text-decoration: underline; }
+@media (max-width: 700px) {
+  .picker-body { grid-template-columns: 1fr; }
+  .picker-preview-card { height: 180px; }
+}
+
+
+/* APNG / GIF animation must play */
+.profile-effect-overlay,
+.picker-preview-fx,
+.shop-card-effect,
+.effect-tile-preview img {
+  image-rendering: auto !important;
+  /* do not freeze frames */
+  animation: none !important;
+}
+/* Prefer normal blend so APNG colors show fully */
+#user-account-menu > .profile-effect-overlay,
+.zpc .profile-effect-overlay,
+.profile-card .profile-effect-overlay {
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
 }

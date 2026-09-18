@@ -13,14 +13,52 @@
       <div class="login-logo">
         <svg width="130" height="36" viewBox="0 0 71 55" fill="none"><path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6715 0.41542C45.5603 0.39451 45.4492 0.44718 45.3926 0.54718C44.852 1.55918 44.2065 2.86318 43.754 3.88918C38.3105 3.05718 32.908 3.05718 27.508 3.88918C27.0555 2.84118 26.3905 1.55918 25.8465 0.54718C25.7899 0.45018 25.6788 0.39751 25.5676 0.41542C20.5156 1.2916 15.6629 2.8214 11.1346 4.8978C11.0871 4.9178 11.0464 4.95418 11.0224 5.00218C3.58464 16.5332 1.48764 27.7752 2.50664 38.8752C2.51214 38.9352 2.54364 38.9912 2.58864 39.0272C8.57214 43.4772 14.3486 46.1972 19.9921 47.9772C20.1041 48.0112 20.2241 47.9712 20.2951 47.8772C21.5481 46.1272 22.6661 44.2772 23.6281 42.3472C23.7041 42.1912 23.6311 42.0052 23.4751 41.9412C21.6521 41.2212 19.9241 40.3212 18.3081 39.2912C18.1321 39.1812 18.1201 38.9252 18.2841 38.7992C18.6281 38.5112 18.9721 38.2092 19.3001 37.9012C19.3761 37.8292 19.4841 37.8132 19.5761 37.8612C29.7551 42.5712 40.8041 42.5712 50.8591 37.8612C50.9511 37.8092 51.0591 37.8252 51.1391 37.8972C51.4671 38.2052 51.8111 38.5112 52.1591 38.7992C52.3231 38.9252 52.3151 39.1852 52.1391 39.2912C50.5191 40.3352 48.7871 41.2252 46.9601 41.9452C46.8041 42.0092 46.7351 42.1992 46.8151 42.3512C47.7931 44.2772 48.9111 46.1272 50.1481 47.8732C50.2151 47.9712 50.3391 48.0112 50.4511 47.9732C56.1191 46.1932 61.9191 43.4732 67.9101 39.0232C67.9591 38.9872 67.9906 38.9312 67.9961 38.8712C69.2121 26.0212 66.0391 14.8812 60.2241 5.00618C60.2021 4.95418 60.1611 4.9178 60.1045 4.8978ZM23.7251 31.8752C20.9231 31.8752 18.6231 29.2752 18.6231 26.0752C18.6231 22.8752 20.8731 20.2752 23.7251 20.2752C26.5931 20.2752 28.8771 22.8912 28.8271 26.0752C28.8271 29.2752 26.5771 31.8752 23.7251 31.8752ZM47.7141 31.8752C44.9121 31.8752 42.6121 29.2752 42.6121 26.0752C42.6121 22.8752 44.8621 20.2752 47.7141 20.2752C50.5821 20.2752 52.8661 22.8912 52.8161 26.0752C52.8161 29.2752 50.5821 31.8752 47.7141 31.8752Z" fill="#5865F2"/></svg>
       </div>
-      <h1>Bienvenue sur Zeyscord !</h1>
-      <p class="login-subtitle">Connecte-toi pour discuter.</p>
-      <form id="login-form">
-        <label for="username">NOM D'UTILISATEUR</label>
-        <input type="text" id="username" placeholder="Entre ton pseudo..." maxlength="32" required autocomplete="off">
-        <button type="submit">Se connecter</button>
-      </form>
-      <p class="login-footer">Besoin d'un compte ? <a href="#">S'inscrire</a></p>
+
+      <!-- CONNEXION -->
+      <div id="auth-login-panel">
+        <h1>Content de te revoir !</h1>
+        <p class="login-subtitle">Connecte-toi à Zeyscord.</p>
+        <form id="login-form">
+          <label>E-MAIL</label>
+          <input type="email" id="login-email" placeholder="email@exemple.com" required autocomplete="username">
+          <label>MOT DE PASSE</label>
+          <input type="password" id="login-password" placeholder="Mot de passe" required autocomplete="current-password">
+          <button type="submit">Se connecter</button>
+        </form>
+        <p class="login-footer">Pas encore de compte ? <a href="#" id="goto-register">S'inscrire</a></p>
+      </div>
+
+      <!-- INSCRIPTION -->
+      <div id="auth-register-panel" class="hidden">
+        <h1>Créer un compte</h1>
+        <p class="login-subtitle">E-mail, mot de passe et pseudo.</p>
+        <form id="register-form">
+          <label>E-MAIL</label>
+          <input type="email" id="reg-email" placeholder="email@exemple.com" required>
+          <label>NOM D'UTILISATEUR</label>
+          <input type="text" id="reg-username" placeholder="Pseudo" maxlength="32" required autocomplete="off">
+          <label>MOT DE PASSE</label>
+          <input type="password" id="reg-password" placeholder="Au moins 4 caractères" minlength="4" required>
+          <button type="submit">Continuer</button>
+        </form>
+        <p class="login-footer">Déjà un compte ? <a href="#" id="goto-login">Se connecter</a></p>
+      </div>
+
+      <!-- CODE DE VÉRIFICATION -->
+      <div id="auth-verify-panel" class="hidden">
+        <h1>Vérifie ton e-mail</h1>
+        <p class="login-subtitle">Un code a été généré pour valider ton compte.</p>
+        <div id="verify-code-display" class="verify-code-display">------</div>
+        <p class="login-hint">Entre ce code ci-dessous pour activer ton compte.</p>
+        <form id="verify-form">
+          <label>CODE DE VÉRIFICATION</label>
+          <input type="text" id="verify-code" placeholder="123456" maxlength="6" required autocomplete="off">
+          <button type="submit">Valider le compte</button>
+        </form>
+        <p class="login-footer"><a href="#" id="goto-login-from-verify">Retour à la connexion</a></p>
+      </div>
+
+      <p id="auth-error" class="auth-error hidden"></p>
     </div>
   </div>
 
@@ -62,13 +100,10 @@
         <div class="channels-section" id="home-friends-panel">
           <div class="channels-header"><span>MESSAGES DIRECTS</span></div>
           <div id="dm-list" class="channels-list"></div>
-          <div class="channels-header" style="margin-top:12px"><span>AMIS</span></div>
-          <div id="friends-list" class="channels-list"></div>
-          <div style="padding:8px">
-            <input id="add-friend-input" type="text" placeholder="Ajouter un ami (pseudo)..." style="width:100%;padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px;outline:none">
-            <button id="add-friend-btn" style="width:100%;margin-top:6px;padding:8px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px">Envoyer une demande</button>
-          </div>
-          <div id="friend-requests-list"></div>
+          <div id="friends-list" class="channels-list" style="display:none"></div>
+          <div id="friend-requests-list" style="display:none"></div>
+          <input id="add-friend-input" type="hidden">
+          <button id="add-friend-btn" style="display:none"></button>
         </div>
       </div>
 
@@ -91,16 +126,91 @@
       </div>
 
       <div class="user-panel">
-        <div class="user-info">
-          <div id="user-avatar" class="user-avatar"></div>
+        <div class="user-info" id="user-info-btn">
+          <div class="user-avatar-wrap">
+            <div id="user-avatar" class="user-avatar"></div>
+            <div id="user-status-dot" class="status-dot status-online"></div>
+          </div>
           <div class="user-details">
             <span id="user-name" class="user-name"></span>
-            <span class="user-status">En ligne</span>
+            <span id="user-custom-status" class="user-custom-status"></span>
           </div>
         </div>
         <div class="user-controls">
-          <button title="Mute"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/></svg></button>
-          <button title="Paramètres"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+          <button title="Muet" id="btn-mute"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path fill="currentColor" d="M19 11a1 1 0 0 0-2 0 5 5 0 0 1-10 0 1 1 0 0 0-2 0 7 7 0 0 0 6 6.92V21H9a1 1 0 0 0 0 2h6a1 1 0 0 0 0-2h-2v-3.08A7 7 0 0 0 19 11z"/></svg></button>
+          <button title="Sourdine" id="btn-deafen"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3.75a6.25 6.25 0 0 0-6.25 6.25v1.89l-1.8 1.8A1 1 0 0 0 4.5 15h15a1 1 0 0 0 .55-1.81l-1.8-1.8V10A6.25 6.25 0 0 0 12 3.75zm-1.5 14.5a1.5 1.5 0 0 0 3 0v-1h-3v1z"/></svg></button>
+          <button title="Paramètres" id="btn-settings"><svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+        </div>
+
+        <!-- Discord-style account menu -->
+        <div id="user-account-menu" class="user-account-menu hidden">
+          <div class="uam-header-block">
+            <div id="uam-banner" class="uam-banner"></div>
+          </div>
+
+          <div class="uam-avatar-wrap">
+            <div id="uam-avatar" class="uam-avatar"></div>
+            <div id="uam-status-dot" class="status-dot status-online"></div>
+          </div>
+
+          <div class="uam-profile-body">
+            <div class="uam-top-info">
+              <div id="uam-name" class="uam-name"></div>
+              <div id="uam-handle" class="uam-handle"></div>
+              <div id="uam-badges" class="uam-badges"></div>
+            </div>
+
+            <div class="uam-user-card">
+              <div id="uam-custom-status" class="uam-custom-status"></div>
+            </div>
+
+            <div class="uam-actions">
+              <button type="button" class="uam-item" id="uam-edit-profile">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                <span>Modifier le profil</span>
+              </button>
+
+              <div class="uam-status-row">
+                <button type="button" class="uam-item uam-status-btn" id="uam-status-toggle">
+                  <span id="uam-status-indicator" class="uam-status-icon status-online"></span>
+                  <span id="uam-status-label">En ligne</span>
+                  <svg class="uam-chevron" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+                <div id="uam-status-submenu" class="uam-status-submenu hidden">
+                  <button type="button" class="uam-status-option" data-status="online">
+                    <span class="uam-status-icon status-online"></span>
+                    <span class="uam-status-text"><strong>En ligne</strong></span>
+                  </button>
+                  <button type="button" class="uam-status-option" data-status="idle">
+                    <span class="uam-status-icon status-idle"></span>
+                    <span class="uam-status-text"><strong>Inactif</strong></span>
+                  </button>
+                  <button type="button" class="uam-status-option" data-status="dnd">
+                    <span class="uam-status-icon status-dnd"></span>
+                    <span class="uam-status-text"><strong>Ne pas déranger</strong><small>Tu ne recevras pas de notifications sur le bureau</small></span>
+                  </button>
+                  <button type="button" class="uam-status-option" data-status="invisible">
+                    <span class="uam-status-icon status-invisible"></span>
+                    <span class="uam-status-text"><strong>Invisible</strong><small>Tu apparaîtras hors ligne</small></span>
+                  </button>
+                </div>
+              </div>
+
+              <button type="button" class="uam-item" id="uam-switch-account">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <span>Changer de compte</span>
+                <svg class="uam-chevron" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+              </button>
+              <div id="uam-accounts-submenu" class="uam-accounts-submenu hidden">
+                <div id="uam-accounts-list"></div>
+              </div>
+
+              <button type="button" class="uam-item" id="uam-copy-id">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                <span>Copier l'identifiant de l'utilisateur</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -134,6 +244,34 @@
         </div>
       </div>
 
+
+      <!-- FRIENDS MAIN PANEL (Discord-style) -->
+      <div id="friends-panel" class="friends-panel hidden">
+        <div class="friends-header">
+          <div class="friends-header-left">
+            <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 10.9c1.5 0 2.7-1.2 2.7-2.7S13.5 5.5 12 5.5 9.3 6.7 9.3 8.2s1.2 2.7 2.7 2.7zm0 1.4c-2.1 0-6.4 1.1-6.4 3.2V17h12.7v-1.5c0-2.1-4.3-3.2-6.3-3.2z"/></svg>
+            <span class="friends-title">Amis</span>
+            <div class="friends-tabs">
+              <button type="button" class="friends-tab active" data-ftab="online">En ligne</button>
+              <button type="button" class="friends-tab" data-ftab="all">Tous</button>
+              <button type="button" class="friends-tab" data-ftab="pending">En attente <span id="friends-pending-badge" class="friends-badge hidden">0</span></button>
+              <button type="button" class="friends-tab friends-tab-add" data-ftab="add">Ajouter</button>
+            </div>
+          </div>
+        </div>
+        <div class="friends-search-wrap">
+          <input type="text" id="friends-search" class="friends-search" placeholder="Rechercher">
+        </div>
+        <div id="friends-main-list" class="friends-main-list"></div>
+        <div id="friends-add-panel" class="friends-add-panel hidden">
+          <h3>Ajouter un ami</h3>
+          <p>Tu peux ajouter des amis avec leur pseudo Zeyscord.</p>
+          <div class="friends-add-row">
+            <input type="text" id="friends-add-input" placeholder="Entre un pseudo">
+            <button type="button" id="friends-add-btn" class="friends-add-btn">Envoyer une demande</button>
+          </div>
+        </div>
+      </div>
 
        <div id="messages-container" class="messages-container">
         <div class="welcome-message">
@@ -169,64 +307,134 @@
   <!-- Profile Popup Zeyscord (style Discord) -->
   <div id="profile-modal" class="profile-modal hidden">
     <div class="profile-overlay" id="profile-overlay"></div>
-    <div class="profile-card">
-      <div class="profile-banner" id="profile-banner"></div>
-      <div class="profile-avatar-wrapper">
-        <div class="profile-avatar" id="profile-avatar"></div>
-        <div class="profile-status-dot" id="profile-status-dot"></div>
-      </div>
-      <div class="profile-content">
-        <div class="profile-name-row">
-          <h2 id="profile-username"></h2>
+    <div class="zpc" id="profile-card-main">
+      <div class="zpc-banner" id="profile-banner"></div>
+      <div class="zpc-body" id="profile-body">
+        <div class="zpc-avatar-wrap" id="profile-avatar-wrap">
+          <div class="zpc-avatar" id="profile-avatar"></div>
+          <div class="zpc-online" id="profile-status-dot"></div>
         </div>
-        <div class="profile-handle" id="profile-handle"></div>
-        <div id="profile-badges" class="profile-badges"></div>
-        <div class="profile-status" id="profile-status"></div>
-        <div class="profile-section">
-          <h3>À PROPOS DE MOI</h3>
-          <p id="profile-about">Aucune bio pour le moment.</p>
-        </div>
-        <div class="profile-section" id="profile-member-since-section">
-          <h3>MEMBRE DEPUIS</h3>
-          <p id="profile-member-since">—</p>
-          <div id="profile-created-edit" class="hidden" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-            <input type="date" id="profile-created-input" style="padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px">
-            <button type="button" id="profile-created-save" style="padding:8px 12px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px;font-weight:500">Changer la date</button>
+        <div class="zpc-info">
+          <h2 class="zpc-name" id="profile-username"></h2>
+          <div class="zpc-handle" id="profile-handle"></div>
+          <div id="profile-badges" class="zpc-badges profile-badges"></div>
+          <div class="zpc-status" id="profile-status"></div>
+          <div class="zpc-section">
+            <h3>À PROPOS DE MOI</h3>
+            <p id="profile-about">Aucune bio pour le moment.</p>
           </div>
+          <div class="zpc-section" id="profile-member-since-section">
+            <h3>MEMBRE DEPUIS</h3>
+            <p id="profile-member-since">—</p>
+            <div id="profile-created-edit" class="hidden" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+              <input type="date" id="profile-created-input" style="padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px">
+              <button type="button" id="profile-created-save" style="padding:8px 12px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px;font-weight:500">Changer la date</button>
+            </div>
+          </div>
+          <div class="zpc-actions profile-actions" id="profile-actions"></div>
         </div>
-        <div class="profile-actions" id="profile-actions"></div>
       </div>
     </div>
   </div>
 
-  <!-- Modal d'édition de profil -->
-  <div id="edit-profile-modal" class="edit-modal hidden">
+  <!-- Modal d'édition de profil (style Discord) -->
+  <div id="edit-profile-modal" class="edit-modal pe-modal hidden">
     <div class="edit-overlay" id="edit-overlay"></div>
-    <div class="edit-card">
-      <h2>Modifier le profil</h2>
-      <label>Avatar (importer une image / GIF)</label>
-      <div class="upload-row">
-        <div id="edit-avatar-preview" class="upload-preview avatar-preview"></div>
-        <div>
-          <input type="file" id="edit-avatar-file" accept="image/*,.gif" style="display:none">
-          <button type="button" class="upload-btn" id="edit-avatar-btn">Choisir une image</button>
-          <button type="button" class="upload-clear" id="edit-avatar-clear">Supprimer</button>
-        </div>
+    <div class="pe-panel">
+      <div class="pe-header">
+        <h2>Profil principal</h2>
+        <button type="button" class="pe-close" id="edit-cancel" title="Fermer">✕</button>
       </div>
-      <label>Bannière (importer une image / GIF)</label>
-      <div class="upload-row">
-        <div id="edit-banner-preview" class="upload-preview banner-preview"></div>
-        <div>
-          <input type="file" id="edit-banner-file" accept="image/*,.gif" style="display:none">
-          <button type="button" class="upload-btn" id="edit-banner-btn">Choisir une image</button>
-          <button type="button" class="upload-clear" id="edit-banner-clear">Supprimer</button>
+      <div class="pe-body">
+        <!-- Colonne gauche : options -->
+        <div class="pe-sidebar">
+          <div class="pe-section">
+            <div class="pe-section-title">Avatar et décoration</div>
+            <input type="file" id="edit-avatar-file" accept="image/*,.gif" style="display:none">
+            <div id="edit-avatar-preview" class="upload-preview avatar-preview" style="display:none"></div>
+            <div class="deco-grid" id="edit-deco-grid" data-picker="1" style="margin-top:0">
+              <div class="deco-option active" data-deco="none" title="Aucune"><div class="deco-preview none"></div></div>
+              <div class="deco-option" data-deco="angry" title="En colère"><img class="deco-img" src="/decos/angry.png" alt="Angry"></div>
+              <div class="deco-option" data-deco="ki" title="Le Ki"><img class="deco-img" src="/decos/ki.png" alt="Ki"></div>
+              <div class="deco-option" data-deco="rage" title="Rage"><img class="deco-img" src="/decos/rage.png" alt="Rage"></div>
+              <div class="deco-option" data-deco="phoenix" title="Phoenix"><img class="deco-img" src="/decos/phoenix.png" alt="Phoenix"></div>
+              <div class="deco-option" data-deco="lotus" title="Lotus"><img class="deco-img" src="/decos/lotus.png" alt="Lotus"></div>
+            </div>
+          </div>
+
+          <div class="pe-section">
+            <div class="pe-section-title">Style du pseudonyme</div>
+            <input type="text" id="edit-username" maxlength="32" placeholder="Nom d'utilisateur">
+          </div>
+
+          <div class="pe-section">
+            <div class="pe-section-title">Thème et bannière</div>
+            <div class="pe-theme-row">
+              <div class="pe-color-swatch">
+                <input type="color" id="edit-primary-color" value="#5865f2" title="Couleur primaire">
+                <span>Primaire</span>
+              </div>
+              <div class="pe-color-swatch">
+                <input type="color" id="edit-secondary-color" value="#eb459e" title="Couleur secondaire">
+                <span>Secondaire</span>
+              </div>
+            </div>
+            <input type="file" id="edit-banner-file" accept="image/*,.gif" style="display:none">
+            <div id="edit-banner-preview" class="upload-preview banner-preview" style="display:none"></div>
+          </div>
+
+          <div class="pe-section">
+            <div class="pe-section-title">Effet de profil <button type="button" class="link-btn" onclick="openEffectPicker()">Changer</button></div>
+            <div class="effect-grid" id="edit-effect-grid">
+              <div class="effect-option active" data-effect="none">Aucun</div>
+              <div class="effect-option" data-effect="earthquake">Séisme</div>
+              <div class="effect-option" data-effect="sakura">Sakura</div>
+              <div class="effect-option" data-effect="cyberpunk">Cyberpunk</div>
+              <div class="effect-option" data-effect="mastery">Mastery</div>
+              <div class="effect-option" data-effect="vortex">Vortex</div>
+            </div>
+          </div>
+
+          <div class="pe-section">
+            <div class="pe-section-title">Bio / Statut</div>
+            <textarea id="edit-status" rows="3" maxlength="190" placeholder="Parle de toi..."></textarea>
+          </div>
+
+          <div class="pe-footer">
+            <button type="button" id="edit-save" class="primary pe-save">Enregistrer</button>
+          </div>
         </div>
-      </div>
-      <label>Bio / Statut personnalisé</label>
-      <input type="text" id="edit-status" placeholder="ex: En train de coder..." maxlength="128">
-      <div class="edit-buttons">
-        <button id="edit-cancel">Annuler</button>
-        <button id="edit-save" class="primary">Enregistrer</button>
+
+        <!-- Colonne droite : aperçu live -->
+        <div class="pe-preview-wrap">
+          <div class="pe-preview-label">Aperçu</div>
+          <div class="zpc" id="edit-preview-card">
+            <div class="zpc-banner" id="edit-preview-banner">
+              <button type="button" class="zpc-edit-btn zpc-edit-banner" id="edit-banner-pencil" title="Changer la bannière">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+              </button>
+            </div>
+            <div class="zpc-body" id="edit-preview-content">
+              <div class="zpc-avatar-wrap" id="edit-preview-avatar-wrap">
+                <div class="zpc-avatar" id="edit-preview-avatar"></div>
+                <button type="button" class="zpc-edit-btn zpc-edit-avatar" id="edit-avatar-pencil" title="Changer l'avatar">
+                  <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                </button>
+              </div>
+              <div class="zpc-info">
+                <h2 class="zpc-name" id="edit-preview-username">User</h2>
+                <div class="zpc-handle" id="edit-preview-handle"></div>
+                <div id="edit-preview-badges" class="zpc-badges uam-badges"></div>
+                <div class="zpc-status" id="edit-preview-status">Pas de statut personnalisé</div>
+                <div class="zpc-section">
+                  <h3>À PROPOS DE MOI</h3>
+                  <p id="edit-preview-about">Aucune bio pour le moment.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="pe-preview-hint">Les badges et la date d'inscription restent sous le profil principal (hors éditeur).</p>
+        </div>
       </div>
     </div>
   </div>
@@ -317,6 +525,21 @@
               <div class="effect-option" data-effect="vortex">Vortex</div>
             </div>
 
+            <label style="margin-top:20px">Couleurs du profil</label>
+            <p style="color:#b5bac1;font-size:13px;margin:4px 0 12px">Comme sur Discord : couleur primaire + secondaire (dégradé sur la carte profil).</p>
+            <div class="color-row" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+                <span style="font-size:12px;color:#b5bac1;text-transform:uppercase;font-weight:600">Primaire</span>
+                <input type="color" id="settings-primary-color" value="#5865f2" style="width:56px;height:40px;border:none;border-radius:6px;cursor:pointer;background:transparent;padding:0">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+                <span style="font-size:12px;color:#b5bac1;text-transform:uppercase;font-weight:600">Secondaire</span>
+                <input type="color" id="settings-secondary-color" value="#eb459e" style="width:56px;height:40px;border:none;border-radius:6px;cursor:pointer;background:transparent;padding:0">
+              </div>
+              <button type="button" id="settings-colors-reset" class="upload-clear" style="margin-top:18px">Réinitialiser</button>
+            </div>
+            <div id="settings-color-preview" style="height:48px;border-radius:8px;margin-bottom:16px;background:linear-gradient(90deg,#5865f2,#eb459e)"></div>
+
             <button class="settings-save-btn" id="save-profile">Enregistrer le profil</button>
           </div>
         </div>
@@ -364,16 +587,27 @@
   </div>
 
   
-  <!-- SHOP -->
+  <!-- SHOP Discord-style -->
   <div id="shop-modal" class="shop-modal hidden">
     <div class="shop-overlay" id="shop-overlay"></div>
-    <div class="shop-panel">
+    <div class="shop-panel shop-panel-discord">
       <div class="shop-header">
-        <h2>Boutique Zeyscord</h2>
+        <h2>Boutique</h2>
         <button id="shop-close" class="settings-close">✕</button>
       </div>
-      <p class="shop-subtitle">Décorations & effets de profil — gratuits pour le moment</p>
-      <div class="shop-grid" id="shop-grid"></div>
+      <div class="shop-body-discord">
+        <div class="shop-catalog">
+          <div class="shop-tabs">
+            <button type="button" class="shop-tab active" data-tab="decos">Décorations</button>
+            <button type="button" class="shop-tab" data-tab="effects">Effets</button>
+            <button type="button" class="shop-tab" data-tab="nitro">Nitro</button>
+          </div>
+          <div class="shop-grid" id="shop-grid"></div>
+        </div>
+        <div class="shop-detail" id="shop-detail">
+          <div class="shop-detail-empty">Sélectionne un article</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -413,8 +647,18 @@
           <div class="settings-card">
             <label>Nom du serveur</label>
             <input type="text" id="ss-name" maxlength="32">
-            <label>Icône (1-2 lettres)</label>
-            <input type="text" id="ss-icon" maxlength="2">
+            <label>Icône du serveur</label>
+            <div style="display:flex;align-items:center;gap:12px;margin:8px 0 16px">
+              <div id="ss-icon-preview" class="server-icon" style="width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#5865f2;overflow:hidden;flex-shrink:0"></div>
+              <div>
+                <input type="file" id="ss-icon-file" accept="image/png,image/jpeg,image/gif,image/webp" style="display:none">
+                <button type="button" class="settings-save-btn" id="ss-icon-upload" style="margin:0 0 8px 0">Changer l'icône</button>
+                <button type="button" class="upload-clear" id="ss-icon-clear" style="display:block">Supprimer</button>
+                <div style="font-size:12px;color:#949ba4;margin-top:6px">PNG, JPG, GIF ou WebP — max 5 Mo</div>
+              </div>
+            </div>
+            <label>Ou initiales (1-2 lettres)</label>
+            <input type="text" id="ss-icon" maxlength="2" placeholder="ZC">
             <button class="settings-save-btn" id="ss-save-overview">Enregistrer</button>
           </div>
         </div>
@@ -448,6 +692,23 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  
+  <!-- GÉRER LES COMPTES (Discord style) -->
+  <div id="accounts-modal" class="accounts-modal hidden">
+    <div class="accounts-overlay" id="accounts-overlay"></div>
+    <div class="accounts-panel">
+      <div class="accounts-header">
+        <div>
+          <h2>Gérer les comptes</h2>
+          <p>Change de compte, connecte-toi, déconnecte-toi, éclate-toi.</p>
+        </div>
+        <button type="button" id="accounts-close" class="accounts-close">✕</button>
+      </div>
+      <div id="accounts-list" class="accounts-list"></div>
+      <button type="button" id="accounts-add" class="accounts-add">Ajouter un compte</button>
     </div>
   </div>
 
