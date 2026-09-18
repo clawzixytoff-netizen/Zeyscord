@@ -80,7 +80,20 @@ const staticDir = fs.existsSync(path.join(__dirname, 'public'))
   ? path.join(__dirname, 'public')
   : path.join(__dirname, 'publique');
 app.use(express.static(staticDir));
+
 console.log('[Static]', staticDir);
+// Alias dossiers FR -> EN (si renommés sur GitHub)
+const pubRoot = staticDir;
+if (fs.existsSync(path.join(pubRoot, 'décorations'))) {
+  app.use('/decos', express.static(path.join(pubRoot, 'décorations')));
+}
+if (fs.existsSync(path.join(pubRoot, 'decorations'))) {
+  app.use('/decos', express.static(path.join(pubRoot, 'decorations')));
+}
+if (fs.existsSync(path.join(pubRoot, 'effets'))) {
+  app.use('/effects', express.static(path.join(pubRoot, 'effets')));
+}
+
 
 
 // Créer une session Stripe Checkout
