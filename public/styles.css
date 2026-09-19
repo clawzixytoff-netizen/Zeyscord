@@ -7701,3 +7701,269 @@ img.avatar-deco-overlay {
   pointer-events: none !important;
   z-index: 20 !important;
 }
+
+
+/* =========================================================
+   RESPONSIVE — PC (défaut) / MOBILE (max-width: 768px)
+   ========================================================= */
+
+.mobile-nav-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--interactive);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mobile-nav-btn:hover { background: var(--bg-hover); color: var(--header); }
+
+.mobile-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 900;
+}
+
+/* ---- MOBILE ---- */
+@media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .mobile-nav-btn { display: inline-flex !important; }
+
+  .mobile-sidebar-overlay:not(.hidden) {
+    display: block !important;
+  }
+
+  /* Layout: servers + chat only by default */
+  .app {
+    flex-direction: row;
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  .servers-sidebar {
+    width: 56px !important;
+    padding: 8px 0 !important;
+    gap: 6px !important;
+    z-index: 950;
+  }
+  .server-icon {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  /* Channels: drawer from left */
+  .channels-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 56px;
+    bottom: 0;
+    width: min(280px, calc(100vw - 56px)) !important;
+    z-index: 940;
+    transform: translateX(-110%);
+    transition: transform 0.2s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  }
+  body.mobile-channels-open .channels-sidebar {
+    transform: translateX(0);
+  }
+
+  /* Members: drawer from right */
+  .members-sidebar {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(260px, 85vw) !important;
+    z-index: 940;
+    transform: translateX(110%);
+    transition: transform 0.2s ease;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.4);
+    display: flex !important;
+  }
+  body.mobile-members-open .members-sidebar {
+    transform: translateX(0);
+  }
+
+  /* Chat full width */
+  .chat-area {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .chat-header {
+    padding: 0 8px !important;
+    gap: 4px;
+  }
+  .channel-info {
+    min-width: 0;
+    overflow: hidden;
+  }
+  #current-channel-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 45vw;
+  }
+
+  /* Messages */
+  .messages-container {
+    padding: 12px 8px !important;
+  }
+  .message {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  .message-avatar {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* Input */
+  .message-input-area {
+    padding: 8px !important;
+    padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  }
+  .input-wrapper {
+    min-height: 44px !important;
+  }
+  #message-input {
+    font-size: 16px !important; /* évite zoom iOS */
+  }
+
+  /* User panel */
+  .user-panel {
+    padding: 6px 8px !important;
+  }
+  .user-custom-status {
+    max-width: 80px !important;
+  }
+
+  /* Login */
+  .login-screen {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: max(24px, env(safe-area-inset-top));
+    overflow-y: auto;
+  }
+  .login-box {
+    padding: 24px 16px !important;
+    max-width: 100% !important;
+    margin: auto 0;
+  }
+  .login-box input,
+  .login-box button {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  /* Account menu */
+  #user-account-menu,
+  .user-account-menu {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: calc(100vw - 16px) !important;
+    bottom: calc(100% + 8px) !important;
+  }
+
+  /* Profile modal */
+  .profile-modal .zpc,
+  #profile-card-main,
+  .profile-card {
+    width: min(340px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  /* Settings full screen-ish */
+  .settings-modal,
+  .settings-container {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+  .settings-sidebar {
+    width: 100% !important;
+  }
+
+  /* Shop */
+  .shop-modal,
+  #shop-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+
+  /* Edit profile */
+  .pe-layout,
+  .profile-edit-modal .pe-body {
+    flex-direction: column !important;
+  }
+  .pe-sidebar,
+  .pe-preview-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Pickers */
+  .picker-panel {
+    width: 96vw !important;
+    max-height: 90dvh !important;
+  }
+  .picker-body {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Friends panel */
+  .friends-panel {
+    padding: 8px !important;
+  }
+  .friends-tabs {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* Nitro panel */
+  .nitro-panel-inner {
+    padding: 16px !important;
+  }
+
+  /* Hide desktop-only hover tooltips issues */
+  .servers-sidebar {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ---- TABLETTE (optionnel, entre mobile et PC) ---- */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .members-sidebar {
+    width: 200px !important;
+  }
+  .channels-sidebar {
+    width: 200px !important;
+  }
+}
+
+/* ---- PC : s'assurer que les boutons mobile sont cachés ---- */
+@media (min-width: 769px) {
+  .mobile-nav-btn { display: none !important; }
+  .mobile-sidebar-overlay { display: none !important; }
+  body.mobile-channels-open .channels-sidebar,
+  body.mobile-members-open .members-sidebar {
+    transform: none !important;
+  }
+}

@@ -2,9 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zeyscord</title>
-  <link rel="stylesheet" href="styles.css?v=20260918f">
+  <link rel="stylesheet" href="styles.css?v=20260919mobile">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -62,6 +62,7 @@
     </div>
   </div>
 
+  <div id="mobile-sidebar-overlay" class="mobile-sidebar-overlay hidden"></div>
   <div id="app" class="app hidden">
     <div class="servers-sidebar">
       <div class="server-icon home active" id="home-btn" title="Accueil">
@@ -217,12 +218,17 @@
 
     <div class="chat-area">
       <div class="chat-header">
+        <button type="button" id="mobile-channels-btn" class="mobile-nav-btn" title="Menu" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
         <div class="channel-info">
           <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M5.88657 21C5.43619 21 5.05291 20.6919 4.96847 20.2497L3.10921 10.3679C3.05097 10.0575 3.16278 9.7413 3.4014 9.54224C3.64003 9.34317 3.97164 9.29167 4.25966 9.40967L7.5 10.75V6.5C7.5 5.67157 8.17157 5 9 5H15C15.8284 5 16.5 5.67157 16.5 6.5V10.75L19.7403 9.40967C20.0284 9.29167 20.36 9.34317 20.5986 9.54224C20.8372 9.7413 20.949 10.0575 20.8908 10.3679L19.0315 20.2497C18.9471 20.6919 18.5638 21 18.1134 21H5.88657ZM9 7V12.25L5.5 10.8L6.88657 19H17.1134L18.5 10.8L15 12.25V7H9Z"/></svg>
           <span id="current-channel-name">général</span>
         </div>
         <div class="chat-actions">
-          <button title="Membres"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></button>
+          <button type="button" id="mobile-members-btn" class="mobile-nav-btn" title="Membres" aria-label="Membres">
+            <svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          </button>
         </div>
       </div>
 
@@ -718,7 +724,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260918f"></script>
+  <script src="app.js?v=20260919mobile"></script>
 </body>
 </html>
 

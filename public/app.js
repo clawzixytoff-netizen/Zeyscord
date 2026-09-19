@@ -3756,3 +3756,70 @@ function switchAccount(username) {
   if (socket) socket.disconnect();
   location.reload();
 }
+
+
+// ===== MOBILE NAV (téléphone) =====
+(function setupMobileNav() {
+  const overlay = document.getElementById('mobile-sidebar-overlay');
+  const btnCh = document.getElementById('mobile-channels-btn');
+  const btnMb = document.getElementById('mobile-members-btn');
+
+  function isMobile() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+  function closeMobileSidebars() {
+    document.body.classList.remove('mobile-channels-open', 'mobile-members-open');
+    if (overlay) overlay.classList.add('hidden');
+  }
+  function openChannels() {
+    document.body.classList.remove('mobile-members-open');
+    document.body.classList.add('mobile-channels-open');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+  function openMembers() {
+    document.body.classList.remove('mobile-channels-open');
+    document.body.classList.add('mobile-members-open');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+
+  btnCh?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!isMobile()) return;
+    if (document.body.classList.contains('mobile-channels-open')) closeMobileSidebars();
+    else openChannels();
+  });
+  btnMb?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!isMobile()) return;
+    if (document.body.classList.contains('mobile-members-open')) closeMobileSidebars();
+    else openMembers();
+  });
+  overlay?.addEventListener('click', closeMobileSidebars);
+
+  // Fermer le menu salons après choix d'un salon / DM / nav
+  document.getElementById('channels-list')?.addEventListener('click', () => {
+    if (isMobile()) closeMobileSidebars();
+  });
+  document.getElementById('dm-list')?.addEventListener('click', () => {
+    if (isMobile()) closeMobileSidebars();
+  });
+  document.querySelectorAll('.home-nav-item').forEach(el => {
+    el.addEventListener('click', () => {
+      if (isMobile()) closeMobileSidebars();
+    });
+  });
+  document.querySelectorAll('.server-icon').forEach(el => {
+    el.addEventListener('click', () => {
+      if (isMobile()) {
+        // Ouvrir les salons apres choix serveur
+        setTimeout(() => {
+          if (isMobile()) openChannels();
+        }, 50);
+      }
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    if (!isMobile()) closeMobileSidebars();
+  });
+})();
