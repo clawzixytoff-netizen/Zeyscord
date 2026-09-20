@@ -1645,11 +1645,23 @@ document.getElementById('profile-overlay')?.addEventListener('click', closeProfi
 let pendingEditAvatar = null;   // dataURL or null (null = keep current, '' = clear)
 let pendingEditBanner = null;
 
-/** Compresse une image base64 pour passer sous la limite socket (~5 Mo) */
+/** Compresse une image base64 pour passer sous la limite socket (~5 Mo).
+ *  Les GIF (et animations) sont renvoyés TELSquels — pas de canvas (sinon plus d'anim). */
 function compressImageDataUrl(dataUrl, maxW, maxH, quality) {
   return new Promise((resolve) => {
     try {
       if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image')) {
+        resolve(dataUrl);
+        return;
+      }
+      // Ne JAMAIS convertir les GIF (garde l'animation)
+      const header = dataUrl.slice(0, 40).toLowerCase();
+      if (header.includes('image/gif')) {
+        resolve(dataUrl);
+        return;
+      }
+      // PNG/WebP animes rares : si tres gros on laisse tel quel plutot que casser
+      if (header.includes('image/webp') && dataUrl.length < 4e6) {
         resolve(dataUrl);
         return;
       }
@@ -1667,10 +1679,13 @@ function compressImageDataUrl(dataUrl, maxW, maxH, quality) {
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, w, h);
-        let out = canvas.toDataURL('image/jpeg', quality || 0.82);
-        // Si encore trop gros (>1.5Mo), recompress
-        if (out.length > 1.5e6) out = canvas.toDataURL('image/jpeg', 0.65);
-        if (out.length > 2.5e6) out = canvas.toDataURL('image/jpeg', 0.5);
+        // Garder PNG si transparence, sinon JPEG
+        const hasAlpha = header.includes('image/png');
+        let out = hasAlpha
+          ? canvas.toDataURL('image/png')
+          : canvas.toDataURL('image/jpeg', quality || 0.82);
+        if (out.length > 1.5e6 && !hasAlpha) out = canvas.toDataURL('image/jpeg', 0.65);
+        if (out.length > 2.5e6 && !hasAlpha) out = canvas.toDataURL('image/jpeg', 0.5);
         resolve(out);
       };
       img.onerror = () => resolve(dataUrl);
