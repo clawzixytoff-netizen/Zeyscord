@@ -1644,6 +1644,42 @@ document.getElementById('profile-overlay')?.addEventListener('click', closeProfi
 // ===== Upload helpers (avatar / bannière en fichier local) =====
 let pendingEditAvatar = null;   // dataURL or null (null = keep current, '' = clear)
 let pendingEditBanner = null;
+
+/** Compresse une image base64 pour passer sous la limite socket (~5 Mo) */
+function compressImageDataUrl(dataUrl, maxW, maxH, quality) {
+  return new Promise((resolve) => {
+    try {
+      if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image')) {
+        resolve(dataUrl);
+        return;
+      }
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        const mw = maxW || 512, mh = maxH || 512;
+        if (w > mw || h > mh) {
+          const r = Math.min(mw / w, mh / h);
+          w = Math.round(w * r);
+          h = Math.round(h * r);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        let out = canvas.toDataURL('image/jpeg', quality || 0.82);
+        // Si encore trop gros (>1.5Mo), recompress
+        if (out.length > 1.5e6) out = canvas.toDataURL('image/jpeg', 0.65);
+        if (out.length > 2.5e6) out = canvas.toDataURL('image/jpeg', 0.5);
+        resolve(out);
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    } catch (e) {
+      resolve(dataUrl);
+    }
+  });
+}
 let pendingSettingsAvatar = null;
 let pendingSettingsBanner = null;
 
@@ -1847,19 +1883,57 @@ function openEditProfile() {
 function closeEditProfile() { document.getElementById('edit-profile-modal').classList.add('hidden'); }
 document.getElementById('edit-overlay')?.addEventListener('click', closeEditProfile);
 document.getElementById('edit-cancel')?.addEventListener('click', closeEditProfile);
-document.getElementById('edit-save')?.addEventListener('click', () => {
+document.getElementById('edit-save')?.addEventListener('click', async () => {
+  const btn = document.getElementById('edit-save');
+  if (btn) { btn.disabled = true; btn.textContent = 'Enregistrement...'; }
+
   const payload = {
-    customStatus: document.getElementById('edit-status').value.trim(),
-    username: document.getElementById('edit-username')?.value.trim(),
+    customStatus: (document.getElementById('edit-status')?.value || '').trim(),
+    username: (document.getElementById('edit-username')?.value || '').trim() || currentUser?.username,
     primaryColor: document.getElementById('edit-primary-color')?.value || null,
     secondaryColor: document.getElementById('edit-secondary-color')?.value || null,
-    avatarDeco: editSelectedDeco,
-    profileEffect: editSelectedEffect
+    avatarDeco: (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none',
+    profileEffect: (typeof editSelectedEffect !== 'undefined' ? editSelectedEffect : null) || currentUser?.profileEffect || 'none'
   };
-  if (pendingEditAvatar !== undefined) payload.avatarUrl = pendingEditAvatar || null;
-  if (pendingEditBanner !== undefined) payload.bannerUrl = pendingEditBanner || null;
+
+  try {
+    if (pendingEditAvatar !== undefined) {
+      payload.avatarUrl = pendingEditAvatar
+        ? await compressImageDataUrl(pendingEditAvatar, 256, 256, 0.85)
+        : null;
+    }
+    if (pendingEditBanner !== undefined) {
+      payload.bannerUrl = pendingEditBanner
+        ? await compressImageDataUrl(pendingEditBanner, 960, 340, 0.8)
+        : null;
+    }
+  } catch (e) {
+    console.warn('compress', e);
+    if (pendingEditAvatar !== undefined) payload.avatarUrl = pendingEditAvatar || null;
+    if (pendingEditBanner !== undefined) payload.bannerUrl = pendingEditBanner || null;
+  }
+
+  // Mise a jour locale immediate (ne pas attendre le serveur)
+  if (currentUser) {
+    Object.assign(currentUser, {
+      customStatus: payload.customStatus,
+      username: payload.username || currentUser.username,
+      primaryColor: payload.primaryColor,
+      secondaryColor: payload.secondaryColor,
+      avatarDeco: payload.avatarDeco,
+      profileEffect: payload.profileEffect
+    });
+    if (payload.avatarUrl !== undefined) currentUser.avatarUrl = payload.avatarUrl;
+    if (payload.bannerUrl !== undefined) currentUser.bannerUrl = payload.bannerUrl;
+    try { updateUserPanel(); } catch (e) {}
+    try { populateAccountMenu(); } catch (e) {}
+  }
+
   socket.emit('updateProfile', payload);
   closeEditProfile();
+  if (btn) { btn.disabled = false; btn.textContent = 'Enregistrer'; }
+  pendingEditAvatar = undefined;
+  pendingEditBanner = undefined;
 });
 
 // Wire edit modal uploads + live preview
@@ -2206,17 +2280,44 @@ document.getElementById('settings-colors-reset')?.addEventListener('click', () =
   updateSettingsColorPreview();
 });
 
-document.getElementById('save-profile')?.addEventListener('click', () => {
+document.getElementById('save-profile')?.addEventListener('click', async () => {
   const payload = {
-    customStatus: document.getElementById('settings-bio').value.trim(),
-    avatarDeco: selectedDeco,
-    profileEffect: selectedEffect,
+    customStatus: (document.getElementById('settings-bio')?.value || '').trim(),
+    avatarDeco: (typeof selectedDeco !== 'undefined' ? selectedDeco : null) || currentUser?.avatarDeco || 'none',
+    profileEffect: (typeof selectedEffect !== 'undefined' ? selectedEffect : null) || currentUser?.profileEffect || 'none',
     primaryColor: document.getElementById('settings-primary-color')?.value || null,
     secondaryColor: document.getElementById('settings-secondary-color')?.value || null
   };
-  if (pendingSettingsAvatar !== undefined) payload.avatarUrl = pendingSettingsAvatar || null;
-  if (pendingSettingsBanner !== undefined) payload.bannerUrl = pendingSettingsBanner || null;
+  try {
+    if (pendingSettingsAvatar !== undefined) {
+      payload.avatarUrl = pendingSettingsAvatar
+        ? await compressImageDataUrl(pendingSettingsAvatar, 256, 256, 0.85)
+        : null;
+    }
+    if (pendingSettingsBanner !== undefined) {
+      payload.bannerUrl = pendingSettingsBanner
+        ? await compressImageDataUrl(pendingSettingsBanner, 960, 340, 0.8)
+        : null;
+    }
+  } catch (e) {
+    if (pendingSettingsAvatar !== undefined) payload.avatarUrl = pendingSettingsAvatar || null;
+    if (pendingSettingsBanner !== undefined) payload.bannerUrl = pendingSettingsBanner || null;
+  }
+  if (currentUser) {
+    Object.assign(currentUser, {
+      customStatus: payload.customStatus,
+      avatarDeco: payload.avatarDeco,
+      profileEffect: payload.profileEffect,
+      primaryColor: payload.primaryColor,
+      secondaryColor: payload.secondaryColor
+    });
+    if (payload.avatarUrl !== undefined) currentUser.avatarUrl = payload.avatarUrl;
+    if (payload.bannerUrl !== undefined) currentUser.bannerUrl = payload.bannerUrl;
+    try { updateUserPanel(); } catch (e) {}
+  }
   socket.emit('updateProfile', payload);
+  pendingSettingsAvatar = undefined;
+  pendingSettingsBanner = undefined;
   alert('Profil mis à jour');
 });
 
@@ -2451,7 +2552,7 @@ function openEffectPicker() {
       editSelectedEffect = pickerTempEffect;
       selectedEffect = pickerTempEffect;
       if (typeof refreshEffectOptionsInSettings === 'function') refreshEffectOptionsInSettings();
-      if (typeof updateEditPreview === 'function') updateEditPreview();
+      if (typeof refreshEditPreview === 'function') refreshEditPreview();
       if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
       modal.classList.add('hidden');
     };
@@ -2623,7 +2724,7 @@ function openDecoPicker() {
       editSelectedDeco = pickerTempDeco;
       selectedDeco = pickerTempDeco;
       if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
-      if (typeof updateEditPreview === 'function') updateEditPreview();
+      if (typeof refreshEditPreview === 'function') refreshEditPreview();
       if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
       modal.classList.add('hidden');
     };
