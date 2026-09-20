@@ -8288,3 +8288,169 @@ img.avatar-deco-overlay {
     position: revert !important;
   }
 }
+
+
+/* ============================================================
+   EDIT PROFIL + DECO — style Discord mobile app
+   ============================================================ */
+
+/* Reset agressif des tailles deco forcees en % */
+img.avatar-deco-overlay {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 15 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  /* width/height laisses au JS (px) — ne pas forcer 160% */
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Ne plus forcer 160% nulle part */
+.user-avatar-wrap .avatar-deco-overlay,
+.member-avatar-wrap .avatar-deco-overlay,
+.uam-avatar-wrap .avatar-deco-overlay,
+.zpc-avatar-wrap .avatar-deco-overlay,
+.profile-avatar-wrapper .avatar-deco-overlay {
+  /* sizes from JS only */
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+@media (max-width: 768px) {
+  /* Modal edit profil = plein ecran comme Discord */
+  #edit-profile-modal,
+  #edit-profile-modal.edit-modal,
+  #edit-profile-modal.pe-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 3000 !important;
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    padding: 0 !important;
+    background: #313338 !important;
+  }
+  #edit-profile-modal.hidden {
+    display: none !important;
+  }
+  #edit-profile-modal .edit-overlay {
+    display: none !important;
+  }
+  #edit-profile-modal .pe-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #313338 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+  #edit-profile-modal .pe-header {
+    flex-shrink: 0 !important;
+    height: 56px !important;
+    padding: 0 12px !important;
+    padding-top: env(safe-area-inset-top) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid rgba(0,0,0,0.3) !important;
+    background: #2b2d31 !important;
+  }
+  #edit-profile-modal .pe-header h2 {
+    font-size: 16px !important;
+  }
+  #edit-profile-modal .pe-body {
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    min-height: 0 !important;
+    display: flex !important;
+  }
+  /* Apercu EN HAUT (comme Discord mobile) */
+  #edit-profile-modal .pe-preview-wrap {
+    order: -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    background: #2b2d31 !important;
+    flex-shrink: 0 !important;
+    border-bottom: 1px solid rgba(0,0,0,0.25) !important;
+  }
+  #edit-profile-modal .pe-preview-card,
+  #edit-profile-modal #edit-preview-card,
+  #edit-profile-modal .zpc {
+    width: min(340px, 100%) !important;
+    max-width: 100% !important;
+  }
+  #edit-profile-modal .pe-sidebar {
+    order: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    border-right: none !important;
+    padding: 16px !important;
+    padding-bottom: 100px !important;
+  }
+  #edit-profile-modal .pe-footer {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    padding: 12px 16px !important;
+    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    background: #2b2d31 !important;
+    border-top: 1px solid rgba(0,0,0,0.3) !important;
+    z-index: 10 !important;
+  }
+  #edit-profile-modal .pe-save,
+  #edit-profile-modal #edit-save {
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  #edit-profile-modal .pe-section {
+    margin-bottom: 20px !important;
+  }
+  #edit-profile-modal input,
+  #edit-profile-modal textarea {
+    font-size: 16px !important;
+    min-height: 44px !important;
+  }
+  #edit-profile-modal .discord-tile {
+    width: 72px !important;
+    height: 72px !important;
+  }
+
+  /* Pickers plein ecran */
+  .picker-modal {
+    z-index: 4000 !important;
+  }
+  .picker-panel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 90dvh !important;
+    max-height: 90dvh !important;
+    border-radius: 16px 16px 0 0 !important;
+    margin-top: auto !important;
+    align-self: flex-end !important;
+  }
+  .picker-modal {
+    align-items: flex-end !important;
+  }
+}

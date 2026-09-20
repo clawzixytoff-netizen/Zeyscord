@@ -230,54 +230,43 @@ function applyAvatarDeco(el, deco) {
   if (!el) return;
   const next = (!deco || deco === 'none' || !DECO_URLS[deco]) ? 'none' : deco;
 
-  // Wrap dedie autour de l'avatar
-  let wrap = el.parentElement;
-  if (!wrap || !wrap.classList.contains('deco-host')) {
-    // Reutiliser wraps existants
-    wrap =
-      el.closest('.uam-avatar-wrap') ||
-      el.closest('.zpc-avatar-wrap') ||
-      el.closest('.profile-avatar-wrapper') ||
-      el.closest('.user-avatar-wrap') ||
-      el.closest('.member-avatar-wrap') ||
-      el.parentElement;
-  }
+  let wrap =
+    el.closest('.uam-avatar-wrap') ||
+    el.closest('.zpc-avatar-wrap') ||
+    el.closest('.profile-avatar-wrapper') ||
+    el.closest('.user-avatar-wrap') ||
+    el.closest('.member-avatar-wrap') ||
+    el.parentElement;
 
-  const old = (wrap && wrap.querySelectorAll('.avatar-deco-overlay')) || [];
-  old.forEach(n => n.remove());
+  if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
   el.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
   el.classList.toggle('has-deco', next !== 'none');
   if (next === 'none') return;
 
   if (wrap) {
-    // Ne pas forcer flex sur uam (casse le layout absolute)
-    const isUam = wrap.classList.contains('uam-avatar-wrap');
-    if (!isUam) {
+    wrap.style.overflow = 'visible';
+    if (getComputedStyle(wrap).position === 'static') {
       wrap.style.position = 'relative';
     }
-    wrap.style.overflow = 'visible';
   }
-
-  el.style.position = 'relative';
   el.style.overflow = 'hidden';
+  el.style.position = 'relative';
   el.style.zIndex = '1';
 
   function place() {
-    const rect = el.getBoundingClientRect();
-    let av = Math.max(rect.width, rect.height);
+    if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+
+    const avRect = el.getBoundingClientRect();
+    const hostRect = (wrap || el).getBoundingClientRect();
+    let av = Math.max(avRect.width, avRect.height);
     if (!av || av < 8) {
       if (el.id === 'uam-avatar') av = 68;
       else if (el.id === 'profile-avatar' || el.id === 'edit-preview-avatar') av = 80;
-      else if (el.classList.contains('member-avatar')) av = 32;
-      else if (el.classList.contains('user-avatar')) av = 32;
       else if (el.classList.contains('message-avatar')) av = 40;
       else av = 32;
     }
-    // Ratio type Discord (deco ~ 160% a 180% du cercle avatar)
-    const size = Math.round(av * 1.55);
-
-    // Supprimer si deja place par un double appel
-    if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+    // Discord nitro deco ≈ 1.4x a 1.5x du diametre avatar
+    const size = Math.round(av * 1.45);
 
     const img = document.createElement('img');
     img.className = 'avatar-deco-overlay';
@@ -285,43 +274,41 @@ function applyAvatarDeco(el, deco) {
     img.src = DECO_URLS[next];
     img.alt = '';
     img.draggable = false;
-    img.style.cssText = [
-      'position:absolute',
-      'left:50%',
-      'top:50%',
-      'transform:translate(-50%,-50%)',
-      'width:' + size + 'px',
-      'height:' + size + 'px',
-      'max-width:none',
-      'max-height:none',
-      'object-fit:contain',
-      'pointer-events:none',
-      'z-index:15',
-      'margin:0',
-      'padding:0',
-      'border:0',
-      'display:block'
-    ].join(';');
-    // !important via setProperty
-    ['position','left','top','transform','width','height','object-fit','pointer-events','z-index'].forEach(() => {});
+
+    // Centrer sur le CENTRE de l'avatar, pas du wrap (si wrap plus grand)
+    const host = wrap || el;
+    let leftPct = 50;
+    let topPct = 50;
+    if (wrap && hostRect.width > 0 && hostRect.height > 0) {
+      const cx = avRect.left + avRect.width / 2 - hostRect.left;
+      const cy = avRect.top + avRect.height / 2 - hostRect.top;
+      leftPct = (cx / hostRect.width) * 100;
+      topPct = (cy / hostRect.height) * 100;
+    }
+
     img.style.setProperty('position', 'absolute', 'important');
-    img.style.setProperty('left', '50%', 'important');
-    img.style.setProperty('top', '50%', 'important');
+    img.style.setProperty('left', leftPct + '%', 'important');
+    img.style.setProperty('top', topPct + '%', 'important');
     img.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
     img.style.setProperty('width', size + 'px', 'important');
     img.style.setProperty('height', size + 'px', 'important');
     img.style.setProperty('max-width', 'none', 'important');
     img.style.setProperty('max-height', 'none', 'important');
     img.style.setProperty('object-fit', 'contain', 'important');
-    img.style.setProperty('z-index', '15', 'important');
     img.style.setProperty('pointer-events', 'none', 'important');
+    img.style.setProperty('z-index', '15', 'important');
+    img.style.setProperty('margin', '0', 'important');
+    img.style.setProperty('padding', '0', 'important');
+    img.style.setProperty('border', '0', 'important');
+    img.style.setProperty('display', 'block', 'important');
 
-    (wrap || el).appendChild(img);
+    host.appendChild(img);
   }
 
-  // Placer maintenant + apres layout (mesure fiable)
   place();
   requestAnimationFrame(() => requestAnimationFrame(place));
+  // Mobile: reflow tardif
+  setTimeout(place, 100);
 }
 
 function applyProfileEffect(card, effect) {
