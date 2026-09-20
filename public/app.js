@@ -388,14 +388,21 @@ function applyAvatarDeco(el, deco) {
   if (next === 'none') return;
 
   if (wrap) {
-    wrap.style.overflow = 'visible';
-    if (getComputedStyle(wrap).position === 'static') {
-      wrap.style.position = 'relative';
-    }
+    wrap.style.setProperty('overflow', 'visible', 'important');
+    wrap.style.setProperty('position', 'relative', 'important');
+    wrap.style.setProperty('z-index', '40', 'important');
   }
   el.style.overflow = 'hidden';
   el.style.position = 'relative';
   el.style.zIndex = '1';
+  // La PDP reste SOUS la deco
+  el.style.setProperty('z-index', '1', 'important');
+  Array.from(el.children).forEach(ch => {
+    if (!ch.classList.contains('avatar-deco-overlay')) {
+      ch.style.setProperty('z-index', '1', 'important');
+      ch.style.setProperty('position', 'relative', 'important');
+    }
+  });
 
   function place() {
     if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
@@ -440,7 +447,7 @@ function applyAvatarDeco(el, deco) {
     img.style.setProperty('max-height', 'none', 'important');
     img.style.setProperty('object-fit', 'contain', 'important');
     img.style.setProperty('pointer-events', 'none', 'important');
-    img.style.setProperty('z-index', '15', 'important');
+    img.style.setProperty('z-index', '50', 'important');
     img.style.setProperty('margin', '0', 'important');
     img.style.setProperty('padding', '0', 'important');
     img.style.setProperty('border', '0', 'important');

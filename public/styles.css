@@ -8629,3 +8629,42 @@ img.profile-effect-overlay,
   width: 100% !important;
   height: 100% !important;
 }
+
+
+/* Deco TOUJOURS au-dessus de la PDP */
+img.avatar-deco-overlay,
+.avatar-deco-overlay {
+  z-index: 50 !important;
+  position: absolute !important;
+  pointer-events: none !important;
+}
+.uam-avatar-wrap,
+.zpc-avatar-wrap,
+.profile-avatar-wrapper,
+.user-avatar-wrap,
+.member-avatar-wrap,
+.picker-deco-av-wrap {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 40 !important;
+}
+.uam-avatar,
+.zpc-avatar,
+.profile-avatar,
+.user-avatar,
+.member-avatar,
+.picker-preview-av {
+  position: relative !important;
+  z-index: 1 !important;
+}
+.picker-deco-overlay {
+  z-index: 50 !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 150% !important;
+  height: 150% !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+}
