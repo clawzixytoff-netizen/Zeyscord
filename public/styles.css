@@ -8525,3 +8525,45 @@ img.avatar-deco-overlay {
     position: relative !important;
   }
 }
+
+
+/* Statut : meme taille, plus gros sur le menu profil */
+#uam-status-dot,
+#user-account-menu #uam-status-dot,
+.uam-avatar-wrap #uam-status-dot {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  border-width: 4px !important;
+  border-style: solid !important;
+  border-radius: 50% !important;
+  bottom: -2px !important;
+  right: -2px !important;
+  z-index: 30 !important;
+  box-sizing: border-box !important;
+}
+
+#user-status-dot,
+.user-avatar-wrap #user-status-dot {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  border-width: 4px !important;
+  border-style: solid !important;
+  border-radius: 50% !important;
+  bottom: -3px !important;
+  right: -3px !important;
+  z-index: 30 !important;
+  box-sizing: border-box !important;
+}
+
+/* Profil modal aussi coherent */
+#profile-status-dot,
+.zpc-online {
+  width: 20px !important;
+  height: 20px !important;
+  border-width: 4px !important;
+  border-radius: 50% !important;
+}
