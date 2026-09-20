@@ -4729,10 +4729,10 @@ function renderDecoPickerGrid() {
       preview.innerHTML = '';
       const wrap = document.createElement('div');
       wrap.className = 'picker-deco-av-wrap';
-      wrap.style.cssText = 'position:relative;width:96px;height:96px;margin:0 auto;';
+      wrap.style.cssText = 'position:relative;width:160px;height:160px;margin:40px auto 0;';
       const av = document.createElement('div');
       av.className = 'picker-preview-av';
-      av.style.cssText = 'width:80px;height:80px;border-radius:50%;background:'+(currentUser?.avatarColor||'#5865f2')+';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:28px;overflow:hidden;z-index:1;';
+      av.style.cssText = 'width:120px;height:120px;border-radius:50%;background:'+(currentUser?.avatarColor||'#5865f2')+';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:42px;overflow:hidden;z-index:1;';
       if (currentUser?.avatarUrl) av.innerHTML = '<img src="'+currentUser.avatarUrl+'" style="width:100%;height:100%;object-fit:cover;">';
       else av.textContent = (currentUser?.username||'Z')[0].toUpperCase();
       wrap.appendChild(av);
@@ -4740,7 +4740,7 @@ function renderDecoPickerGrid() {
         const deco = document.createElement('img');
         deco.src = img;
         deco.className = 'picker-deco-overlay';
-        deco.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:132%;height:132%;object-fit:contain;pointer-events:none;z-index:50;';
+        deco.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:160%;height:160%;object-fit:contain;pointer-events:none;z-index:50;';
         wrap.appendChild(deco);
       }
       preview.appendChild(wrap);

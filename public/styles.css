@@ -8938,3 +8938,42 @@ img.avatar-deco-overlay {
     height: 72px !important;
   }
 }
+
+
+/* Deco picker = même taille que effets (3 colonnes, grandes tuiles) */
+#deco-picker-modal .picker-grid,
+#deco-picker-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px !important;
+}
+#deco-picker-modal .picker-tile {
+  width: 100% !important;
+  min-height: 140px !important;
+  padding: 12px 8px !important;
+}
+#deco-picker-modal .picker-tile-inner,
+#deco-picker-modal .picker-tile-deco {
+  width: 100% !important;
+  max-width: 120px !important;
+  height: 100px !important;
+}
+#deco-picker-modal .picker-tile-deco img {
+  object-fit: contain !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 4px !important;
+}
+#deco-picker-modal .picker-preview-card,
+#deco-picker-modal .picker-preview-deco {
+  width: 100% !important;
+  height: 360px !important;
+  min-height: 360px !important;
+}
+#deco-picker-modal .picker-body {
+  grid-template-columns: 1fr 280px !important;
+  min-height: 420px !important;
+}
+#deco-picker-modal .picker-panel {
+  width: min(900px, 96vw) !important;
+}
