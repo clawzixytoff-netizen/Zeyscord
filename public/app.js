@@ -357,7 +357,6 @@ const DECO_URLS = {
   death_s_edge: "https://cdn.discordapp.com/avatar-decoration-presets/a_fe63036018fefb8abe3172383497e3bf.png?size=240&passthrough=true",
   autumn_s_arbor: "https://cdn.discordapp.com/avatar-decoration-presets/a_fead934c894e95e070d8a0301f9f0b27.png?size=240&passthrough=true",
   futuristic_ui: "https://cdn.discordapp.com/avatar-decoration-presets/a_fed43ab12698df65902ba06727e20c0e.png?size=240&passthrough=true",
-  comoros: "https://i.ibb.co/9nqKx3b/ezgif-1-f0b73c7a9f.png?size=240&passthrough=true",
 };
 const EFFECT_LAYERS = {
   boost_relic: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/loop.png" },
@@ -4048,13 +4047,6 @@ const SHOP_DECOS = [
     "id": "futuristic_ui",
     "name": "Futuristic UI",
     "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fed43ab12698df65902ba06727e20c0e.png?size=240&passthrough=true",
-    "price": 2.75,
-    "type": "deco"
-  },
-  {
-    "id": "comoros",
-    "name": "Comoros",
-    "img": "https://i.ibb.co/9nqKx3b/ezgif-1-f0b73c7a9f.png?size=240&passthrough=true",
     "price": 2.75,
     "type": "deco"
   }
