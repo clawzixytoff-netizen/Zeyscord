@@ -710,15 +710,41 @@ const STATUS_COLORS = {
 function setStatusDot(el, status) {
   if (!el) return;
   const s = status || 'online';
-  // keep structural classes
   const keep = [];
   if (el.classList.contains('zpc-online')) keep.push('zpc-online');
   if (el.classList.contains('status-dot')) keep.push('status-dot');
   if (el.classList.contains('member-status-dot')) keep.push('member-status-dot');
-  if (el.id === 'user-status-dot') keep.push('status-dot');
-  el.className = keep.join(' ') + ' status-' + s;
-  el.style.background = STATUS_COLORS[s] || STATUS_COLORS.online;
-  el.style.display = 'block';
+  if (el.classList.contains('uam-status-icon')) keep.push('uam-status-icon');
+  if (el.id === 'user-status-dot' || el.id === 'uam-status-dot') keep.push('status-dot');
+  el.className = (keep.join(' ') + ' status-' + s).trim();
+  const color = STATUS_COLORS[s] || STATUS_COLORS.online;
+  el.style.setProperty('background', color, 'important');
+  el.style.setProperty('background-color', color, 'important');
+  el.style.setProperty('display', 'block', 'important');
+}
+
+/** Met a jour TOUS les indicateurs de statut (PC + mobile) */
+function applyPresenceStatus(status) {
+  const s = status || 'online';
+  if (currentUser) currentUser.presenceStatus = s;
+
+  setStatusDot(document.getElementById('user-status-dot'), s);
+  setStatusDot(document.getElementById('uam-status-dot'), s);
+  setStatusDot(document.getElementById('profile-status-dot'), s);
+
+  const ind = document.getElementById('uam-status-indicator');
+  if (ind) {
+    ind.className = 'uam-status-icon status-' + s;
+  }
+  const lab = document.getElementById('uam-status-label');
+  if (lab) lab.textContent = STATUS_LABELS[s] || 'En ligne';
+
+  // Texte sous le pseudo dans le menu
+  const handle = document.getElementById('uam-handle');
+  if (handle && currentUser) {
+    const base = (currentUser.username || '').toLowerCase();
+    handle.textContent = base + ' • ' + (STATUS_LABELS[s] || 'en ligne').toLowerCase();
+  }
 }
 
 function fillSmallAvatar(el, user) {
@@ -863,20 +889,16 @@ function populateAccountMenu() {
     cs.style.display = currentUser.customStatus ? 'block' : 'none';
   }
 
-  // Status
+  // Status — synchronise tous les points / labels
   const st = currentUser.presenceStatus || 'online';
-  const statusDot = document.getElementById('uam-status-dot');
-  if (statusDot) {
-    statusDot.className = 'status-dot status-' + st;
-    statusDot.style.background = STATUS_COLORS[st] || '#23a559';
+  if (typeof applyPresenceStatus === 'function') applyPresenceStatus(st);
+  else {
+    setStatusDot(document.getElementById('uam-status-dot'), st);
+    const ind = document.getElementById('uam-status-indicator');
+    if (ind) ind.className = 'uam-status-icon status-' + st;
+    const lab = document.getElementById('uam-status-label');
+    if (lab) lab.textContent = STATUS_LABELS[st] || 'En ligne';
   }
-  const ind = document.getElementById('uam-status-indicator');
-  if (ind) {
-    ind.className = 'uam-status-icon status-' + st;
-    ind.style.background = '';
-  }
-  const lab = document.getElementById('uam-status-label');
-  if (lab) lab.textContent = STATUS_LABELS[st] || 'En ligne';
 
   // Theme: couleurs de profil + effet (sans changer les tailles)
   const menuEl = document.getElementById('user-account-menu');
@@ -1083,8 +1105,8 @@ function closeAccountMenu() {
     const statusOpt = t.closest('.uam-status-option') || (t.dataset && t.dataset.status ? t : null);
     if (statusOpt && statusOpt.dataset && statusOpt.dataset.status) {
       const status = statusOpt.dataset.status;
+      applyPresenceStatus(status);
       socket.emit('updateProfile', { presenceStatus: status });
-      if (currentUser) currentUser.presenceStatus = status;
       updateUserPanel();
       populateAccountMenu();
       document.getElementById('uam-status-submenu')?.classList.add('hidden');

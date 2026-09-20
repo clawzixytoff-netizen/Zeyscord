@@ -8488,3 +8488,40 @@ img.avatar-deco-overlay {
     display: flex !important;
   }
 }
+
+
+/* Status dots — couleurs forcees */
+.status-dot.status-online,
+#user-status-dot.status-online,
+#uam-status-dot.status-online,
+.member-status-dot.status-online { background: #23a559 !important; background-color: #23a559 !important; }
+.status-dot.status-idle,
+#user-status-dot.status-idle,
+#uam-status-dot.status-idle,
+.member-status-dot.status-idle { background: #f0b232 !important; background-color: #f0b232 !important; }
+.status-dot.status-dnd,
+#user-status-dot.status-dnd,
+#uam-status-dot.status-dnd,
+.member-status-dot.status-dnd { background: #f23f43 !important; background-color: #f23f43 !important; }
+.status-dot.status-invisible,
+#user-status-dot.status-invisible,
+#uam-status-dot.status-invisible,
+.member-status-dot.status-invisible { background: #80848e !important; background-color: #80848e !important; }
+
+@media (max-width: 768px) {
+  /* Sous-menu statut : dans le menu, pas hors ecran */
+  .uam-status-submenu {
+    position: absolute !important;
+    left: 8px !important;
+    right: 8px !important;
+    bottom: auto !important;
+    top: 100% !important;
+    width: auto !important;
+    max-width: none !important;
+    z-index: 3200 !important;
+    margin-top: 4px !important;
+  }
+  .uam-status-row {
+    position: relative !important;
+  }
+}
