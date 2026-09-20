@@ -274,7 +274,7 @@ function applyAvatarDeco(el, deco) {
       else av = 32;
     }
     // Ratio type Discord (deco ~ 160% a 180% du cercle avatar)
-    const size = Math.round(av * 1.6);
+    const size = Math.round(av * 1.55);
 
     // Supprimer si deja place par un double appel
     if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
@@ -545,15 +545,8 @@ document.getElementById('accounts-add')?.addEventListener('click', () => {
 
 socket.on('init', data => {
   currentUser = data.user;
-  // Mobile: rappel discret une fois
-  if (window.matchMedia('(max-width: 768px)').matches && !sessionStorage.getItem('mobile-auto-hint')) {
-    sessionStorage.setItem('mobile-auto-hint', '1');
-    setTimeout(() => {
-      try {
-        document.body.classList.add('mobile-channels-open');
-        document.getElementById('mobile-sidebar-overlay')?.classList.remove('hidden');
-      } catch (e) {}
-    }, 600);
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    document.body.classList.remove('mobile-in-chat');
   }
   onlineUsers = data.onlineUsers || [];
   availableBadges = data.availableBadges || [];
@@ -3792,59 +3785,103 @@ function switchAccount(username) {
   function isMobile() {
     return window.matchMedia('(max-width: 768px)').matches;
   }
-  function closeMobileSidebars() {
-    document.body.classList.remove('mobile-channels-open', 'mobile-members-open');
+
+  function showChannelsList() {
+    document.body.classList.remove('mobile-in-chat', 'mobile-members-open', 'mobile-channels-open');
     if (overlay) overlay.classList.add('hidden');
+    updateMobileBackBtn();
   }
-  function openChannels() {
-    document.body.classList.remove('mobile-members-open');
-    document.body.classList.add('mobile-channels-open');
-    if (overlay) overlay.classList.remove('hidden');
+
+  function showChat() {
+    if (!isMobile()) return;
+    document.body.classList.add('mobile-in-chat');
+    document.body.classList.remove('mobile-members-open', 'mobile-channels-open');
+    if (overlay) overlay.classList.add('hidden');
+    updateMobileBackBtn();
   }
-  function openMembers() {
-    document.body.classList.remove('mobile-channels-open');
+
+  function showMembers() {
+    if (!isMobile()) return;
     document.body.classList.add('mobile-members-open');
     if (overlay) overlay.classList.remove('hidden');
   }
 
+  function closeMembers() {
+    document.body.classList.remove('mobile-members-open');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  function updateMobileBackBtn() {
+    if (!btnCh) return;
+    const inChat = document.body.classList.contains('mobile-in-chat');
+    if (inChat) {
+      btnCh.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>';
+      btnCh.title = 'Retour';
+    } else {
+      btnCh.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
+      btnCh.title = 'Menu';
+    }
+  }
+
+  // Expose for other handlers
+  window.__zeyMobile = { isMobile, showChannelsList, showChat, showMembers, closeMembers };
+
   btnCh?.addEventListener('click', (e) => {
     e.stopPropagation();
     if (!isMobile()) return;
-    if (document.body.classList.contains('mobile-channels-open')) closeMobileSidebars();
-    else openChannels();
+    if (document.body.classList.contains('mobile-in-chat')) {
+      showChannelsList();
+    } else {
+      // deja sur la liste
+      showChannelsList();
+    }
   });
+
   btnMb?.addEventListener('click', (e) => {
     e.stopPropagation();
     if (!isMobile()) return;
-    if (document.body.classList.contains('mobile-members-open')) closeMobileSidebars();
-    else openMembers();
+    if (document.body.classList.contains('mobile-members-open')) closeMembers();
+    else showMembers();
   });
-  overlay?.addEventListener('click', closeMobileSidebars);
 
-  // Fermer le menu salons après choix d'un salon / DM / nav
-  document.getElementById('channels-list')?.addEventListener('click', () => {
-    if (isMobile()) closeMobileSidebars();
+  overlay?.addEventListener('click', () => {
+    closeMembers();
   });
-  document.getElementById('dm-list')?.addEventListener('click', () => {
-    if (isMobile()) closeMobileSidebars();
-  });
-  document.querySelectorAll('.home-nav-item').forEach(el => {
-    el.addEventListener('click', () => {
-      if (isMobile()) closeMobileSidebars();
-    });
-  });
-  document.querySelectorAll('.server-icon').forEach(el => {
-    el.addEventListener('click', () => {
-      if (isMobile()) {
-        // Ouvrir les salons apres choix serveur
-        setTimeout(() => {
-          if (isMobile()) openChannels();
-        }, 50);
+
+  // Clic salon / DM → vue chat (style Discord mobile)
+  function bindChatOpen(root) {
+    if (!root) return;
+    root.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      const item = e.target.closest('.channel-item, .dm-item, [data-channel], .home-nav-item');
+      if (!item) return;
+      // home-nav (amis/nitro/shop) reste sur panel principal
+      if (item.classList.contains('home-nav-item')) {
+        showChat();
+        return;
       }
+      setTimeout(showChat, 30);
     });
+  }
+  bindChatOpen(document.getElementById('channels-list'));
+  bindChatOpen(document.getElementById('dm-list'));
+  bindChatOpen(document.getElementById('home-view'));
+
+  // Serveur → liste des salons
+  document.getElementById('servers-list')?.addEventListener('click', () => {
+    if (isMobile()) setTimeout(showChannelsList, 40);
+  });
+  document.getElementById('home-btn')?.addEventListener('click', () => {
+    if (isMobile()) setTimeout(showChannelsList, 40);
   });
 
   window.addEventListener('resize', () => {
-    if (!isMobile()) closeMobileSidebars();
+    if (!isMobile()) {
+      document.body.classList.remove('mobile-in-chat', 'mobile-members-open', 'mobile-channels-open');
+      if (overlay) overlay.classList.add('hidden');
+    }
+    updateMobileBackBtn();
   });
+
+  updateMobileBackBtn();
 })();

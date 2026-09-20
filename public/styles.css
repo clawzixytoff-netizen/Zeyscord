@@ -8091,3 +8091,200 @@ img.avatar-deco-overlay {
     overflow: visible !important;
   }
 }
+
+
+/* ============================================================
+   DISCORD MOBILE APP LAYOUT (priorite max)
+   ============================================================ */
+@media (max-width: 768px) {
+  html, body {
+    height: 100% !important;
+    height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  .app {
+    display: flex !important;
+    height: 100dvh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+  }
+
+  /* Barre serveurs */
+  .servers-sidebar {
+    width: 56px !important;
+    flex-shrink: 0 !important;
+    z-index: 50 !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+
+  /* LISTE SALONS / AMIS — plein ecran a cote des serveurs (vue par defaut) */
+  .channels-sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    right: auto !important;
+    width: calc(100vw - 56px) !important;
+    max-width: none !important;
+    height: 100dvh !important;
+    transform: none !important;
+    z-index: 40 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+    flex: 1 1 auto !important;
+  }
+  .channels-sidebar .sidebar-view {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .channels-sidebar .user-panel {
+    display: flex !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 5 !important;
+  }
+
+  /* CHAT — cache tant qu'on est sur la liste */
+  .chat-area {
+    display: none !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    z-index: 60 !important;
+    background: var(--bg-primary, #313338) !important;
+    flex-direction: column !important;
+  }
+  body.mobile-in-chat .chat-area {
+    display: flex !important;
+  }
+  body.mobile-in-chat .channels-sidebar {
+    display: none !important;
+  }
+  body.mobile-in-chat .servers-sidebar {
+    display: none !important;
+  }
+
+  /* Header chat avec bouton retour */
+  .chat-header {
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 8px !important;
+    padding-top: env(safe-area-inset-top) !important;
+    flex-shrink: 0 !important;
+  }
+  .mobile-nav-btn {
+    display: inline-flex !important;
+  }
+
+  .messages-container {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 8px !important;
+  }
+  .message-input-area {
+    flex-shrink: 0 !important;
+    padding: 8px !important;
+    padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  }
+  #message-input {
+    font-size: 16px !important;
+  }
+
+  /* Membres = plein ecran par-dessus */
+  .members-sidebar {
+    display: none !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    z-index: 70 !important;
+    transform: none !important;
+    overflow-y: auto !important;
+  }
+  body.mobile-members-open .members-sidebar {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  body.mobile-members-open .mobile-sidebar-overlay {
+    display: block !important;
+    z-index: 65 !important;
+  }
+
+  /* Menu compte = bottom sheet opaque */
+  #user-account-menu,
+  .user-account-menu {
+    position: fixed !important;
+    left: 8px !important;
+    right: 8px !important;
+    bottom: max(8px, env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-height: 75dvh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    z-index: 2000 !important;
+    background: #111214 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.7) !important;
+  }
+  #user-account-menu .uam-profile-body {
+    background: #1e1f22 !important;
+  }
+
+  /* Overlay */
+  .mobile-sidebar-overlay {
+    z-index: 65 !important;
+  }
+
+  /* Modals plein ecran */
+  .settings-modal, .settings-container,
+  .shop-modal, #shop-modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+
+  .profile-modal .zpc,
+  #profile-card-main {
+    width: min(100vw - 16px, 360px) !important;
+  }
+
+  .picker-panel {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    max-height: 100dvh !important;
+    border-radius: 12px 12px 0 0 !important;
+  }
+  .picker-body {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Friends / nitro dans le chat area */
+  .friends-panel, .nitro-panel {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 5 !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (min-width: 769px) {
+  body.mobile-in-chat .chat-area,
+  body.mobile-in-chat .channels-sidebar,
+  body.mobile-in-chat .servers-sidebar {
+    display: revert !important;
+    position: revert !important;
+  }
+}
