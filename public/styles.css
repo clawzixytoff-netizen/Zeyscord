@@ -8683,3 +8683,8 @@ img.avatar-deco-overlay {
 .user-avatar-wrap {
   overflow: visible !important;
 }
+
+.picker-deco-overlay {
+  width: 132% !important;
+  height: 132% !important;
+}

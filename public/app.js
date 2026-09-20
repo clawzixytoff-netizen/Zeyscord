@@ -411,7 +411,7 @@ function applyAvatarDeco(el, deco) {
       else av = 32;
     }
     // Discord : deco ~1.6x le diametre de la PDP, centree pile
-    const size = Math.round(av * 1.6);
+    const size = Math.round(av * 1.32);
 
     const img = document.createElement('img');
     img.className = 'avatar-deco-overlay';
