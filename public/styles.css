@@ -8668,3 +8668,18 @@ img.avatar-deco-overlay,
   object-fit: contain !important;
   pointer-events: none !important;
 }
+
+
+/* Cadre deco precise */
+img.avatar-deco-overlay {
+  object-fit: contain !important;
+  object-position: center center !important;
+  z-index: 50 !important;
+  pointer-events: none !important;
+}
+.uam-avatar-wrap,
+.zpc-avatar-wrap,
+.profile-avatar-wrapper,
+.user-avatar-wrap {
+  overflow: visible !important;
+}

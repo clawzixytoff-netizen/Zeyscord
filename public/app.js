@@ -380,6 +380,7 @@ function applyAvatarDeco(el, deco) {
     el.closest('.profile-avatar-wrapper') ||
     el.closest('.user-avatar-wrap') ||
     el.closest('.member-avatar-wrap') ||
+    el.closest('.picker-deco-av-wrap') ||
     el.parentElement;
 
   if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
@@ -392,23 +393,16 @@ function applyAvatarDeco(el, deco) {
     wrap.style.setProperty('position', 'relative', 'important');
     wrap.style.setProperty('z-index', '40', 'important');
   }
-  el.style.overflow = 'hidden';
-  el.style.position = 'relative';
-  el.style.zIndex = '1';
-  // La PDP reste SOUS la deco
+  el.style.setProperty('overflow', 'hidden', 'important');
+  el.style.setProperty('position', 'relative', 'important');
   el.style.setProperty('z-index', '1', 'important');
-  Array.from(el.children).forEach(ch => {
-    if (!ch.classList.contains('avatar-deco-overlay')) {
-      ch.style.setProperty('z-index', '1', 'important');
-      ch.style.setProperty('position', 'relative', 'important');
-    }
-  });
 
   function place() {
-    if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+    const host = wrap || el;
+    host.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
 
     const avRect = el.getBoundingClientRect();
-    const hostRect = (wrap || el).getBoundingClientRect();
+    const hostRect = host.getBoundingClientRect();
     let av = Math.max(avRect.width, avRect.height);
     if (!av || av < 8) {
       if (el.id === 'uam-avatar') av = 68;
@@ -416,50 +410,55 @@ function applyAvatarDeco(el, deco) {
       else if (el.classList.contains('message-avatar')) av = 40;
       else av = 32;
     }
-    // Discord nitro deco ≈ 1.4x a 1.5x du diametre avatar
-    const size = Math.round(av * 1.45);
+    // Discord : deco ~1.6x le diametre de la PDP, centree pile
+    const size = Math.round(av * 1.6);
 
     const img = document.createElement('img');
     img.className = 'avatar-deco-overlay';
     img.dataset.decoId = next;
-    img.src = DECO_URLS[next];
+    let src = DECO_URLS[next];
+    // CDN : forcer taille nette
+    if (src && src.includes('avatar-decoration-presets')) {
+      src = src.replace(/size=\d+/, 'size=240');
+      if (!src.includes('passthrough')) src += (src.includes('?') ? '&' : '?') + 'passthrough=true';
+    }
+    img.src = src;
     img.alt = '';
     img.draggable = false;
 
-    // Centrer sur le CENTRE de l'avatar, pas du wrap (si wrap plus grand)
-    const host = wrap || el;
-    let leftPct = 50;
-    let topPct = 50;
-    if (wrap && hostRect.width > 0 && hostRect.height > 0) {
-      const cx = avRect.left + avRect.width / 2 - hostRect.left;
-      const cy = avRect.top + avRect.height / 2 - hostRect.top;
-      leftPct = (cx / hostRect.width) * 100;
-      topPct = (cy / hostRect.height) * 100;
+    // Position en px depuis le centre de la PDP dans le host
+    let left = hostRect.width / 2;
+    let top = hostRect.height / 2;
+    if (hostRect.width > 0 && avRect.width > 0) {
+      left = (avRect.left - hostRect.left) + avRect.width / 2;
+      top = (avRect.top - hostRect.top) + avRect.height / 2;
     }
 
-    img.style.setProperty('position', 'absolute', 'important');
-    img.style.setProperty('left', leftPct + '%', 'important');
-    img.style.setProperty('top', topPct + '%', 'important');
-    img.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
-    img.style.setProperty('width', size + 'px', 'important');
-    img.style.setProperty('height', size + 'px', 'important');
-    img.style.setProperty('max-width', 'none', 'important');
-    img.style.setProperty('max-height', 'none', 'important');
-    img.style.setProperty('object-fit', 'contain', 'important');
-    img.style.setProperty('pointer-events', 'none', 'important');
-    img.style.setProperty('z-index', '50', 'important');
-    img.style.setProperty('margin', '0', 'important');
-    img.style.setProperty('padding', '0', 'important');
-    img.style.setProperty('border', '0', 'important');
-    img.style.setProperty('display', 'block', 'important');
+    img.style.cssText = [
+      'position:absolute',
+      'left:' + left + 'px',
+      'top:' + top + 'px',
+      'width:' + size + 'px',
+      'height:' + size + 'px',
+      'transform:translate(-50%,-50%)',
+      'object-fit:contain',
+      'pointer-events:none',
+      'z-index:50',
+      'margin:0',
+      'padding:0',
+      'border:0',
+      'display:block',
+      'max-width:none',
+      'max-height:none'
+    ].map(s => s + ' !important').join(';');
 
     host.appendChild(img);
   }
 
   place();
   requestAnimationFrame(() => requestAnimationFrame(place));
-  // Mobile: reflow tardif
-  setTimeout(place, 100);
+  setTimeout(place, 80);
+  setTimeout(place, 250);
 }
 
 function applyProfileEffect(card, effect) {
