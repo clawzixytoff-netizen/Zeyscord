@@ -8567,3 +8567,30 @@ img.avatar-deco-overlay {
   border-width: 4px !important;
   border-radius: 50% !important;
 }
+
+
+/* Effets profil HD — anti-pixelisation */
+img.profile-effect-overlay,
+.profile-effect-overlay {
+  image-rendering: auto !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  -ms-interpolation-mode: bicubic !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  transform: translateZ(0) !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+.picker-preview-fx,
+.shop-card-effect,
+.effect-tile-preview img {
+  image-rendering: auto !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+}

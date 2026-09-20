@@ -332,22 +332,28 @@ function applyProfileEffect(card, effect) {
   const overlay = document.createElement('img');
   overlay.className = 'profile-effect-overlay';
   overlay.dataset.effectId = next;
-  overlay.src = EFFECT_URLS[next];
+  // cache-bust leger pour forcer le nouveau GIF HD
+  overlay.src = EFFECT_URLS[next] + (EFFECT_URLS[next].includes('?') ? '&' : '?') + 'q=2';
   overlay.alt = '';
   overlay.draggable = false;
   overlay.decoding = 'async';
-  // AU-DESSUS de la banniere + fond, SOUS le texte / avatar
+  overlay.loading = 'eager';
+  // Qualite max : cover depuis le haut (ratio Discord portrait)
   overlay.style.setProperty('position', 'absolute', 'important');
   overlay.style.setProperty('inset', '0', 'important');
   overlay.style.setProperty('width', '100%', 'important');
   overlay.style.setProperty('height', '100%', 'important');
   overlay.style.setProperty('object-fit', 'cover', 'important');
-  overlay.style.setProperty('object-position', 'center center', 'important');
+  overlay.style.setProperty('object-position', 'center top', 'important');
+  overlay.style.setProperty('image-rendering', 'auto', 'important');
+  overlay.style.setProperty('-ms-interpolation-mode', 'bicubic', 'important');
   overlay.style.setProperty('pointer-events', 'none', 'important');
   overlay.style.setProperty('z-index', '10', 'important');
   overlay.style.setProperty('border-radius', '8px', 'important');
   overlay.style.setProperty('opacity', '1', 'important');
   overlay.style.setProperty('mix-blend-mode', 'normal', 'important');
+  overlay.style.setProperty('transform', 'translateZ(0)', 'important');
+  overlay.style.setProperty('backface-visibility', 'hidden', 'important');
   card.appendChild(overlay);
 
   // Banniere DERRIERE l'effet
