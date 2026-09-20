@@ -229,93 +229,99 @@ const EFFECT_URLS = {
 function applyAvatarDeco(el, deco) {
   if (!el) return;
   const next = (!deco || deco === 'none' || !DECO_URLS[deco]) ? 'none' : deco;
-  const wrap =
-    el.closest('.uam-avatar-wrap') ||
-    el.closest('.zpc-avatar-wrap') ||
-    el.closest('.profile-avatar-wrapper') ||
-    el.closest('.user-avatar-wrap') ||
-    el.closest('.member-avatar-wrap') ||
-    el.parentElement;
 
-  const existing = (wrap && wrap.querySelector(':scope > .avatar-deco-overlay')) ||
-    el.querySelector(':scope > .avatar-deco-overlay');
-  if (next === 'none') {
-    if (existing) existing.remove();
-    el.classList.remove('has-deco');
-    return;
+  // Wrap dedie autour de l'avatar
+  let wrap = el.parentElement;
+  if (!wrap || !wrap.classList.contains('deco-host')) {
+    // Reutiliser wraps existants
+    wrap =
+      el.closest('.uam-avatar-wrap') ||
+      el.closest('.zpc-avatar-wrap') ||
+      el.closest('.profile-avatar-wrapper') ||
+      el.closest('.user-avatar-wrap') ||
+      el.closest('.member-avatar-wrap') ||
+      el.parentElement;
   }
-  // Toujours recreer pour corriger taille/position (force)
-  if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+
+  const old = (wrap && wrap.querySelectorAll('.avatar-deco-overlay')) || [];
+  old.forEach(n => n.remove());
   el.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
-  el.classList.add('has-deco');
+  el.classList.toggle('has-deco', next !== 'none');
+  if (next === 'none') return;
 
-  const host = wrap || el;
-
-  // Host: visible + centré
-  if (host !== el) {
-    host.style.setProperty('overflow', 'visible', 'important');
-    if (!host.classList.contains('uam-avatar-wrap')) {
-      host.style.setProperty('position', 'relative', 'important');
+  if (wrap) {
+    // Ne pas forcer flex sur uam (casse le layout absolute)
+    const isUam = wrap.classList.contains('uam-avatar-wrap');
+    if (!isUam) {
+      wrap.style.position = 'relative';
     }
-    host.style.setProperty('display', 'flex', 'important');
-    host.style.setProperty('align-items', 'center', 'important');
-    host.style.setProperty('justify-content', 'center', 'important');
+    wrap.style.overflow = 'visible';
   }
 
-  // Parents jusqu'au menu : ne pas clipper
-  let p = host.parentElement;
-  for (let i = 0; i < 5 && p; i++) {
-    if (p.id === 'user-account-menu' || p.classList.contains('user-account-menu') ||
-        p.classList.contains('zpc') || p.classList.contains('profile-card')) {
-      p.style.setProperty('overflow', 'visible', 'important');
-      break;
+  el.style.position = 'relative';
+  el.style.overflow = 'hidden';
+  el.style.zIndex = '1';
+
+  function place() {
+    const rect = el.getBoundingClientRect();
+    let av = Math.max(rect.width, rect.height);
+    if (!av || av < 8) {
+      if (el.id === 'uam-avatar') av = 68;
+      else if (el.id === 'profile-avatar' || el.id === 'edit-preview-avatar') av = 80;
+      else if (el.classList.contains('member-avatar')) av = 32;
+      else if (el.classList.contains('user-avatar')) av = 32;
+      else if (el.classList.contains('message-avatar')) av = 40;
+      else av = 32;
     }
-    p.style.setProperty('overflow', 'visible', 'important');
-    p = p.parentElement;
+    // Ratio type Discord (deco ~ 160% a 180% du cercle avatar)
+    const size = Math.round(av * 1.7);
+
+    // Supprimer si deja place par un double appel
+    if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+
+    const img = document.createElement('img');
+    img.className = 'avatar-deco-overlay';
+    img.dataset.decoId = next;
+    img.src = DECO_URLS[next];
+    img.alt = '';
+    img.draggable = false;
+    img.style.cssText = [
+      'position:absolute',
+      'left:50%',
+      'top:50%',
+      'transform:translate(-50%,-50%)',
+      'width:' + size + 'px',
+      'height:' + size + 'px',
+      'max-width:none',
+      'max-height:none',
+      'object-fit:contain',
+      'pointer-events:none',
+      'z-index:15',
+      'margin:0',
+      'padding:0',
+      'border:0',
+      'display:block'
+    ].join(';');
+    // !important via setProperty
+    ['position','left','top','transform','width','height','object-fit','pointer-events','z-index'].forEach(() => {});
+    img.style.setProperty('position', 'absolute', 'important');
+    img.style.setProperty('left', '50%', 'important');
+    img.style.setProperty('top', '50%', 'important');
+    img.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
+    img.style.setProperty('width', size + 'px', 'important');
+    img.style.setProperty('height', size + 'px', 'important');
+    img.style.setProperty('max-width', 'none', 'important');
+    img.style.setProperty('max-height', 'none', 'important');
+    img.style.setProperty('object-fit', 'contain', 'important');
+    img.style.setProperty('z-index', '15', 'important');
+    img.style.setProperty('pointer-events', 'none', 'important');
+
+    (wrap || el).appendChild(img);
   }
 
-  el.style.setProperty('position', 'relative', 'important');
-  el.style.setProperty('overflow', 'hidden', 'important'); // photo ronde seulement
-  el.style.setProperty('z-index', '1', 'important');
-  el.style.setProperty('flex-shrink', '0', 'important');
-
-  // Mesure de l'AVATAR (pas du wrap)
-  const avRect = el.getBoundingClientRect();
-  let avSize = Math.max(avRect.width, avRect.height);
-  if (!avSize || avSize < 16) {
-    if (el.id === 'uam-avatar') avSize = 68;
-    else if (el.id === 'profile-avatar' || el.id === 'edit-preview-avatar') avSize = 80;
-    else avSize = 32;
-  }
-  // Discord ~ avatar * 1.7 a 2.2 selon les decos
-  const sizePx = Math.round(avSize * 2.15);
-
-  const img = document.createElement('img');
-  img.className = 'avatar-deco-overlay';
-  img.dataset.decoId = next;
-  img.src = DECO_URLS[next];
-  img.alt = '';
-  img.draggable = false;
-  img.style.setProperty('position', 'absolute', 'important');
-  img.style.setProperty('left', '50%', 'important');
-  img.style.setProperty('top', '50%', 'important');
-  img.style.setProperty('right', 'auto', 'important');
-  img.style.setProperty('bottom', 'auto', 'important');
-  img.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
-  img.style.setProperty('width', sizePx + 'px', 'important');
-  img.style.setProperty('height', sizePx + 'px', 'important');
-  img.style.setProperty('max-width', 'none', 'important');
-  img.style.setProperty('max-height', 'none', 'important');
-  img.style.setProperty('min-width', sizePx + 'px', 'important');
-  img.style.setProperty('min-height', sizePx + 'px', 'important');
-  img.style.setProperty('object-fit', 'contain', 'important');
-  img.style.setProperty('pointer-events', 'none', 'important');
-  img.style.setProperty('z-index', '20', 'important');
-  img.style.setProperty('margin', '0', 'important');
-  img.style.setProperty('padding', '0', 'important');
-  img.style.setProperty('border', 'none', 'important');
-  img.style.setProperty('display', 'block', 'important');
-  host.appendChild(img);
+  // Placer maintenant + apres layout (mesure fiable)
+  place();
+  requestAnimationFrame(() => requestAnimationFrame(place));
 }
 
 function applyProfileEffect(card, effect) {
@@ -539,6 +545,16 @@ document.getElementById('accounts-add')?.addEventListener('click', () => {
 
 socket.on('init', data => {
   currentUser = data.user;
+  // Mobile: rappel discret une fois
+  if (window.matchMedia('(max-width: 768px)').matches && !sessionStorage.getItem('mobile-auto-hint')) {
+    sessionStorage.setItem('mobile-auto-hint', '1');
+    setTimeout(() => {
+      try {
+        document.body.classList.add('mobile-channels-open');
+        document.getElementById('mobile-sidebar-overlay')?.classList.remove('hidden');
+      } catch (e) {}
+    }, 600);
+  }
   onlineUsers = data.onlineUsers || [];
   availableBadges = data.availableBadges || [];
   friends = data.friends || [];

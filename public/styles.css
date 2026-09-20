@@ -94,8 +94,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 .member-name{font-size:14px;font-weight:500;color:var(--header2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .member-item:hover .member-name{color:var(--header)}
 
-@media(max-width:900px){.members-sidebar{display:none}}
-@media(max-width:600px){.channels-sidebar{display:none}.servers-sidebar{width:56px}}
+/* media 900/600 remplacees par responsive mobile en fin de fichier */
 
 /* ===== PROFILE MODAL (Discord style) ===== */
 .profile-modal {
@@ -1905,9 +1904,7 @@ img.profile-effect-overlay {
   flex-shrink: 0 !important;
   visibility: visible !important;
 }
-@media (max-width: 900px) {
-  .members-sidebar { display: none !important; }
-}
+/* members sidebar geree en responsive mobile */
 
 /* ===== Upload avatar / bannière ===== */
 .upload-row {
@@ -7763,37 +7760,72 @@ img.avatar-deco-overlay {
     height: 42px !important;
   }
 
-  /* Channels: drawer from left */
+  /* Channels: drawer from left — TOUJOURS display flex (pas display:none) */
   .channels-sidebar {
+    display: flex !important;
+    flex-direction: column !important;
     position: fixed !important;
-    top: 0;
-    left: 56px;
-    bottom: 0;
-    width: min(280px, calc(100vw - 56px)) !important;
-    z-index: 940;
-    transform: translateX(-110%);
-    transition: transform 0.2s ease;
-    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+    top: 0 !important;
+    left: 56px !important;
+    bottom: 0 !important;
+    width: min(300px, calc(100vw - 56px)) !important;
+    max-width: calc(100vw - 56px) !important;
+    z-index: 940 !important;
+    transform: translateX(-110%) !important;
+    transition: transform 0.22s ease !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.45) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
   body.mobile-channels-open .channels-sidebar {
-    transform: translateX(0);
+    transform: translateX(0) !important;
   }
 
   /* Members: drawer from right */
   .members-sidebar {
-    position: fixed !important;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(260px, 85vw) !important;
-    z-index: 940;
-    transform: translateX(110%);
-    transition: transform 0.2s ease;
-    box-shadow: -4px 0 24px rgba(0,0,0,0.4);
     display: flex !important;
+    flex-direction: column !important;
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: min(280px, 88vw) !important;
+    z-index: 940 !important;
+    transform: translateX(110%) !important;
+    transition: transform 0.22s ease !important;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.45) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
   body.mobile-members-open .members-sidebar {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+  }
+
+  /* Contenu des sidebars visible */
+  .channels-sidebar .sidebar-view,
+  .channels-sidebar #home-view,
+  .channels-sidebar #server-view {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    flex: 1 !important;
+    overflow-y: auto !important;
+  }
+  .home-nav-item {
+    min-height: 44px !important;
+    font-size: 15px !important;
+  }
+  .channels-list,
+  .members-list {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* User panel toujours visible en bas */
+  .user-panel {
+    display: flex !important;
+    flex-shrink: 0 !important;
+    min-height: 52px !important;
   }
 
   /* Chat full width */
@@ -7966,4 +7998,43 @@ img.avatar-deco-overlay {
   body.mobile-members-open .members-sidebar {
     transform: none !important;
   }
+}
+
+
+/* DECO AVATAR — placement final propre */
+img.avatar-deco-overlay {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: contain !important;
+  pointer-events: none !important;
+  z-index: 15 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+.user-avatar-wrap,
+.member-avatar-wrap,
+.uam-avatar-wrap,
+.zpc-avatar-wrap,
+.profile-avatar-wrapper,
+.message-avatar {
+  overflow: visible !important;
+}
+.user-avatar,
+.member-avatar,
+.uam-avatar,
+.zpc-avatar,
+.profile-avatar,
+#user-avatar,
+#uam-avatar,
+#profile-avatar,
+#edit-preview-avatar {
+  overflow: hidden !important;
+  position: relative !important;
 }
