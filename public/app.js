@@ -316,7 +316,7 @@ function applyProfileEffect(card, effect) {
   const next = (!effect || effect === 'none' || !EFFECT_URLS[effect]) ? 'none' : effect;
 
   if (card.dataset.appliedEffect === next) {
-    const still = card.querySelector(':scope > .profile-effect-overlay');
+    const still = card.querySelector(':scope > .profile-effect-overlay, .profile-effect-overlay');
     if (next === 'none' || still) return;
   }
 
@@ -327,51 +327,64 @@ function applyProfileEffect(card, effect) {
 
   card.classList.add('effect-' + next);
   card.style.setProperty('position', 'relative', 'important');
-  card.style.setProperty('overflow', 'visible', 'important');
+  // clip a la carte pour voir l'effet sur TOUTE la surface
+  card.style.setProperty('overflow', 'hidden', 'important');
+
+  const layer = document.createElement('div');
+  layer.className = 'profile-effect-overlay';
+  layer.dataset.effectId = next;
+  layer.style.cssText = [
+    'position:absolute',
+    'inset:0',
+    'width:100%',
+    'height:100%',
+    'z-index:10',
+    'pointer-events:none',
+    'border-radius:inherit',
+    'overflow:hidden'
+  ].join(';');
 
   const overlay = document.createElement('img');
-  overlay.className = 'profile-effect-overlay';
-  overlay.dataset.effectId = next;
-  // cache-bust leger pour forcer le nouveau GIF HD
-  overlay.src = EFFECT_URLS[next] + (EFFECT_URLS[next].includes('?') ? '&' : '?') + 'q=2';
+  overlay.src = EFFECT_URLS[next];
   overlay.alt = '';
   overlay.draggable = false;
   overlay.decoding = 'async';
   overlay.loading = 'eager';
-  // Qualite max : cover depuis le haut (ratio Discord portrait)
+  // Discord : APNG 450x880, on remplit toute la carte sans couper le bas
   overlay.style.setProperty('position', 'absolute', 'important');
-  overlay.style.setProperty('inset', '0', 'important');
+  overlay.style.setProperty('left', '0', 'important');
+  overlay.style.setProperty('top', '0', 'important');
   overlay.style.setProperty('width', '100%', 'important');
   overlay.style.setProperty('height', '100%', 'important');
   overlay.style.setProperty('object-fit', 'cover', 'important');
   overlay.style.setProperty('object-position', 'center top', 'important');
   overlay.style.setProperty('image-rendering', 'auto', 'important');
-  overlay.style.setProperty('-ms-interpolation-mode', 'bicubic', 'important');
-  overlay.style.setProperty('pointer-events', 'none', 'important');
-  overlay.style.setProperty('z-index', '10', 'important');
-  overlay.style.setProperty('border-radius', '8px', 'important');
   overlay.style.setProperty('opacity', '1', 'important');
   overlay.style.setProperty('mix-blend-mode', 'normal', 'important');
-  overlay.style.setProperty('transform', 'translateZ(0)', 'important');
-  overlay.style.setProperty('backface-visibility', 'hidden', 'important');
-  card.appendChild(overlay);
+  layer.appendChild(overlay);
+  card.appendChild(layer);
 
-  // Banniere DERRIERE l'effet
+  // Banniere derriere l'effet
   card.querySelectorAll('.uam-header-block, .uam-banner, .zpc-banner, .profile-banner').forEach(el => {
     el.style.setProperty('position', 'relative', 'important');
     el.style.setProperty('z-index', '1', 'important');
   });
-  // Body transparent, texte au-dessus de l'effet
+  // Body 100% transparent = effet visible sur TOUT le profil
   card.querySelectorAll('.uam-profile-body, .zpc-body, .profile-content').forEach(el => {
     el.style.setProperty('position', 'relative', 'important');
     el.style.setProperty('z-index', '15', 'important');
     el.style.setProperty('background', 'transparent', 'important');
+    el.style.setProperty('background-image', 'none', 'important');
   });
-  card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-name, .uam-handle, .uam-badges, .uam-item, .zpc-info').forEach(el => {
+  // Boutons lisibles sans masquer l'effet partout
+  card.querySelectorAll('.uam-item, .uam-actions .uam-item').forEach(el => {
+    el.style.setProperty('background', 'rgba(0,0,0,0.35)', 'important');
+    el.style.setProperty('backdrop-filter', 'blur(6px)', 'important');
+  });
+  card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-name, .uam-handle, .uam-badges, .zpc-info').forEach(el => {
     el.style.setProperty('position', 'relative', 'important');
     el.style.setProperty('z-index', '16', 'important');
   });
-  // Avatar + deco tout en haut
   card.querySelectorAll('.uam-avatar-wrap, .zpc-avatar-wrap, .profile-avatar-wrapper').forEach(el => {
     el.style.setProperty('z-index', '30', 'important');
   });
@@ -925,7 +938,9 @@ function populateAccountMenu() {
   if (bodyEl) {
     const hasFx = !!(currentUser.profileEffect && currentUser.profileEffect !== 'none');
     if (hasFx) {
-      bodyEl.style.setProperty('background', 'rgba(17,18,20,0.45)', 'important');
+      // transparent total pour voir l'effet complet
+      bodyEl.style.setProperty('background', 'transparent', 'important');
+      bodyEl.style.setProperty('background-image', 'none', 'important');
     } else if (hasTheme) {
       bodyEl.style.setProperty('background', 'transparent', 'important');
     } else {
