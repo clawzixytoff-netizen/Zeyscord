@@ -586,10 +586,13 @@ io.on('connection', (socket) => {
   socket.on('updateProfile', (data) => {
     const user = users.get(socket.id);
     if (!user) return;
+    const oldKey = (user.username || '').toLowerCase();
     if (data.avatarUrl !== undefined) user.avatarUrl = data.avatarUrl || null;
     if (data.bannerUrl !== undefined) user.bannerUrl = data.bannerUrl || null;
     if (data.customStatus !== undefined) user.customStatus = (data.customStatus || '').substring(0, 128);
-    if (data.username !== undefined && data.username.trim()) user.username = data.username.trim().substring(0, 32);
+    if (data.username !== undefined && data.username.trim()) {
+      user.username = data.username.trim().substring(0, 32);
+    }
     if (data.avatarDeco !== undefined) user.avatarDeco = data.avatarDeco || 'none';
     if (data.profileEffect !== undefined) user.profileEffect = data.profileEffect || 'none';
     if (data.primaryColor !== undefined) user.primaryColor = data.primaryColor || null;
@@ -608,13 +611,19 @@ io.on('connection', (socket) => {
     }
     users.set(socket.id, user);
     usersById.set(user.id, user);
-    savedProfiles[user.username.toLowerCase()] = {
+    const newKey = (user.username || '').toLowerCase();
+    // Fusionner avec l'ancien profil + migrer la cle si pseudo change
+    const prev = savedProfiles[oldKey] || savedProfiles[newKey] || {};
+    savedProfiles[newKey] = Object.assign({}, prev, {
       avatarUrl: user.avatarUrl, bannerUrl: user.bannerUrl, customStatus: user.customStatus,
       avatarDeco: user.avatarDeco, profileEffect: user.profileEffect,
       primaryColor: user.primaryColor, secondaryColor: user.secondaryColor,
       presenceStatus: user.presenceStatus,
       badges: user.badges, hasNitro: user.hasNitro, createdAt: user.createdAt
-    };
+    });
+    if (oldKey && oldKey !== newKey && savedProfiles[oldKey]) {
+      delete savedProfiles[oldKey];
+    }
     saveProfilesToDisk();
     io.emit('userUpdated', publicUser(user));
     io.emit('onlineUsers', Array.from(users.values()).map(publicUser));
