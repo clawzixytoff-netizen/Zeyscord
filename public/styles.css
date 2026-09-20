@@ -8137,12 +8137,17 @@ img.avatar-deco-overlay {
     flex: 1 1 auto !important;
   }
   .channels-sidebar .sidebar-view {
-    display: flex !important;
     flex-direction: column !important;
     flex: 1 !important;
     min-height: 0 !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
+  }
+  .channels-sidebar .sidebar-view:not(.hidden) {
+    display: flex !important;
+  }
+  .channels-sidebar .sidebar-view.hidden {
+    display: none !important;
   }
   .channels-sidebar .user-panel {
     display: flex !important;
@@ -8452,5 +8457,34 @@ img.avatar-deco-overlay {
   }
   .picker-modal {
     align-items: flex-end !important;
+  }
+}
+
+
+/* FIX: home vs server — une seule vue a la fois (mobile + PC) */
+#home-view.hidden,
+#server-view.hidden,
+.sidebar-view.hidden {
+  display: none !important;
+}
+#home-view:not(.hidden),
+#server-view:not(.hidden) {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+
+@media (max-width: 768px) {
+  /* Accueil = uniquement amis + DM (pas les salons serveur) */
+  body:not(.mobile-in-chat) #home-view:not(.hidden) {
+    display: flex !important;
+  }
+  body:not(.mobile-in-chat) #server-view.hidden {
+    display: none !important;
+  }
+  body:not(.mobile-in-chat) #server-view:not(.hidden) {
+    display: flex !important;
   }
 }

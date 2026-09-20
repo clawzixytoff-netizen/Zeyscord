@@ -2025,6 +2025,7 @@ function renderServers() {
       socket.emit('joinGuild', g.id);
       switchView('server');
       renderServers();
+      if (window.__zeyMobile?.isMobile?.()) window.__zeyMobile.showChannelsList();
     };
     list.appendChild(el);
   });
@@ -2041,8 +2042,12 @@ function switchView(view) {
   if (view === 'home') {
     homeView?.classList.remove('hidden');
     serverView?.classList.add('hidden');
+    // Force display (mobile CSS)
+    if (homeView) homeView.style.display = '';
+    if (serverView) serverView.style.display = 'none';
     homeBtn?.classList.add('active');
     serverBtn?.classList.remove('active');
+    document.querySelectorAll('#servers-list .server-icon').forEach(el => el.classList.remove('active'));
     if (membersSidebar) membersSidebar.style.display = 'none';
     currentChannelName.textContent = 'Amis';
     messageInput.placeholder = 'Sélectionne un ami pour discuter...';
@@ -2053,6 +2058,8 @@ function switchView(view) {
   } else {
     homeView?.classList.add('hidden');
     serverView?.classList.remove('hidden');
+    if (homeView) homeView.style.display = 'none';
+    if (serverView) serverView.style.display = '';
     homeBtn?.classList.remove('active');
     serverBtn?.classList.add('active');
     if (membersSidebar) membersSidebar.style.display = '';
@@ -2070,7 +2077,10 @@ function switchView(view) {
   }
 }
 
-document.getElementById('home-btn')?.addEventListener('click', () => switchView('home'));
+document.getElementById('home-btn')?.addEventListener('click', () => {
+  switchView('home');
+  if (window.__zeyMobile?.isMobile?.()) window.__zeyMobile.showChannelsList();
+});
 document.getElementById('server-btn')?.addEventListener('click', () => switchView('server'));
 
 // Open DM also switches to home view
