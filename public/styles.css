@@ -8790,3 +8790,151 @@ img.avatar-deco-overlay {
   text-align: center !important;
   font-size: 14px !important;
 }
+
+
+/* ===== Pickers grands : 3 par ligne (style Discord) ===== */
+.picker-modal {
+  z-index: 10050 !important;
+}
+.picker-panel {
+  width: min(900px, 96vw) !important;
+  max-height: 90vh !important;
+  background: #313338 !important;
+  border-radius: 12px !important;
+}
+.picker-body {
+  display: grid !important;
+  grid-template-columns: 1fr 280px !important;
+  gap: 20px !important;
+  padding: 20px !important;
+  min-height: 420px !important;
+  overflow: hidden !important;
+}
+.picker-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px !important;
+  align-content: start !important;
+  overflow-y: auto !important;
+  max-height: min(58vh, 520px) !important;
+  padding: 4px 6px 12px 0 !important;
+}
+.picker-tile {
+  width: 100% !important;
+  min-height: 140px !important;
+  padding: 12px 8px !important;
+  background: #1e1f22 !important;
+  border: 2px solid transparent !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+.picker-tile:hover {
+  background: #2b2d31 !important;
+}
+.picker-tile.active {
+  border-color: #5865f2 !important;
+}
+.picker-tile-inner {
+  width: 100% !important;
+  max-width: 120px !important;
+  height: 100px !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: #111214 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.picker-tile-inner img {
+  width: 100% !important;
+  height: 100% !important;
+}
+.picker-tile-fx img {
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+.picker-tile-deco img {
+  object-fit: contain !important;
+  object-position: center !important;
+  padding: 6px !important;
+}
+.picker-tile-inner.none,
+.picker-tile-inner.shop {
+  font-size: 32px !important;
+  color: #b5bac1 !important;
+}
+.picker-tile span:not(.picker-lock) {
+  font-size: 13px !important;
+  color: #dbdee1 !important;
+  text-align: center !important;
+  line-height: 1.25 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding: 0 4px !important;
+}
+.picker-lock {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  font-size: 14px !important;
+}
+.picker-preview-col {
+  width: 280px !important;
+  flex-shrink: 0 !important;
+}
+.picker-preview-card {
+  width: 100% !important;
+  height: 360px !important;
+  border-radius: 12px !important;
+  background: #1e1f22 !important;
+  overflow: hidden !important;
+}
+.picker-preview-deco {
+  height: 220px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.picker-item-name {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #f2f3f5 !important;
+  text-align: center !important;
+  margin-top: 10px !important;
+}
+.picker-header h2 {
+  font-size: 20px !important;
+}
+.picker-footer {
+  padding: 16px 20px !important;
+}
+
+@media (max-width: 720px) {
+  .picker-body {
+    grid-template-columns: 1fr !important;
+  }
+  .picker-preview-col {
+    width: 100% !important;
+  }
+  .picker-preview-card {
+    height: 200px !important;
+  }
+  .picker-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    max-height: 42vh !important;
+  }
+  .picker-tile {
+    min-height: 110px !important;
+  }
+  .picker-tile-inner {
+    height: 72px !important;
+  }
+}
