@@ -4797,6 +4797,62 @@ function renderDecoPickerGrid() {
 }
 
 
+
+function openDecoPicker() {
+  pickerTempDeco = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
+  let modal = document.getElementById('deco-picker-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'deco-picker-modal';
+    modal.className = 'picker-modal hidden';
+    modal.innerHTML = `
+      <div class="picker-overlay" data-close="1"></div>
+      <div class="picker-panel">
+        <div class="picker-header">
+          <div>
+            <h2>Changer la déco d'avatar</h2>
+            <p class="picker-sub">Tes décorations</p>
+          </div>
+          <button type="button" class="picker-x" data-close="1">×</button>
+        </div>
+        <div class="picker-body">
+          <div class="picker-grid" id="deco-picker-grid"></div>
+          <div class="picker-preview-col">
+            <div class="picker-preview-card picker-preview-deco" id="deco-picker-preview"></div>
+            <div class="picker-item-meta">
+              <div class="picker-item-name" id="deco-picker-name">Aucune</div>
+            </div>
+          </div>
+        </div>
+        <div class="picker-footer">
+          <button type="button" class="btn-secondary" data-close="1">Annuler</button>
+          <button type="button" class="btn-primary" id="deco-picker-apply">Appliquer</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', () => modal.classList.add('hidden')));
+    document.getElementById('deco-picker-apply').onclick = () => {
+      editSelectedDeco = pickerTempDeco;
+      selectedDeco = pickerTempDeco;
+      if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
+      if (typeof refreshEditPreview === 'function') refreshEditPreview();
+      if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
+      modal.classList.add('hidden');
+    };
+  }
+  renderDecoPickerGrid();
+  modal.classList.remove('hidden');
+}
+
+
+document.getElementById('edit-deco-tile')?.addEventListener('click', () => openDecoPicker());
+document.getElementById('edit-effect-tile')?.addEventListener('click', () => openEffectPicker());
+document.getElementById('settings-deco-tile')?.addEventListener('click', () => openDecoPicker());
+document.getElementById('settings-effect-tile')?.addEventListener('click', () => openEffectPicker());
+document.getElementById('edit-avatar-tile')?.addEventListener('click', () => {
+  document.getElementById('edit-avatar-file')?.click();
+});
+
 function openShop() {
   const grid = document.getElementById('shop-grid');
   if (!grid) return;
