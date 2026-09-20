@@ -165,209 +165,355 @@ function badgesHtml(badges) {
 })();
 
 const DECO_URLS = {
-  hugh_the_rainbow: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0c0eeb351ae2cf48c6e1eee2cae49d40.png?size=240&passthrough=true',
-  phoenix: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0e839cd79500e7b68e2bbbed54790c28.png?size=240&passthrough=true',
-  firecrackers: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0f4f1b40921ce680b60007e94427d1f2.png?size=240&passthrough=true',
-  flaming_sword: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0f5d6c4dd8ae74662ee9c40722a56cbd.png?size=240&passthrough=true',
-  ramenbowl: 'https://cdn.discordapp.com/avatar-decoration-presets/a_001e956faa73bd0410c455234c62818f.png?size=240&passthrough=true',
-  steampunk_cat_ears: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1acbe609daec21fa5b866df9e5a42cb7.png?size=240&passthrough=true',
-  lucky_envelopes: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1b1df0ae8c2d34afd85da5c22a0d761a.png?size=240&passthrough=true',
-  magical_potion: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1dbc603c181999b9815cb426dfec71a6.png?size=240&passthrough=true',
-  akuma: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1e8cb6070b13f775a41384c84c5a53e1.png?size=240&passthrough=true',
-  next_turn_button: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2b95e7a4951a1a092e7870bf1d456262.png?size=240&passthrough=true',
-  snowglobe: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2ca5fb1ecf0dac410b38d76cb4aae7f9.png?size=240&passthrough=true',
-  feelin_nervous: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2d792aad5003faf6809e26879a7eae6b.png?size=240&passthrough=true',
-  lotus_flower: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2e55d644e11acb6253dfa422eff16dfd.png?size=240&passthrough=true',
-  angry: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3c97a2d37f433a7913a1c7b7a735d000.png?size=240&passthrough=true',
-  owlbear_cub: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3c5743cedcb72131c58278278a97c143.png?size=240&passthrough=true',
-  straw_hat: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3d1e6078b2e4c8865e0ad0f429d651b1.png?size=240&passthrough=true',
-  heartbloom: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3e1fc3c7ee2e34e8176f4737427e8f4f.png?size=240&passthrough=true',
-  candlelight: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3f29e6edfe1cff43736f644cf1d01278.png?size=240&passthrough=true',
-  treasure_and_key: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4c9f2ec29c05755456dbce45d8190ed4.png?size=240&passthrough=true',
-  in_tears: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4cc97277177b166fd7d4af3bdb370815.png?size=240&passthrough=true',
-  butterflies: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4cd9ae5a8d103c219eacd3674d7730cd.png?size=240&passthrough=true',
-  zombie_food: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4f2b75e5adff09709702613ea0e2cb70.png?size=240&passthrough=true',
-  bubble_tea: 'https://cdn.discordapp.com/avatar-decoration-presets/a_5b1319abfc9f928479b68a73635f591d.png?size=240&passthrough=true',
-  witch_hat_plum: 'https://cdn.discordapp.com/avatar-decoration-presets/a_5e8abacc7a7454d6b08b5cc84cac1d80.png?size=240&passthrough=true',
-  shy: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6b793a5f7e4e15eea6b10a4fde448511.png?size=240&passthrough=true',
-  black_hole: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6d16b27d9415cafe3b289053644337c4.png?size=240&passthrough=true',
-  mirage: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6d99f670de3fcee669660fe262e896ea.png?size=240&passthrough=true',
-  ufo: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6fdbddb6229453eac3bbb212edf5cd1c.png?size=240&passthrough=true',
-  aespa_fanlight: 'https://cdn.discordapp.com/avatar-decoration-presets/a_007d64a922ff5773fb9464945de93c8e.png?size=240&passthrough=true',
-  sakura_warrior: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7cf09c7e78d6eb35ae354acc1d5cc676.png?size=240&passthrough=true',
-  fox_hat: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7d305bca6cf371df98c059f9d2ef05e4.png?size=240&passthrough=true',
-  lovestruck: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7f44d538ec830f479605f7bf8720afda.png?size=240&passthrough=true',
-  crossbones: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7f863078aee4932cd50ee4e3b55d3035.png?size=240&passthrough=true',
-  group_hug: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8ad98d25ee4e4512704f759476eeb294.png?size=240&passthrough=true',
-  pipedream: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8c17e799bfeffa797042569a1ebcafc0.png?size=240&passthrough=true',
-  hex_tiles: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8dddba8c2a9704a943bb7020a3d0a418.png?size=240&passthrough=true',
-  crystal_ball_blue: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8ee8ae54bddfcb17d7d5c5f9bce41c0d.png?size=240&passthrough=true',
-  in_love: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8ffa2ba9bff18e96b76c2e66fd0d7fa3.png?size=240&passthrough=true',
-  hex_lights: 'https://cdn.discordapp.com/avatar-decoration-presets/a_09bb4197c743ea31b7eb052eddd3e892.png?size=240&passthrough=true',
-  frag_out: 'https://cdn.discordapp.com/avatar-decoration-presets/a_09de63526a45be1ddac70e84718ee04a.png?size=240&passthrough=true',
-  solar_orbit: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9a6bf0ab30a6719d6eb09fa4996984ca.png?size=240&passthrough=true',
-  the_monster_you_created: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9bc421cef4bdcfffeb2344b44ad91b44.png?size=240&passthrough=true',
-  good_ol_pepper: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9cc1c1426ea5478aac7be6cdefdbc568.png?size=240&passthrough=true',
-  fan_flourish: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9d2ff9685be0c668ef6990b0035fac17.png?size=240&passthrough=true',
-  skull_medallion: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9d67a1cbf81fe7197c871e94f619b04b.png?size=240&passthrough=true',
-  air: '/decos/air.png',
-  balance: '/decos/balance.png',
-  blue_ring: '/decos/blue_ring.png',
-  cat: '/decos/cat.png',
-  cat_ears: '/decos/cat_ears.png',
-  crackers: '/decos/crackers.png',
-  earth: '/decos/earth.png',
-  fan: '/decos/fan.png',
-  fire: '/decos/fire.png',
-  halo: '/decos/halo.png',
-  lightning: '/decos/lightning.png',
-  lotus: '/decos/lotus.png',
-  lunar_lanterns: '/decos/lunar_lanterns.png',
-  moon: '/decos/moon.png',
-  phoenix2: '/decos/phoenix2.png',
-  purple_ring: '/decos/purple_ring.png',
-  rage: '/decos/rage.png',
-  rainbow_hugh: '/decos/rainbow_hugh.png',
-  ring_purple2: '/decos/ring_purple2.png',
-  ring_yellow2: '/decos/ring_yellow2.png',
-  water: '/decos/water.png',
-  wreath: '/decos/wreath.png',
-  yellow_ring: '/decos/yellow_ring.png',
+  hugh_the_rainbow: "https://cdn.discordapp.com/avatar-decoration-presets/a_0c0eeb351ae2cf48c6e1eee2cae49d40.png?size=240&passthrough=true",
+  phoenix: "https://cdn.discordapp.com/avatar-decoration-presets/a_0e839cd79500e7b68e2bbbed54790c28.png?size=240&passthrough=true",
+  firecrackers: "https://cdn.discordapp.com/avatar-decoration-presets/a_0f4f1b40921ce680b60007e94427d1f2.png?size=240&passthrough=true",
+  flaming_sword: "https://cdn.discordapp.com/avatar-decoration-presets/a_0f5d6c4dd8ae74662ee9c40722a56cbd.png?size=240&passthrough=true",
+  ramenbowl: "https://cdn.discordapp.com/avatar-decoration-presets/a_001e956faa73bd0410c455234c62818f.png?size=240&passthrough=true",
+  steampunk_cat_ears: "https://cdn.discordapp.com/avatar-decoration-presets/a_1acbe609daec21fa5b866df9e5a42cb7.png?size=240&passthrough=true",
+  lucky_envelopes: "https://cdn.discordapp.com/avatar-decoration-presets/a_1b1df0ae8c2d34afd85da5c22a0d761a.png?size=240&passthrough=true",
+  magical_potion: "https://cdn.discordapp.com/avatar-decoration-presets/a_1dbc603c181999b9815cb426dfec71a6.png?size=240&passthrough=true",
+  akuma: "https://cdn.discordapp.com/avatar-decoration-presets/a_1e8cb6070b13f775a41384c84c5a53e1.png?size=240&passthrough=true",
+  next_turn_button: "https://cdn.discordapp.com/avatar-decoration-presets/a_2b95e7a4951a1a092e7870bf1d456262.png?size=240&passthrough=true",
+  snowglobe: "https://cdn.discordapp.com/avatar-decoration-presets/a_2ca5fb1ecf0dac410b38d76cb4aae7f9.png?size=240&passthrough=true",
+  feelin_nervous: "https://cdn.discordapp.com/avatar-decoration-presets/a_2d792aad5003faf6809e26879a7eae6b.png?size=240&passthrough=true",
+  lotus_flower: "https://cdn.discordapp.com/avatar-decoration-presets/a_2e55d644e11acb6253dfa422eff16dfd.png?size=240&passthrough=true",
+  angry: "https://cdn.discordapp.com/avatar-decoration-presets/a_3c97a2d37f433a7913a1c7b7a735d000.png?size=240&passthrough=true",
+  owlbear_cub: "https://cdn.discordapp.com/avatar-decoration-presets/a_3c5743cedcb72131c58278278a97c143.png?size=240&passthrough=true",
+  straw_hat: "https://cdn.discordapp.com/avatar-decoration-presets/a_3d1e6078b2e4c8865e0ad0f429d651b1.png?size=240&passthrough=true",
+  heartbloom: "https://cdn.discordapp.com/avatar-decoration-presets/a_3e1fc3c7ee2e34e8176f4737427e8f4f.png?size=240&passthrough=true",
+  candlelight: "https://cdn.discordapp.com/avatar-decoration-presets/a_3f29e6edfe1cff43736f644cf1d01278.png?size=240&passthrough=true",
+  treasure_and_key: "https://cdn.discordapp.com/avatar-decoration-presets/a_4c9f2ec29c05755456dbce45d8190ed4.png?size=240&passthrough=true",
+  in_tears: "https://cdn.discordapp.com/avatar-decoration-presets/a_4cc97277177b166fd7d4af3bdb370815.png?size=240&passthrough=true",
+  butterflies: "https://cdn.discordapp.com/avatar-decoration-presets/a_4cd9ae5a8d103c219eacd3674d7730cd.png?size=240&passthrough=true",
+  zombie_food: "https://cdn.discordapp.com/avatar-decoration-presets/a_4f2b75e5adff09709702613ea0e2cb70.png?size=240&passthrough=true",
+  bubble_tea: "https://cdn.discordapp.com/avatar-decoration-presets/a_5b1319abfc9f928479b68a73635f591d.png?size=240&passthrough=true",
+  witch_hat_plum: "https://cdn.discordapp.com/avatar-decoration-presets/a_5e8abacc7a7454d6b08b5cc84cac1d80.png?size=240&passthrough=true",
+  shy: "https://cdn.discordapp.com/avatar-decoration-presets/a_6b793a5f7e4e15eea6b10a4fde448511.png?size=240&passthrough=true",
+  black_hole: "https://cdn.discordapp.com/avatar-decoration-presets/a_6d16b27d9415cafe3b289053644337c4.png?size=240&passthrough=true",
+  mirage: "https://cdn.discordapp.com/avatar-decoration-presets/a_6d99f670de3fcee669660fe262e896ea.png?size=240&passthrough=true",
+  ufo: "https://cdn.discordapp.com/avatar-decoration-presets/a_6fdbddb6229453eac3bbb212edf5cd1c.png?size=240&passthrough=true",
+  aespa_fanlight: "https://cdn.discordapp.com/avatar-decoration-presets/a_007d64a922ff5773fb9464945de93c8e.png?size=240&passthrough=true",
+  sakura_warrior: "https://cdn.discordapp.com/avatar-decoration-presets/a_7cf09c7e78d6eb35ae354acc1d5cc676.png?size=240&passthrough=true",
+  fox_hat: "https://cdn.discordapp.com/avatar-decoration-presets/a_7d305bca6cf371df98c059f9d2ef05e4.png?size=240&passthrough=true",
+  lovestruck: "https://cdn.discordapp.com/avatar-decoration-presets/a_7f44d538ec830f479605f7bf8720afda.png?size=240&passthrough=true",
+  crossbones: "https://cdn.discordapp.com/avatar-decoration-presets/a_7f863078aee4932cd50ee4e3b55d3035.png?size=240&passthrough=true",
+  group_hug: "https://cdn.discordapp.com/avatar-decoration-presets/a_8ad98d25ee4e4512704f759476eeb294.png?size=240&passthrough=true",
+  pipedream: "https://cdn.discordapp.com/avatar-decoration-presets/a_8c17e799bfeffa797042569a1ebcafc0.png?size=240&passthrough=true",
+  hex_tiles: "https://cdn.discordapp.com/avatar-decoration-presets/a_8dddba8c2a9704a943bb7020a3d0a418.png?size=240&passthrough=true",
+  crystal_ball_blue: "https://cdn.discordapp.com/avatar-decoration-presets/a_8ee8ae54bddfcb17d7d5c5f9bce41c0d.png?size=240&passthrough=true",
+  in_love: "https://cdn.discordapp.com/avatar-decoration-presets/a_8ffa2ba9bff18e96b76c2e66fd0d7fa3.png?size=240&passthrough=true",
+  hex_lights: "https://cdn.discordapp.com/avatar-decoration-presets/a_09bb4197c743ea31b7eb052eddd3e892.png?size=240&passthrough=true",
+  frag_out: "https://cdn.discordapp.com/avatar-decoration-presets/a_09de63526a45be1ddac70e84718ee04a.png?size=240&passthrough=true",
+  solar_orbit: "https://cdn.discordapp.com/avatar-decoration-presets/a_9a6bf0ab30a6719d6eb09fa4996984ca.png?size=240&passthrough=true",
+  the_monster_you_created: "https://cdn.discordapp.com/avatar-decoration-presets/a_9bc421cef4bdcfffeb2344b44ad91b44.png?size=240&passthrough=true",
+  good_ol_pepper: "https://cdn.discordapp.com/avatar-decoration-presets/a_9cc1c1426ea5478aac7be6cdefdbc568.png?size=240&passthrough=true",
+  fan_flourish: "https://cdn.discordapp.com/avatar-decoration-presets/a_9d2ff9685be0c668ef6990b0035fac17.png?size=240&passthrough=true",
+  skull_medallion: "https://cdn.discordapp.com/avatar-decoration-presets/a_9d67a1cbf81fe7197c871e94f619b04b.png?size=240&passthrough=true",
+  tarrain_tiles: "https://cdn.discordapp.com/avatar-decoration-presets/a_9d95e36bc282523fddc63d31a8d01091.png?size=240&passthrough=true",
+  feelin_scrumptious: "https://cdn.discordapp.com/avatar-decoration-presets/a_9d35467f282b8c72a26f5aa40aa2a637.png?size=240&passthrough=true",
+  red_lantern: "https://cdn.discordapp.com/avatar-decoration-presets/a_9e16d86b2887eb2a3bed36a5b8876935.png?size=240&passthrough=true",
+  mooncaps_blue: "https://cdn.discordapp.com/avatar-decoration-presets/a_25f7407a6a0c5de43736a1f24c3b7979.png?size=240&passthrough=true",
+  honeyblossom: "https://cdn.discordapp.com/avatar-decoration-presets/a_27bbf0b53b1054cf61e9a4c0e8d4027f.png?size=240&passthrough=true",
+  string_lights_dusk: "https://cdn.discordapp.com/avatar-decoration-presets/a_28e531da18a80b8287837332154c5f58.png?size=240&passthrough=true",
+  defensive_shield: "https://cdn.discordapp.com/avatar-decoration-presets/a_29a0533cb3de61aa8179810188f3830d.png?size=240&passthrough=true",
+  heartstrings_blue: "https://cdn.discordapp.com/avatar-decoration-presets/a_42cc3fe7133523096466102e7a222003.png?size=240&passthrough=true",
+  magical_girl: "https://cdn.discordapp.com/avatar-decoration-presets/a_45f7f9975255971b197d34d77fb50ede.png?size=240&passthrough=true",
+  unicorn: "https://cdn.discordapp.com/avatar-decoration-presets/a_47c0f4b4a837894998d5a316acf74f87.png?size=240&passthrough=true",
+  chromawave: "https://cdn.discordapp.com/avatar-decoration-presets/a_49c479e15533fb4c02eb320c9c137433.png?size=240&passthrough=true",
+  rocket_puncher: "https://cdn.discordapp.com/avatar-decoration-presets/a_49ed38f73003e2e182f77190af0a0a56.png?size=240&passthrough=true",
+  slither_n_snack: "https://cdn.discordapp.com/avatar-decoration-presets/a_49ffdb1883d8c644a8eb68711ee58be9.png?size=240&passthrough=true",
+  koi_pond: "https://cdn.discordapp.com/avatar-decoration-presets/a_50b440810b1bbd89f6284f36d40ad0af.png?size=240&passthrough=true",
+  faces_of_the_moon: "https://cdn.discordapp.com/avatar-decoration-presets/a_50cfb73a4c52235363491855d3c3c3bc.png?size=240&passthrough=true",
+  dismay: "https://cdn.discordapp.com/avatar-decoration-presets/a_51d3bb502109eec26c76386ec980bc8b.png?size=240&passthrough=true",
+  sweat_drops: "https://cdn.discordapp.com/avatar-decoration-presets/a_55c9d0354290afa8b7fe47ea9bd7dbcf.png?size=240&passthrough=true",
+  lofi_girl_outfit: "https://cdn.discordapp.com/avatar-decoration-presets/a_60cb281fac6d8f558efaf6dd9fe4dbe4.png?size=240&passthrough=true",
+  viper_poison_cloud: "https://cdn.discordapp.com/avatar-decoration-presets/a_62cd9d7c0031a7c1eb5ad5cc96992189.png?size=240&passthrough=true",
+  heartstrings_red: "https://cdn.discordapp.com/avatar-decoration-presets/a_63a69109db554a66764cbe61c6e556ef.png?size=240&passthrough=true",
+  lunar_lanterns: "https://cdn.discordapp.com/avatar-decoration-presets/a_63b29ec5b1ea6bb01c2251049838d822.png?size=240&passthrough=true",
+  string_lights_ember: "https://cdn.discordapp.com/avatar-decoration-presets/a_63d17f42ee46a843d99a58655910bc6a.png?size=240&passthrough=true",
+  m_bison: "https://cdn.discordapp.com/avatar-decoration-presets/a_66f69effef43b4f7c4f5d0739079a947.png?size=240&passthrough=true",
+  ryu: "https://cdn.discordapp.com/avatar-decoration-presets/a_68cb6c21d6222cd9285c08068f39873d.png?size=240&passthrough=true",
+  magic_portal_purple: "https://cdn.discordapp.com/avatar-decoration-presets/a_72d1fd7c47cc7a98c8f64d175773344b.png?size=240&passthrough=true",
+  cozy_cat: "https://cdn.discordapp.com/avatar-decoration-presets/a_77b7b6a740a9451e1ef39c0252154ef8.png?size=240&passthrough=true",
+  scallywag: "https://cdn.discordapp.com/avatar-decoration-presets/a_78f326d95c0193c317470e3e81db81e7.png?size=240&passthrough=true",
+  balance: "https://cdn.discordapp.com/avatar-decoration-presets/a_82e4df4028396ad5ccaaafb397fa6248.png?size=240&passthrough=true",
+  fishbones: "https://cdn.discordapp.com/avatar-decoration-presets/a_84a67b33ef5b75e17f858a95648c973f.png?size=240&passthrough=true",
+  string_lights: "https://cdn.discordapp.com/avatar-decoration-presets/a_88f42fb7360d8224a670a50c3496f315.png?size=240&passthrough=true",
+  valorant_champions_2024: "https://cdn.discordapp.com/avatar-decoration-presets/a_90e0dce3cc48c4a9607b6d41209c737e.png?size=240&passthrough=true",
+  cannon_fire: "https://cdn.discordapp.com/avatar-decoration-presets/a_91a33236cf2728310a3a29bbdc8e0d29.png?size=240&passthrough=true",
+  playful_lofi_cat: "https://cdn.discordapp.com/avatar-decoration-presets/a_96f65d0aacc4a94b50ef7fb656d5826d.png?size=240&passthrough=true",
+  crystal_elk: "https://cdn.discordapp.com/avatar-decoration-presets/a_98c7600d304b86ca3b18272e1da05559.png?size=240&passthrough=true",
+  magic_portal_blue: "https://cdn.discordapp.com/avatar-decoration-presets/a_98cf94e029ac79c5b377413d1a2bd82f.png?size=240&passthrough=true",
+  implant: "https://cdn.discordapp.com/avatar-decoration-presets/a_172fa9da0af8698e37f5e5de76637439.png?size=240&passthrough=true",
+  cottage_home: "https://cdn.discordapp.com/avatar-decoration-presets/a_210b82b98876083ce393ecd92eb07260.png?size=240&passthrough=true",
+  bloomling: "https://cdn.discordapp.com/avatar-decoration-presets/a_306a56249fe3c3d2bc7a30041cb63e0e.png?size=240&passthrough=true",
+  lightning: "https://cdn.discordapp.com/avatar-decoration-presets/a_365eed4178528fe8293c4212e8e2d5cb.png?size=240&passthrough=true",
+  mech_flora: "https://cdn.discordapp.com/avatar-decoration-presets/a_459cf2afde41f01559a4a4204ab81767.png?size=240&passthrough=true",
+  lava_lamp_bundle: "https://cdn.discordapp.com/avatar-decoration-presets/a_462b0bddc07dd495765fe12abe8b077f.png?size=240&passthrough=true",
+  mallow_jump: "https://cdn.discordapp.com/avatar-decoration-presets/a_492f6b54b761c0a14d9dbc9c98aaa0f5.png?size=240&passthrough=true",
+  dancing_fairies: "https://cdn.discordapp.com/avatar-decoration-presets/a_535aa3354b1a7395c271bb2f53be4275.png?size=240&passthrough=true",
+  air: "https://cdn.discordapp.com/avatar-decoration-presets/a_554b7c34f7b6c709f19535aacb128e7b.png?size=240&passthrough=true",
+  rose_bearer: "https://cdn.discordapp.com/avatar-decoration-presets/a_555ad9b90a13534180b9274d013e3651.png?size=240&passthrough=true",
+  power_by_shimmer: "https://cdn.discordapp.com/avatar-decoration-presets/a_609fb5c17a4d5ff2e2bec1a1931a9caa.png?size=240&passthrough=true",
+  head_in_the_clouds: "https://cdn.discordapp.com/avatar-decoration-presets/a_670b722e56740d11d1e6fe55b8094013.png?size=240&passthrough=true",
+  fall_leaves: "https://cdn.discordapp.com/avatar-decoration-presets/a_720a2045510ec16f9878237d2ff9873f.png?size=240&passthrough=true",
+  pirate_captain: "https://cdn.discordapp.com/avatar-decoration-presets/a_798a5bcbb11067e4d9ab339e51d2a16c.png?size=240&passthrough=true",
+  blade_storm: "https://cdn.discordapp.com/avatar-decoration-presets/a_904b1989077c91fca1168d39bfcaa0a4.png?size=240&passthrough=true",
+  guile: "https://cdn.discordapp.com/avatar-decoration-presets/a_993ac691660d3d67b500d995e121b220.png?size=240&passthrough=true",
+  sproutling: "https://cdn.discordapp.com/avatar-decoration-presets/a_3012fad396abbf24e325431800b51510.png?size=240&passthrough=true",
+  midnight_sorceress: "https://cdn.discordapp.com/avatar-decoration-presets/a_4430a4ee89b7fba456e765db21f38485.png?size=240&passthrough=true",
+  doodling: "https://cdn.discordapp.com/avatar-decoration-presets/a_5873ecaa76fb549654b40095293f902e.png?size=240&passthrough=true",
+  sleepy_chilledcow: "https://cdn.discordapp.com/avatar-decoration-presets/a_6649e251a23f24935471ee02c212675b.png?size=240&passthrough=true",
+  armamenter: "https://cdn.discordapp.com/avatar-decoration-presets/a_6912c651e979fbfdc479ed082a571513.png?size=240&passthrough=true",
+  flame_chompers: "https://cdn.discordapp.com/avatar-decoration-presets/a_8396e9830e3e288cd3aaa6daf18b605a.png?size=240&passthrough=true",
+  constellations: "https://cdn.discordapp.com/avatar-decoration-presets/a_8552f9857793aed0cf816f370e2df3be.png?size=240&passthrough=true",
+  cat_onesie: "https://cdn.discordapp.com/avatar-decoration-presets/a_9661cf3296ac236d8815e3f5b809a467.png?size=240&passthrough=true",
+  strawberry_vine: "https://cdn.discordapp.com/avatar-decoration-presets/a_9867b1ba56601e745cfe741e6b00b835.png?size=240&passthrough=true",
+  sakura_lnk: "https://cdn.discordapp.com/avatar-decoration-presets/a_13913a00bd9990ab4102a3bf069f0f3f.png?size=240&passthrough=true",
+  spooky_cat_ears: "https://cdn.discordapp.com/avatar-decoration-presets/a_33656b7ed12cde00c1826b654cf65590.png?size=240&passthrough=true",
+  dark_hood: "https://cdn.discordapp.com/avatar-decoration-presets/a_41445f736db3525135b6b9e1122f2254.png?size=240&passthrough=true",
+  sushi_roll: "https://cdn.discordapp.com/avatar-decoration-presets/a_44045ae47175eaca4ed1b4d889b62b27.png?size=240&passthrough=true",
+  gelatinous_cube: "https://cdn.discordapp.com/avatar-decoration-presets/a_66604bb5c9351541f30c20a4e78c239c.png?size=240&passthrough=true",
+  feelin_awe: "https://cdn.discordapp.com/avatar-decoration-presets/a_89155faed81b205d59fbbefa4316952d.png?size=240&passthrough=true",
+  dice: "https://cdn.discordapp.com/avatar-decoration-presets/a_94191be95bb9c471ff17644f3639eb6d.png?size=240&passthrough=true",
+  a_hint_of_clove: "https://cdn.discordapp.com/avatar-decoration-presets/a_98555e40cc6802bd3a4fed906af1d992.png?size=240&passthrough=true",
+  neon_nibbles: "https://cdn.discordapp.com/avatar-decoration-presets/a_126219d37fa9422dab6a075064453750.png?size=240&passthrough=true",
+  water: "https://cdn.discordapp.com/avatar-decoration-presets/a_250640ab00a8837a1d56f35879138177.png?size=240&passthrough=true",
+  dragon_s_smile: "https://cdn.discordapp.com/avatar-decoration-presets/a_445566ed965b2c1632a5b45c92f32d11.png?size=240&passthrough=true",
+  joystick: "https://cdn.discordapp.com/avatar-decoration-presets/a_795573a62c6d9b583f3029100f90d56b.png?size=240&passthrough=true",
+  spirit_embers: "https://cdn.discordapp.com/avatar-decoration-presets/a_1005898c6acf56a9ac5010baf444f6fd.png?size=240&passthrough=true",
+  got_xenoglossy: "https://cdn.discordapp.com/avatar-decoration-presets/a_35713167cc82e0f408c26dfc032a7f0f.png?size=240&passthrough=true",
+  kabuto: "https://cdn.discordapp.com/avatar-decoration-presets/a_084353360ae4f9b5b3b5f186e5525de0.png?size=240&passthrough=true",
+  aurora: "https://cdn.discordapp.com/avatar-decoration-presets/a_386445551be850bb16b73a225d0d0602.png?size=240&passthrough=true",
+  dandelion_duo: "https://cdn.discordapp.com/avatar-decoration-presets/a_629689577fa1da2ef0061a5a8c930de1.png?size=240&passthrough=true",
+  rage: "https://cdn.discordapp.com/avatar-decoration-presets/a_a0db4314b8cc271c8f472357aa895005.png?size=240&passthrough=true",
+  fresh_pine: "https://cdn.discordapp.com/avatar-decoration-presets/a_a0fafb7c7ee7f1e5b1442f44f3aa14b7.png?size=240&passthrough=true",
+  ruby_hearts: "https://cdn.discordapp.com/avatar-decoration-presets/a_a1c0581971d4a296908829289fea2c47.png?size=240&passthrough=true",
+  city_walls: "https://cdn.discordapp.com/avatar-decoration-presets/a_a4e8e02dbbba6889428c744df7aa5a81.png?size=240&passthrough=true",
+  polar_bear_hat: "https://cdn.discordapp.com/avatar-decoration-presets/a_a7e6467b5332ab7a2b725aa225e6c752.png?size=240&passthrough=true",
+  dusk_and_dawn: "https://cdn.discordapp.com/avatar-decoration-presets/a_a44e9335ea869639fdf812f3642a56a6.png?size=240&passthrough=true",
+  reyna_s_leer: "https://cdn.discordapp.com/avatar-decoration-presets/a_a87e3efa4de2956331831681231ce63b.png?size=240&passthrough=true",
+  baby_displacer_beast: "https://cdn.discordapp.com/avatar-decoration-presets/a_a842a9cf76fdaf91a6354937b31ecdef.png?size=240&passthrough=true",
+  oni_mask: "https://cdn.discordapp.com/avatar-decoration-presets/a_a21393f8a2cb8eafbdfb5364fb1cbbae.png?size=240&passthrough=true",
+  fire: "https://cdn.discordapp.com/avatar-decoration-presets/a_a065206df7b011a5510e4e5bca7d49be.png?size=240&passthrough=true",
+  bowler_hat: "https://cdn.discordapp.com/avatar-decoration-presets/a_a67833d0f3138d7dcdee98c39eae33d7.png?size=240&passthrough=true",
+  the_petal_pack: "https://cdn.discordapp.com/avatar-decoration-presets/a_ab95c78401ce4ec85c25a6d308db9d85.png?size=240&passthrough=true",
+  the_anomaly: "https://cdn.discordapp.com/avatar-decoration-presets/a_af5ee420e5f860ff2cdbb5fa4633f2cf.png?size=240&passthrough=true",
+  cypher_neural_theft: "https://cdn.discordapp.com/avatar-decoration-presets/a_b1efe77f379c6c9c6e47e6b6299d5a7d.png?size=240&passthrough=true",
+  devil: "https://cdn.discordapp.com/avatar-decoration-presets/a_b4dcf63b6af2e20cba91af61c0e3a8a7.png?size=240&passthrough=true",
+  shocked: "https://cdn.discordapp.com/avatar-decoration-presets/a_b98e8b204d59882fb7f9f7c86922c0bf.png?size=240&passthrough=true",
+  mooncaps: "https://cdn.discordapp.com/avatar-decoration-presets/a_b13180be7866281f6fa588a49dd7feb0.png?size=240&passthrough=true",
+  helmsman: "https://cdn.discordapp.com/avatar-decoration-presets/a_b98093bb7723235a4cd2792762795640.png?size=240&passthrough=true",
+  cozy_headphones: "https://cdn.discordapp.com/avatar-decoration-presets/a_bb71042ccd2ca277a69f086a4f3354d0.png?size=240&passthrough=true",
+  kitsune: "https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=240&passthrough=true",
+  brass_beats: "https://cdn.discordapp.com/avatar-decoration-presets/a_bfaeda83edb41e78250eedc71bed31fc.png?size=240&passthrough=true",
+  soul_leaving_body: "https://cdn.discordapp.com/avatar-decoration-presets/a_c3c09bd122898be35093d0d59850f627.png?size=240&passthrough=true",
+  cat_ears: "https://cdn.discordapp.com/avatar-decoration-presets/a_c3cffc19e9784f7d0b005eecdf1b566e.png?size=240&passthrough=true",
+  aradiating_energy: "https://cdn.discordapp.com/avatar-decoration-presets/a_c7e1751e8122f1b475cb3006966fb28c.png?size=240&passthrough=true",
+  wizard_hat: "https://cdn.discordapp.com/avatar-decoration-presets/a_c25b962e5cabb9a656f02c50095d6496.png?size=240&passthrough=true",
+  shuriken_s_mark: "https://cdn.discordapp.com/avatar-decoration-presets/a_c32ce5680d4be96e059790ad493aa0fe.png?size=240&passthrough=true",
+  omen_s_cowl: "https://cdn.discordapp.com/avatar-decoration-presets/a_c45abe8c7585fdb41b8d8d4d666f1588.png?size=240&passthrough=true",
+  autumn_crown: "https://cdn.discordapp.com/avatar-decoration-presets/a_c509c4760e5e1a50fa341d68f3c1901b.png?size=240&passthrough=true",
+  digital_sunrise: "https://cdn.discordapp.com/avatar-decoration-presets/a_cc83efd93ecd6e41857449c3c0ef9b22.png?size=240&passthrough=true",
+  golden_hex: "https://cdn.discordapp.com/avatar-decoration-presets/a_ccee9031d66bc0f2d7ed0c6178d01784.png?size=240&passthrough=true",
+  e_d_hacker: "https://cdn.discordapp.com/avatar-decoration-presets/a_cdca4a092a03b16b94e50289fe3f7bd1.png?size=240&passthrough=true",
+  malefic_crown: "https://cdn.discordapp.com/avatar-decoration-presets/a_d1ea7b8650bf3d64a03304c2ceb7d089.png?size=240&passthrough=true",
+  magical_wand: "https://cdn.discordapp.com/avatar-decoration-presets/a_d3a9c3a1c89ccb0e1ab8724a5c965f48.png?size=240&passthrough=true",
+  disxcore_headset: "https://cdn.discordapp.com/avatar-decoration-presets/a_d3da36040163ee0f9176dfe7ced45cdc.png?size=240&passthrough=true",
+  flux_alchemy: "https://cdn.discordapp.com/avatar-decoration-presets/a_d8d93c7a53c0dd07a4074b745210434d.png?size=240&passthrough=true",
+  glowing_runes: "https://cdn.discordapp.com/avatar-decoration-presets/a_d650e22f6c4bab4fc0969e9d35edbcb0.png?size=240&passthrough=true",
+  snake_s_hug: "https://cdn.discordapp.com/avatar-decoration-presets/a_d859cee893cffd5dd0fa17a6caea44e0.png?size=240&passthrough=true",
+  starry_eyed: "https://cdn.discordapp.com/avatar-decoration-presets/a_d72066b8cecbadd9fc951913ebcc384f.png?size=240&passthrough=true",
+  yoru_bundle: "https://cdn.discordapp.com/avatar-decoration-presets/a_da532f804b47f1681006c2996eb07b2a.png?size=240&passthrough=true",
+  wizard_s_staff: "https://cdn.discordapp.com/avatar-decoration-presets/a_db9baf0ba7cf449d2b027c06309dbe8d.png?size=240&passthrough=true",
+  the_hexcore: "https://cdn.discordapp.com/avatar-decoration-presets/a_dbb1abd90367c1a31a94f7e162f3a3c3.png?size=240&passthrough=true",
+  juri: "https://cdn.discordapp.com/avatar-decoration-presets/a_dcfe10bac4a782ffb5eefef7a8003115.png?size=240&passthrough=true",
+  rumbling: "https://cdn.discordapp.com/avatar-decoration-presets/a_df5442048d7d5b8b8906f3a9cd93f0ab.png?size=240&passthrough=true",
+  mix_string_light_bundle: "https://cdn.discordapp.com/avatar-decoration-presets/a_dff769a0f922bb56ab0d4ba2bcbacfae.png?size=240&passthrough=true",
+  sakura_scholar: "https://cdn.discordapp.com/avatar-decoration-presets/a_e0a2df84cf7eb8e098a13e37ec9027c1.png?size=240&passthrough=true",
+  rainy_mood: "https://cdn.discordapp.com/avatar-decoration-presets/a_e8c11f139e55dac538cdaafb3caa2317.png?size=240&passthrough=true",
+  aim_for_love: "https://cdn.discordapp.com/avatar-decoration-presets/a_e60cc4d7f4d8a6e79dd8cc67d2b13d6c.png?size=240&passthrough=true",
+  clyde_invaders: "https://cdn.discordapp.com/avatar-decoration-presets/a_e72e44eeea89e92dc02c9bec8b02d158.png?size=240&passthrough=true",
+  glitch: "https://cdn.discordapp.com/avatar-decoration-presets/a_e90ebc0114e7bdc30353c8b11953ea41.png?size=240&passthrough=true",
+  uwu_xp: "https://cdn.discordapp.com/avatar-decoration-presets/a_e257ca83b5b164968fd036f69dbb2ad9.png?size=240&passthrough=true",
+  cozy_post_it: "https://cdn.discordapp.com/avatar-decoration-presets/a_e671277ab6d18c0de00871347eed94a7.png?size=240&passthrough=true",
+  eldritch_ring: "https://cdn.discordapp.com/avatar-decoration-presets/a_ef6fe8b27123eacccebe51c92a61587c.png?size=240&passthrough=true",
+  aracanist_bundle: "https://cdn.discordapp.com/avatar-decoration-presets/a_ef8d97374ffdbf140df1164be6c69e46.png?size=240&passthrough=true",
+  starlight_whales: "https://cdn.discordapp.com/avatar-decoration-presets/a_efe3081ee3359a77b515575b5f7bc8c0.png?size=240&passthrough=true",
+  timekeeper_s_clock: "https://cdn.discordapp.com/avatar-decoration-presets/a_f1c60c026aa89971e360ba88643d92c0.png?size=240&passthrough=true",
+  ki_energy: "https://cdn.discordapp.com/avatar-decoration-presets/a_f3af281c65cf0cf590e9e1f59e9c6cf6.png?size=240&passthrough=true",
+  port_of_soul: "https://cdn.discordapp.com/avatar-decoration-presets/a_f4fcdab859b2eab1874fbe7182d5aa26.png?size=240&passthrough=true",
+  azure_dice_roll_bundle: "https://cdn.discordapp.com/avatar-decoration-presets/a_f8ffeba6f389d1475c8794ca88b59785.png?size=240&passthrough=true",
+  feelin_panic: "https://cdn.discordapp.com/avatar-decoration-presets/a_f11c214394044d001d81c983dcab354f.png?size=240&passthrough=true",
+  a_sphere_of_gusting_wind_swirls_around_the_avatar: "https://cdn.discordapp.com/avatar-decoration-presets/a_f081c6b2c85c5ebe5df42f1c24d45bb5.png?size=240&passthrough=true",
+  bunny_zzzs: "https://cdn.discordapp.com/avatar-decoration-presets/a_f438bb9b2f25ac55058fc169ecc8096e.png?size=240&passthrough=true",
+  ken: "https://cdn.discordapp.com/avatar-decoration-presets/a_f524554b7f42a214d15c226c344a5357.png?size=240&passthrough=true",
+  oasis: "https://cdn.discordapp.com/avatar-decoration-presets/a_f740031cc97d1b7eb73c0d0ac1dd09f3.png?size=240&passthrough=true",
+  cat_ear_headset: "https://cdn.discordapp.com/avatar-decoration-presets/a_fa39ba4d9eff38d2eeb47ebcb623e4ca.png?size=240&passthrough=true",
+  earht: "https://cdn.discordapp.com/avatar-decoration-presets/a_fa014594d4b2b4249e1098c0adc85b47.png?size=240&passthrough=true",
+  gold_laurel_wreath: "https://cdn.discordapp.com/avatar-decoration-presets/a_fcb0de14da228879b455f1f1d3919749.png?size=240&passthrough=true",
+  fairy_pixie_bundle: "https://cdn.discordapp.com/avatar-decoration-presets/a_fe3c76cac2adf426832a7e495e8329d3.png?size=240&passthrough=true",
+  death_s_edge: "https://cdn.discordapp.com/avatar-decoration-presets/a_fe63036018fefb8abe3172383497e3bf.png?size=240&passthrough=true",
+  autumn_s_arbor: "https://cdn.discordapp.com/avatar-decoration-presets/a_fead934c894e95e070d8a0301f9f0b27.png?size=240&passthrough=true",
+  futuristic_ui: "https://cdn.discordapp.com/avatar-decoration-presets/a_fed43ab12698df65902ba06727e20c0e.png?size=240&passthrough=true",
+  libya: "https://i.ibb.co/VJ7q2FV/ezgif-7-a2ecd1b7f9.png?size=240&passthrough=true",
+  algeria: "https://i.ibb.co/C7Zdqnp/ezgif-1-148d3d8ea9.png?size=240&passthrough=true",
+  bahrain: "https://i.ibb.co/Dr5gMvn/ezgif-1-bf03b81f9d.png?size=240&passthrough=true",
+  comoros: "https://i.ibb.co/9nqKx3b/ezgif-1-f0b73c7a9f.png?size=240&passthrough=true",
+  tunisia: "https://i.ibb.co/Ksqq6d7/ezgif-7-727033509f.png?size=240&passthrough=true",
+  uae: "https://i.ibb.co/mSRswm8/ezgif-7-637d28d3db.png?size=240&passthrough=true",
+  somalia: "https://i.ibb.co/Sn84j7t/ezgif-7-0f127c7b46.png?size=240&passthrough=true",
+  sudan: "https://i.ibb.co/TLTD2Jk/ezgif-7-b07f2e63fe.png?size=240&passthrough=true",
+  syria: "https://i.ibb.co/dQvcZQp/ezgif-7-369d86d58c.png?size=240&passthrough=true",
+  yemen: "https://i.ibb.co/kDF5G5v/ezgif-7-ea2030a439.png?size=240&passthrough=true",
+  overlay: "https://i.ibb.co/hZD0mmM/ezgif-7-699c07f6f4.png?size=240&passthrough=true",
+  palestine: "https://i.ibb.co/w6b12fc/ezgif-7-5217c6ff98.png?size=240&passthrough=true",
+  qatar: "https://i.ibb.co/xs2Lktj/ezgif-7-44263314da.png?size=240&passthrough=true",
+  saudi: "https://i.ibb.co/rGYFpWw/ezgif-7-8da0a9f5eb.png?size=240&passthrough=true",
+  jordan: "https://i.ibb.co/hyBBCB7/ezgif-7-df80ea6e6e.png?size=240&passthrough=true",
+  kuwait: "https://i.ibb.co/y58DkH5/ezgif-7-af7e8c28ab.png?size=240&passthrough=true",
+  lebanon: "https://i.ibb.co/LPYNzGG/ezgif-7-d9dc5b4cc6.png?size=240&passthrough=true",
+  mauritania: "https://i.ibb.co/8mZKC19/ezgif-7-f78d395b85.png?size=240&passthrough=true",
+  morocco: "https://i.ibb.co/kSdbdCn/ezgif-7-f3b2fab832.png?size=240&passthrough=true",
+  djibouti: "https://i.ibb.co/cQFNw8G/ezgif-1-92158fd061.png?size=240&passthrough=true",
+  egypt: "https://i.ibb.co/hs9GjBp/ezgif-7-f21e193074.png?size=240&passthrough=true",
+  iraq: "https://i.ibb.co/Q6CLZyM/ezgif-7-126237475a.png?size=240&passthrough=true",
 };
 const EFFECT_LAYERS = {
-  boost_relic: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/loop.png' },
-  cyberspace: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/cyberspace/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/cyberspace/loop.png' },
-  hydro_blast: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/splash/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/splash/loop.png' },
-  shatter: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/earthquake/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/earthquake/loop.png' },
-  magic_hearts: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/magic-girl/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/magic-girl/loop.png' },
-  sakura_dreams: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-12-13/sakura/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/sakura/loop.png' },
-  power_surge: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/sayan/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/sayan/loop.png' },
-  shuriken_strike: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/shuriken/intro3.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/shuriken/loop3.png' },
-  mystic_vines: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/vines/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/vines/loop.png' },
-  pixie_dust: { intro: null, loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/fairy/loop.png' },
-  discord_os: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/cereal/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/cereal/loop.png' },
-  breakfast_plate: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/plate/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/plate/loop.png' },
-  ghoulish_graffiti: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/punk-girl/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/punk-girl/loop.png' },
-  dark_omens: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/ghost-skull/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/ghost-skull/loop.png' },
-  zombie_slime: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/zombie-slime/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/zombie-slime/loop.png' },
-  fall_foliage: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/leaves/intro-branch.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/leaves/loop.png' },
-  lillypad_life: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/rain/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/rain/loop.png' },
-  deck_the_halls: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-28/deck-the-halls/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/deck-the-halls/loop.png' },
-  snowy_shenanigans: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-28/snowy-shenanigans/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/snowy-shenanigans/loop.png' },
-  goozilla: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/goozilla/intro-claw.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/goozilla/loop.png' },
-  heartzilla: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-30/heartzilla/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/heartzilla/loop.png' },
-  monster_pop: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-30/monster-pop/intro-monster.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/monster-pop/loop.png' },
-  nightrunner: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-19/cyberpunk-nightrunner/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-nightrunner/idle.png' },
-  uplink_error: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-19/cyberpunk-uplinkerror/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-uplinkerror/idle.png' },
-  dragon_dance: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-07/dragon-dance/intro_2e0f72c35c.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-07/dragon-dance/loop_20e743b578.png' },
-  fortune_flurry: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/fortune-flurry/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-02/fortune-flurry/loop.png' },
-  midnight_celebration: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/midnight-celebration/intro.png', loop: null },
-  rock_slide: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/rock-slide/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/rock-slide/idle.png' },
-  vortex: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/vortex/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/vortex/idle.png' },
-  mastery: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/mastery/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/mastery/idle.png' },
-  dreamy: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/dreamy/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/dreamy/idle.png' },
-  ki_detonate: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/ki-detonate/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/ki-detonate/idle.png' },
-  sushi_mania: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/sushi-mania/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/sushi-mania/idle.png' },
-  petal_serenade: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/petal-serenade/intro-pse01.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/petal-serenade/idle-frame.png' },
-  fellowship_of_the_spring: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/fellowship-of-the-spring/intro-fose01.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/fellowship-of-the-spring/idle-frame.png' },
-  spring_bloom: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/spring-bloom/intro-sbe01.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/spring-bloom/idle-flowers.png' },
-  clove_s_ruse: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/cloves-ruse/intro_b62d8ce4.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/cloves-ruse/idle_050419ac.png' },
-  ace: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/ace/intro_fa545ec0.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/ace/idle_frame_83d027d7.png' },
-  the_immortal_clove: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/the-immortal-clove/intro_310a69a3.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/the-immortal-clove/idle_8739289c.png' },
-  study_spot: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-12/study-spot/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/study-spot/idle.png' },
-  all_nighter: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-14/all-nighter/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/all-nighter/idle-frame.png' },
-  watercolors: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/watercolors/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/watercolors/idle.png' },
-  shooting_stars: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/shooting-stars/intro_770bd27eae0.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/shooting-stars/loop_b1b5a9936b.png' },
-  supernova: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/supernova/intro_9e90bcf683.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/supernova/loop_5835f1730b.png' },
-  twilight: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/twilight/intro_56dbd2384f.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/twilight/loop_ff3e249d19.png' },
-  feelin_mischievous: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-mischievous/intro_bg.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-mischievous/idle_bg.png' },
-  feelin_90s: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-70s/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-70s/idle.png' },
-  feelin_pizzazz: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-10/feelin-pizzazz/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-pizzazz/idle.png' },
-  jolly_roger: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-10/jolly-roger/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/jolly-roger/idle.png' },
-  forgotten_treasure: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-10/forgotten-treasure/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/forgotten-treasure/idle.png' },
-  haunted_man_o_war: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-13/haunted-man-o-war/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-13/haunted-man-o-war/idle.png' },
-  space_evader: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/space-evader/intro_bg.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/space-evader/idle.png' },
-  turbo_drive: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/turbo-drive/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/turbo-drive/idle_finish.png' },
-  twinkle_trails: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/twinkle-trails/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/twinkle-trails/idle.png' },
-  saya: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-21/saya/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/saya/idle.png' },
-  wake_up: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-20/wake-up/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/wake-up/idle.png' },
-  tocotoco: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-20/tocotoco/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/tocotoco/idle.png' },
-  arcane_summons: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/arcane-summons/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/arcane-summons/idle.png' },
-  vengeance: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/vengeance/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/vengeance/idle.png' },
-  spirit_flame: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/spirit-flame/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/spirit-flame/idle.png' },
-  nice_profile: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-24/nice-profile/intro_a9d1e733.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/nice-profile/idle_a.png' },
-  handsome_squidward: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/handsome-squidward/intro_e89c516b.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/handsome-squidward/idle_a.png' },
-  doodlebob_takeover: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/doodlebob-takeover/intro_479359c2.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/doodlebob-takeover/idle.png' },
-  plankton_splat: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-17/plankton-splat/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-17/plankton-splat/idle.png' },
-  ocean_flowers: { intro: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/ocean-flowers/intro.png', loop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/ocean-flowers/idle.png' },
+  boost_relic: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/loop.png" },
+  cyberspace: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/cyberspace/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/cyberspace/loop.png" },
+  hydro_blast: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/splash/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/splash/loop.png" },
+  shatter: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/earthquake/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/earthquake/loop.png" },
+  magic_hearts: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/magic-girl/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/magic-girl/loop.png" },
+  sakura_dreams: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-12-13/sakura/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/sakura/loop.png" },
+  power_surge: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/sayan/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/sayan/loop.png" },
+  shuriken_strike: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-5/shuriken/intro3.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/shuriken/loop3.png" },
+  mystic_vines: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/vines/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/vines/loop.png" },
+  pixie_dust: { intro: null, loop: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/fairy/loop.png" },
+  discord_os: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/cereal/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/cereal/loop.png" },
+  breakfast_plate: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/plate/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/plate/loop.png" },
+  ghoulish_graffiti: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/punk-girl/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/punk-girl/loop.png" },
+  dark_omens: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/ghost-skull/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/ghost-skull/loop.png" },
+  zombie_slime: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/zombie-slime/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/zombie-slime/loop.png" },
+  fall_foliage: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/leaves/intro-branch.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/leaves/loop.png" },
+  lillypad_life: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/rain/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/rain/loop.png" },
+  deck_the_halls: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-28/deck-the-halls/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/deck-the-halls/loop.png" },
+  snowy_shenanigans: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-28/snowy-shenanigans/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/snowy-shenanigans/loop.png" },
+  goozilla: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/goozilla/intro-claw.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/goozilla/loop.png" },
+  heartzilla: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-30/heartzilla/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/heartzilla/loop.png" },
+  monster_pop: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-30/monster-pop/intro-monster.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/monster-pop/loop.png" },
+  nightrunner: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-19/cyberpunk-nightrunner/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-nightrunner/idle.png" },
+  uplink_error: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-19/cyberpunk-uplinkerror/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-uplinkerror/idle.png" },
+  dragon_dance: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-07/dragon-dance/intro_2e0f72c35c.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-07/dragon-dance/loop_20e743b578.png" },
+  fortune_flurry: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/fortune-flurry/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-02/fortune-flurry/loop.png" },
+  midnight_celebration: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/midnight-celebration/intro.png", loop: null },
+  rock_slide: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/rock-slide/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/rock-slide/idle.png" },
+  vortex: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/vortex/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/vortex/idle.png" },
+  mastery: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/mastery/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/mastery/idle.png" },
+  dreamy: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/dreamy/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/dreamy/idle.png" },
+  ki_detonate: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/ki-detonate/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/ki-detonate/idle.png" },
+  sushi_mania: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/sushi-mania/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/sushi-mania/idle.png" },
+  petal_serenade: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/petal-serenade/intro-pse01.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/petal-serenade/idle-frame.png" },
+  fellowship_of_the_spring: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/fellowship-of-the-spring/intro-fose01.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/fellowship-of-the-spring/idle-frame.png" },
+  spring_bloom: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/spring-bloom/intro-sbe01.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/spring-bloom/idle-flowers.png" },
+  clove_s_ruse: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/cloves-ruse/intro_b62d8ce4.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/cloves-ruse/idle_050419ac.png" },
+  ace: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/ace/intro_fa545ec0.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/ace/idle_frame_83d027d7.png" },
+  the_immortal_clove: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/the-immortal-clove/intro_310a69a3.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/the-immortal-clove/idle_8739289c.png" },
+  study_spot: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-12/study-spot/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/study-spot/idle.png" },
+  all_nighter: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-14/all-nighter/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/all-nighter/idle-frame.png" },
+  watercolors: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/watercolors/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/watercolors/idle.png" },
+  shooting_stars: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/shooting-stars/intro_770bd27eae0.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/shooting-stars/loop_b1b5a9936b.png" },
+  supernova: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/supernova/intro_9e90bcf683.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/supernova/loop_5835f1730b.png" },
+  twilight: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/twilight/intro_56dbd2384f.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/twilight/loop_ff3e249d19.png" },
+  feelin_mischievous: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-mischievous/intro_bg.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-mischievous/idle_bg.png" },
+  feelin_90s: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-70s/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-70s/idle.png" },
+  feelin_pizzazz: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-10/feelin-pizzazz/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-pizzazz/idle.png" },
+  jolly_roger: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-10/jolly-roger/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/jolly-roger/idle.png" },
+  forgotten_treasure: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-10/forgotten-treasure/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/forgotten-treasure/idle.png" },
+  haunted_man_o_war: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-13/haunted-man-o-war/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-13/haunted-man-o-war/idle.png" },
+  space_evader: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/space-evader/intro_bg.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/space-evader/idle.png" },
+  turbo_drive: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/turbo-drive/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/turbo-drive/idle_finish.png" },
+  twinkle_trails: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/twinkle-trails/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/twinkle-trails/idle.png" },
+  saya: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-21/saya/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/saya/idle.png" },
+  wake_up: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-20/wake-up/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/wake-up/idle.png" },
+  tocotoco: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-20/tocotoco/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/tocotoco/idle.png" },
+  arcane_summons: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/arcane-summons/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/arcane-summons/idle.png" },
+  vengeance: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/vengeance/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/vengeance/idle.png" },
+  spirit_flame: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/spirit-flame/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/spirit-flame/idle.png" },
+  nice_profile: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-24/nice-profile/intro_a9d1e733.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/nice-profile/idle_a.png" },
+  handsome_squidward: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/handsome-squidward/intro_e89c516b.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/handsome-squidward/idle_a.png" },
+  doodlebob_takeover: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/doodlebob-takeover/intro_479359c2.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/doodlebob-takeover/idle.png" },
+  plankton_splat: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-17/plankton-splat/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-17/plankton-splat/idle.png" },
+  ocean_flowers: { intro: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/ocean-flowers/intro.png", loop: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/ocean-flowers/idle.png" },
 };
 
 const EFFECT_URLS = {
-  boost_relic: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/loop.png',
-  cyberspace: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/cyberspace/loop.png',
-  hydro_blast: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/splash/loop.png',
-  shatter: 'https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/earthquake/loop.png',
-  magic_hearts: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/magic-girl/loop.png',
-  sakura_dreams: 'https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/sakura/loop.png',
-  power_surge: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/sayan/loop.png',
-  shuriken_strike: 'https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/shuriken/loop3.png',
-  mystic_vines: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/vines/loop.png',
-  pixie_dust: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/fairy/loop.png',
-  discord_os: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/cereal/loop.png',
-  breakfast_plate: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/plate/loop.png',
-  ghoulish_graffiti: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/punk-girl/loop.png',
-  dark_omens: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/ghost-skull/loop.png',
-  zombie_slime: 'https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/zombie-slime/loop.png',
-  fall_foliage: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/leaves/loop.png',
-  lillypad_life: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/rain/loop.png',
-  deck_the_halls: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/deck-the-halls/loop.png',
-  snowy_shenanigans: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/snowy-shenanigans/loop.png',
-  goozilla: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/goozilla/loop.png',
-  heartzilla: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/heartzilla/loop.png',
-  monster_pop: 'https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/monster-pop/loop.png',
-  nightrunner: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-nightrunner/idle.png',
-  uplink_error: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-uplinkerror/idle.png',
-  dragon_dance: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-07/dragon-dance/loop_20e743b578.png',
-  fortune_flurry: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-02/fortune-flurry/loop.png',
-  midnight_celebration: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/midnight-celebration/frame.png',
-  rock_slide: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/rock-slide/idle.png',
-  vortex: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/vortex/idle.png',
-  mastery: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/mastery/idle.png',
-  dreamy: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/dreamy/idle.png',
-  ki_detonate: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/ki-detonate/idle.png',
-  sushi_mania: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/sushi-mania/idle.png',
-  petal_serenade: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/petal-serenade/idle-frame.png',
-  fellowship_of_the_spring: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/fellowship-of-the-spring/idle-frame.png',
-  spring_bloom: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/spring-bloom/idle-flowers.png',
-  clove_s_ruse: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/cloves-ruse/idle_050419ac.png',
-  ace: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/ace/idle_frame_83d027d7.png',
-  the_immortal_clove: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/the-immortal-clove/idle_8739289c.png',
-  study_spot: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/study-spot/idle.png',
-  all_nighter: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/all-nighter/idle-frame.png',
-  watercolors: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/watercolors/idle.png',
-  shooting_stars: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/shooting-stars/loop_b1b5a9936b.png',
-  supernova: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/supernova/loop_5835f1730b.png',
-  twilight: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/twilight/loop_ff3e249d19.png',
-  feelin_mischievous: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-mischievous/idle_bg.png',
-  feelin_90s: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-70s/idle.png',
-  feelin_pizzazz: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-pizzazz/idle.png',
-  jolly_roger: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/jolly-roger/idle.png',
-  forgotten_treasure: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/forgotten-treasure/idle.png',
-  haunted_man_o_war: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-13/haunted-man-o-war/idle.png',
-  space_evader: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/space-evader/idle.png',
-  turbo_drive: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/turbo-drive/idle_finish.png',
-  twinkle_trails: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/twinkle-trails/idle.png',
-  saya: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/saya/idle.png',
-  wake_up: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/wake-up/idle.png',
-  tocotoco: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/tocotoco/idle.png',
-  arcane_summons: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/arcane-summons/idle.png',
-  vengeance: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/vengeance/idle.png',
-  spirit_flame: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/spirit-flame/idle.png',
-  nice_profile: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/nice-profile/idle_a.png',
-  handsome_squidward: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/handsome-squidward/idle_a.png',
-  doodlebob_takeover: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/doodlebob-takeover/idle.png',
-  plankton_splat: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-17/plankton-splat/idle.png',
-  ocean_flowers: 'https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/ocean-flowers/idle.png',
+  boost_relic: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/boost-relic/loop.png",
+  cyberspace: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-20/cyberspace/loop.png",
+  hydro_blast: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/splash/loop.png",
+  shatter: "https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/earthquake/loop.png",
+  magic_hearts: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/magic-girl/loop.png",
+  sakura_dreams: "https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/sakura/loop.png",
+  power_surge: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/sayan/loop.png",
+  shuriken_strike: "https://cdn.discordapp.com/assets/profile_effects/effects/2e46d5d2d9e/shuriken/loop3.png",
+  mystic_vines: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/vines/loop.png",
+  pixie_dust: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/fairy/loop.png",
+  discord_os: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/cereal/loop.png",
+  breakfast_plate: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/plate/loop.png",
+  ghoulish_graffiti: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/punk-girl/loop.png",
+  dark_omens: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/ghost-skull/loop.png",
+  zombie_slime: "https://cdn.discordapp.com/assets/profile_effects/effects/b17d139f2e9/zombie-slime/loop.png",
+  fall_foliage: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-10-11/leaves/loop.png",
+  lillypad_life: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-9-25/rain/loop.png",
+  deck_the_halls: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/deck-the-halls/loop.png",
+  snowy_shenanigans: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-22/snowy-shenanigans/loop.png",
+  goozilla: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/goozilla/loop.png",
+  heartzilla: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/heartzilla/loop.png",
+  monster_pop: "https://cdn.discordapp.com/assets/profile_effects/effects/2023-11-29/monster-pop/loop.png",
+  nightrunner: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-nightrunner/idle.png",
+  uplink_error: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-1-18/cyberpunk-uplinkerror/idle.png",
+  dragon_dance: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-07/dragon-dance/loop_20e743b578.png",
+  fortune_flurry: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-02/fortune-flurry/loop.png",
+  midnight_celebration: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/midnight-celebration/intro.png",
+  rock_slide: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/rock-slide/idle.png",
+  vortex: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/vortex/idle.png",
+  mastery: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-13/mastery/idle.png",
+  dreamy: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/dreamy/idle.png",
+  ki_detonate: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/ki-detonate/idle.png",
+  sushi_mania: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-28/sushi-mania/idle.png",
+  petal_serenade: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/petal-serenade/idle-frame.png",
+  fellowship_of_the_spring: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/fellowship-of-the-spring/idle-frame.png",
+  spring_bloom: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-11/spring-bloom/idle-flowers.png",
+  clove_s_ruse: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/cloves-ruse/idle_050419ac.png",
+  ace: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/ace/idle_frame_83d027d7.png",
+  the_immortal_clove: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-03-21/the-immortal-clove/idle_8739289c.png",
+  study_spot: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/study-spot/idle.png",
+  all_nighter: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/all-nighter/idle-frame.png",
+  watercolors: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-04/watercolors/idle.png",
+  shooting_stars: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/shooting-stars/loop_b1b5a9936b.png",
+  supernova: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/supernova/loop_5835f1730b.png",
+  twilight: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-04-25/twilight/loop_ff3e249d19.png",
+  feelin_mischievous: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-mischievous/idle_bg.png",
+  feelin_90s: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-70s/idle.png",
+  feelin_pizzazz: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/feelin-pizzazz/idle.png",
+  jolly_roger: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/jolly-roger/idle.png",
+  forgotten_treasure: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-09/forgotten-treasure/idle.png",
+  haunted_man_o_war: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-13/haunted-man-o-war/idle.png",
+  space_evader: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/space-evader/idle.png",
+  turbo_drive: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/turbo-drive/idle_finish.png",
+  twinkle_trails: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-05-29/twinkle-trails/idle.png",
+  saya: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/saya/idle.png",
+  wake_up: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/wake-up/idle.png",
+  tocotoco: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-06-18/tocotoco/idle.png",
+  arcane_summons: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/arcane-summons/idle.png",
+  vengeance: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/vengeance/idle.png",
+  spirit_flame: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-01/spirit-flame/idle.png",
+  nice_profile: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/nice-profile/idle_a.png",
+  handsome_squidward: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/handsome-squidward/idle_a.png",
+  doodlebob_takeover: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/doodlebob-takeover/idle.png",
+  plankton_splat: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-17/plankton-splat/idle.png",
+  ocean_flowers: "https://cdn.discordapp.com/assets/profile_effects/effects/2024-07-15/ocean-flowers/idle.png",
 };
 
 function applyAvatarDeco(el, deco) {
@@ -2582,74 +2728,1504 @@ document.getElementById('settings-logout')?.addEventListener('click', () => {
 
 // ===== SHOP & OWNED DECOS =====
 const SHOP_DECOS = [
-  { id: 'hugh_the_rainbow', name: "Hugh the Rainbow", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0c0eeb351ae2cf48c6e1eee2cae49d40.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'phoenix', name: "Phoenix", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0e839cd79500e7b68e2bbbed54790c28.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'firecrackers', name: "Firecrackers", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0f4f1b40921ce680b60007e94427d1f2.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'flaming_sword', name: "Flaming Sword", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_0f5d6c4dd8ae74662ee9c40722a56cbd.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'ramenbowl', name: "RamenBowl", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_001e956faa73bd0410c455234c62818f.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'steampunk_cat_ears', name: "Steampunk Cat Ears", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1acbe609daec21fa5b866df9e5a42cb7.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'lucky_envelopes', name: "Lucky Envelopes", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1b1df0ae8c2d34afd85da5c22a0d761a.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'magical_potion', name: "Magical Potion", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1dbc603c181999b9815cb426dfec71a6.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'akuma', name: "Akuma", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_1e8cb6070b13f775a41384c84c5a53e1.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'next_turn_button', name: "Next Turn Button", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2b95e7a4951a1a092e7870bf1d456262.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'snowglobe', name: "Snowglobe", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2ca5fb1ecf0dac410b38d76cb4aae7f9.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'feelin_nervous', name: "Feelin'Nervous", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2d792aad5003faf6809e26879a7eae6b.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'lotus_flower', name: "Lotus Flower", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_2e55d644e11acb6253dfa422eff16dfd.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'angry', name: "Angry", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3c97a2d37f433a7913a1c7b7a735d000.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'owlbear_cub', name: "Owlbear Cub", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3c5743cedcb72131c58278278a97c143.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'straw_hat', name: "Straw Hat", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3d1e6078b2e4c8865e0ad0f429d651b1.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'heartbloom', name: "Heartbloom", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3e1fc3c7ee2e34e8176f4737427e8f4f.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'candlelight', name: "Candlelight", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_3f29e6edfe1cff43736f644cf1d01278.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'treasure_and_key', name: "Treasure and Key", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4c9f2ec29c05755456dbce45d8190ed4.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'in_tears', name: "in Tears", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4cc97277177b166fd7d4af3bdb370815.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'butterflies', name: "Butterflies", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4cd9ae5a8d103c219eacd3674d7730cd.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'zombie_food', name: "Zombie Food", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_4f2b75e5adff09709702613ea0e2cb70.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'bubble_tea', name: "Bubble Tea", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_5b1319abfc9f928479b68a73635f591d.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'witch_hat_plum', name: "Witch Hat (Plum)", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_5e8abacc7a7454d6b08b5cc84cac1d80.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'shy', name: "Shy", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6b793a5f7e4e15eea6b10a4fde448511.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'black_hole', name: "Black Hole", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6d16b27d9415cafe3b289053644337c4.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'mirage', name: "Mirage", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6d99f670de3fcee669660fe262e896ea.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'ufo', name: "UFO", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_6fdbddb6229453eac3bbb212edf5cd1c.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'aespa_fanlight', name: "aespa Fanlight", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_007d64a922ff5773fb9464945de93c8e.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'sakura_warrior', name: "Sakura Warrior", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7cf09c7e78d6eb35ae354acc1d5cc676.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'fox_hat', name: "Fox Hat", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7d305bca6cf371df98c059f9d2ef05e4.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'lovestruck', name: "Lovestruck", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7f44d538ec830f479605f7bf8720afda.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'crossbones', name: "Crossbones", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_7f863078aee4932cd50ee4e3b55d3035.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'group_hug', name: "Group Hug", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8ad98d25ee4e4512704f759476eeb294.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'pipedream', name: "Pipedream", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8c17e799bfeffa797042569a1ebcafc0.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'hex_tiles', name: "Hex Tiles", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8dddba8c2a9704a943bb7020a3d0a418.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'crystal_ball_blue', name: "Crystal Ball (Blue)", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8ee8ae54bddfcb17d7d5c5f9bce41c0d.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'in_love', name: "In Love", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_8ffa2ba9bff18e96b76c2e66fd0d7fa3.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'hex_lights', name: "Hex Lights", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_09bb4197c743ea31b7eb052eddd3e892.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'frag_out', name: "FRAG OUT", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_09de63526a45be1ddac70e84718ee04a.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'solar_orbit', name: "Solar Orbit", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9a6bf0ab30a6719d6eb09fa4996984ca.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'the_monster_you_created', name: "The Monster You Created", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9bc421cef4bdcfffeb2344b44ad91b44.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'good_ol_pepper', name: "Good Ol'Pepper", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9cc1c1426ea5478aac7be6cdefdbc568.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'fan_flourish', name: "Fan Flourish", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9d2ff9685be0c668ef6990b0035fac17.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'skull_medallion', name: "Skull Medallion", img: 'https://cdn.discordapp.com/avatar-decoration-presets/a_9d67a1cbf81fe7197c871e94f619b04b.png?size=240&passthrough=true', price: 2.75, type: 'deco' },
-  { id: 'air', name: 'Air', img: '/decos/air.png', price: 2.75, type: 'deco' },
-  { id: 'balance', name: 'Balance', img: '/decos/balance.png', price: 2.75, type: 'deco' },
-  { id: 'blue_ring', name: 'Blue Ring', img: '/decos/blue_ring.png', price: 2.75, type: 'deco' },
-  { id: 'cat', name: 'Cat', img: '/decos/cat.png', price: 2.75, type: 'deco' },
-  { id: 'cat_ears', name: 'Cat Ears', img: '/decos/cat_ears.png', price: 2.75, type: 'deco' },
-  { id: 'crackers', name: 'Crackers', img: '/decos/crackers.png', price: 2.75, type: 'deco' },
-  { id: 'earth', name: 'Earth', img: '/decos/earth.png', price: 2.75, type: 'deco' },
-  { id: 'fan', name: 'Fan', img: '/decos/fan.png', price: 2.75, type: 'deco' },
-  { id: 'fire', name: 'Fire', img: '/decos/fire.png', price: 2.75, type: 'deco' },
-  { id: 'halo', name: 'Halo', img: '/decos/halo.png', price: 2.75, type: 'deco' },
-  { id: 'lightning', name: 'Lightning', img: '/decos/lightning.png', price: 2.75, type: 'deco' },
-  { id: 'lotus', name: 'Lotus', img: '/decos/lotus.png', price: 2.75, type: 'deco' },
-  { id: 'lunar_lanterns', name: 'Lunar Lanterns', img: '/decos/lunar_lanterns.png', price: 2.75, type: 'deco' },
-  { id: 'moon', name: 'Moon', img: '/decos/moon.png', price: 2.75, type: 'deco' },
-  { id: 'phoenix2', name: 'Phoenix2', img: '/decos/phoenix2.png', price: 2.75, type: 'deco' },
-  { id: 'purple_ring', name: 'Purple Ring', img: '/decos/purple_ring.png', price: 2.75, type: 'deco' },
-  { id: 'rage', name: 'Rage', img: '/decos/rage.png', price: 2.75, type: 'deco' },
-  { id: 'rainbow_hugh', name: 'Rainbow Hugh', img: '/decos/rainbow_hugh.png', price: 2.75, type: 'deco' },
-  { id: 'ring_purple2', name: 'Ring Purple2', img: '/decos/ring_purple2.png', price: 2.75, type: 'deco' },
-  { id: 'ring_yellow2', name: 'Ring Yellow2', img: '/decos/ring_yellow2.png', price: 2.75, type: 'deco' },
-  { id: 'water', name: 'Water', img: '/decos/water.png', price: 2.75, type: 'deco' },
-  { id: 'wreath', name: 'Wreath', img: '/decos/wreath.png', price: 2.75, type: 'deco' },
-  { id: 'yellow_ring', name: 'Yellow Ring', img: '/decos/yellow_ring.png', price: 2.75, type: 'deco' },
+  {
+    "id": "hugh_the_rainbow",
+    "name": "Hugh the Rainbow",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_0c0eeb351ae2cf48c6e1eee2cae49d40.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "phoenix",
+    "name": "Phoenix",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_0e839cd79500e7b68e2bbbed54790c28.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "firecrackers",
+    "name": "Firecrackers",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_0f4f1b40921ce680b60007e94427d1f2.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "flaming_sword",
+    "name": "Flaming Sword",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_0f5d6c4dd8ae74662ee9c40722a56cbd.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "ramenbowl",
+    "name": "RamenBowl",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_001e956faa73bd0410c455234c62818f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "steampunk_cat_ears",
+    "name": "Steampunk Cat Ears",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_1acbe609daec21fa5b866df9e5a42cb7.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lucky_envelopes",
+    "name": "Lucky Envelopes",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_1b1df0ae8c2d34afd85da5c22a0d761a.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "magical_potion",
+    "name": "Magical Potion",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_1dbc603c181999b9815cb426dfec71a6.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "akuma",
+    "name": "Akuma",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_1e8cb6070b13f775a41384c84c5a53e1.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "next_turn_button",
+    "name": "Next Turn Button",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_2b95e7a4951a1a092e7870bf1d456262.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "snowglobe",
+    "name": "Snowglobe",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_2ca5fb1ecf0dac410b38d76cb4aae7f9.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "feelin_nervous",
+    "name": "Feelin'Nervous",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_2d792aad5003faf6809e26879a7eae6b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lotus_flower",
+    "name": "Lotus Flower",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_2e55d644e11acb6253dfa422eff16dfd.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "angry",
+    "name": "Angry",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_3c97a2d37f433a7913a1c7b7a735d000.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "owlbear_cub",
+    "name": "Owlbear Cub",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_3c5743cedcb72131c58278278a97c143.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "straw_hat",
+    "name": "Straw Hat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_3d1e6078b2e4c8865e0ad0f429d651b1.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "heartbloom",
+    "name": "Heartbloom",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_3e1fc3c7ee2e34e8176f4737427e8f4f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "candlelight",
+    "name": "Candlelight",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_3f29e6edfe1cff43736f644cf1d01278.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "treasure_and_key",
+    "name": "Treasure and Key",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_4c9f2ec29c05755456dbce45d8190ed4.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "in_tears",
+    "name": "in Tears",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_4cc97277177b166fd7d4af3bdb370815.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "butterflies",
+    "name": "Butterflies",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_4cd9ae5a8d103c219eacd3674d7730cd.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "zombie_food",
+    "name": "Zombie Food",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_4f2b75e5adff09709702613ea0e2cb70.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "bubble_tea",
+    "name": "Bubble Tea",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_5b1319abfc9f928479b68a73635f591d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "witch_hat_plum",
+    "name": "Witch Hat (Plum)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_5e8abacc7a7454d6b08b5cc84cac1d80.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "shy",
+    "name": "Shy",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_6b793a5f7e4e15eea6b10a4fde448511.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "black_hole",
+    "name": "Black Hole",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_6d16b27d9415cafe3b289053644337c4.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mirage",
+    "name": "Mirage",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_6d99f670de3fcee669660fe262e896ea.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "ufo",
+    "name": "UFO",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_6fdbddb6229453eac3bbb212edf5cd1c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "aespa_fanlight",
+    "name": "aespa Fanlight",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_007d64a922ff5773fb9464945de93c8e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sakura_warrior",
+    "name": "Sakura Warrior",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_7cf09c7e78d6eb35ae354acc1d5cc676.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fox_hat",
+    "name": "Fox Hat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_7d305bca6cf371df98c059f9d2ef05e4.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lovestruck",
+    "name": "Lovestruck",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_7f44d538ec830f479605f7bf8720afda.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "crossbones",
+    "name": "Crossbones",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_7f863078aee4932cd50ee4e3b55d3035.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "group_hug",
+    "name": "Group Hug",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8ad98d25ee4e4512704f759476eeb294.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "pipedream",
+    "name": "Pipedream",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8c17e799bfeffa797042569a1ebcafc0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "hex_tiles",
+    "name": "Hex Tiles",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8dddba8c2a9704a943bb7020a3d0a418.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "crystal_ball_blue",
+    "name": "Crystal Ball (Blue)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8ee8ae54bddfcb17d7d5c5f9bce41c0d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "in_love",
+    "name": "In Love",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8ffa2ba9bff18e96b76c2e66fd0d7fa3.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "hex_lights",
+    "name": "Hex Lights",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_09bb4197c743ea31b7eb052eddd3e892.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "frag_out",
+    "name": "FRAG OUT",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_09de63526a45be1ddac70e84718ee04a.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "solar_orbit",
+    "name": "Solar Orbit",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9a6bf0ab30a6719d6eb09fa4996984ca.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "the_monster_you_created",
+    "name": "The Monster You Created",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9bc421cef4bdcfffeb2344b44ad91b44.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "good_ol_pepper",
+    "name": "Good Ol'Pepper",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9cc1c1426ea5478aac7be6cdefdbc568.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fan_flourish",
+    "name": "Fan Flourish",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9d2ff9685be0c668ef6990b0035fac17.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "skull_medallion",
+    "name": "Skull Medallion",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9d67a1cbf81fe7197c871e94f619b04b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "tarrain_tiles",
+    "name": "Tarrain Tiles",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9d95e36bc282523fddc63d31a8d01091.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "feelin_scrumptious",
+    "name": "Feelin'Scrumptious",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9d35467f282b8c72a26f5aa40aa2a637.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "red_lantern",
+    "name": "Red Lantern",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9e16d86b2887eb2a3bed36a5b8876935.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mooncaps_blue",
+    "name": "Mooncaps (Blue)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_25f7407a6a0c5de43736a1f24c3b7979.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "honeyblossom",
+    "name": "Honeyblossom",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_27bbf0b53b1054cf61e9a4c0e8d4027f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "string_lights_dusk",
+    "name": "String Lights (Dusk)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_28e531da18a80b8287837332154c5f58.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "defensive_shield",
+    "name": "Defensive Shield",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_29a0533cb3de61aa8179810188f3830d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "heartstrings_blue",
+    "name": "Heartstrings (Blue)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_42cc3fe7133523096466102e7a222003.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "magical_girl",
+    "name": "Magical Girl",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_45f7f9975255971b197d34d77fb50ede.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "unicorn",
+    "name": "Unicorn",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_47c0f4b4a837894998d5a316acf74f87.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "chromawave",
+    "name": "Chromawave",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_49c479e15533fb4c02eb320c9c137433.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "rocket_puncher",
+    "name": "Rocket Puncher",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_49ed38f73003e2e182f77190af0a0a56.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "slither_n_snack",
+    "name": "Slither'n Snack",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_49ffdb1883d8c644a8eb68711ee58be9.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "koi_pond",
+    "name": "Koi Pond",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_50b440810b1bbd89f6284f36d40ad0af.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "faces_of_the_moon",
+    "name": "Faces of the Moon",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_50cfb73a4c52235363491855d3c3c3bc.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dismay",
+    "name": "Dismay",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_51d3bb502109eec26c76386ec980bc8b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sweat_drops",
+    "name": "Sweat Drops",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_55c9d0354290afa8b7fe47ea9bd7dbcf.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lofi_girl_outfit",
+    "name": "Lofi Girl Outfit",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_60cb281fac6d8f558efaf6dd9fe4dbe4.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "viper_poison_cloud",
+    "name": "Viper Poison Cloud",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_62cd9d7c0031a7c1eb5ad5cc96992189.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "heartstrings_red",
+    "name": "Heartstrings (Red)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_63a69109db554a66764cbe61c6e556ef.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lunar_lanterns",
+    "name": "Lunar Lanterns",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_63b29ec5b1ea6bb01c2251049838d822.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "string_lights_ember",
+    "name": "String Lights (Ember)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_63d17f42ee46a843d99a58655910bc6a.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "m_bison",
+    "name": "M. Bison",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_66f69effef43b4f7c4f5d0739079a947.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "ryu",
+    "name": "Ryu",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_68cb6c21d6222cd9285c08068f39873d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "magic_portal_purple",
+    "name": "Magic Portal (Purple)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_72d1fd7c47cc7a98c8f64d175773344b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cozy_cat",
+    "name": "Cozy Cat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_77b7b6a740a9451e1ef39c0252154ef8.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "scallywag",
+    "name": "Scallywag",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_78f326d95c0193c317470e3e81db81e7.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "balance",
+    "name": "Balance",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_82e4df4028396ad5ccaaafb397fa6248.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fishbones",
+    "name": "FISHBONES!",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_84a67b33ef5b75e17f858a95648c973f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "string_lights",
+    "name": "String Lights",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_88f42fb7360d8224a670a50c3496f315.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "valorant_champions_2024",
+    "name": "VALORANT Champions 2024",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_90e0dce3cc48c4a9607b6d41209c737e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cannon_fire",
+    "name": "Cannon Fire",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_91a33236cf2728310a3a29bbdc8e0d29.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "playful_lofi_cat",
+    "name": "Playful Lofi Cat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_96f65d0aacc4a94b50ef7fb656d5826d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "crystal_elk",
+    "name": "Crystal Elk",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_98c7600d304b86ca3b18272e1da05559.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "magic_portal_blue",
+    "name": "Magic Portal (Blue)",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_98cf94e029ac79c5b377413d1a2bd82f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "implant",
+    "name": "Implant",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_172fa9da0af8698e37f5e5de76637439.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cottage_home",
+    "name": "Cottage Home",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_210b82b98876083ce393ecd92eb07260.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "bloomling",
+    "name": "Bloomling",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_306a56249fe3c3d2bc7a30041cb63e0e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lightning",
+    "name": "Lightning",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_365eed4178528fe8293c4212e8e2d5cb.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mech_flora",
+    "name": "Mech flora",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_459cf2afde41f01559a4a4204ab81767.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lava_lamp_bundle",
+    "name": "Lava Lamp Bundle",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_462b0bddc07dd495765fe12abe8b077f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mallow_jump",
+    "name": "Mallow Jump",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_492f6b54b761c0a14d9dbc9c98aaa0f5.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dancing_fairies",
+    "name": "Dancing fairies",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_535aa3354b1a7395c271bb2f53be4275.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "air",
+    "name": "Air",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_554b7c34f7b6c709f19535aacb128e7b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "rose_bearer",
+    "name": "Rose Bearer",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_555ad9b90a13534180b9274d013e3651.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "power_by_shimmer",
+    "name": "Power by shimmer",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_609fb5c17a4d5ff2e2bec1a1931a9caa.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "head_in_the_clouds",
+    "name": "Head in the clouds",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_670b722e56740d11d1e6fe55b8094013.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fall_leaves",
+    "name": "fall leaves",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_720a2045510ec16f9878237d2ff9873f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "pirate_captain",
+    "name": "Pirate captain",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_798a5bcbb11067e4d9ab339e51d2a16c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "blade_storm",
+    "name": "Blade storm",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_904b1989077c91fca1168d39bfcaa0a4.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "guile",
+    "name": "Guile",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_993ac691660d3d67b500d995e121b220.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sproutling",
+    "name": "sproutling",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_3012fad396abbf24e325431800b51510.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "midnight_sorceress",
+    "name": "Midnight Sorceress",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_4430a4ee89b7fba456e765db21f38485.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "doodling",
+    "name": "Doodling",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_5873ecaa76fb549654b40095293f902e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sleepy_chilledcow",
+    "name": "Sleepy chilledcow",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_6649e251a23f24935471ee02c212675b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "armamenter",
+    "name": "Armamenter",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_6912c651e979fbfdc479ed082a571513.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "flame_chompers",
+    "name": "Flame Chompers",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8396e9830e3e288cd3aaa6daf18b605a.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "constellations",
+    "name": "Constellations",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_8552f9857793aed0cf816f370e2df3be.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cat_onesie",
+    "name": "cat onesie",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9661cf3296ac236d8815e3f5b809a467.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "strawberry_vine",
+    "name": "Strawberry Vine",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_9867b1ba56601e745cfe741e6b00b835.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sakura_lnk",
+    "name": "sakura lnk",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_13913a00bd9990ab4102a3bf069f0f3f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "spooky_cat_ears",
+    "name": "spooky cat Ears",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_33656b7ed12cde00c1826b654cf65590.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dark_hood",
+    "name": "Dark Hood",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_41445f736db3525135b6b9e1122f2254.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sushi_roll",
+    "name": "sushi roll",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_44045ae47175eaca4ed1b4d889b62b27.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "gelatinous_cube",
+    "name": "Gelatinous Cube",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_66604bb5c9351541f30c20a4e78c239c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "feelin_awe",
+    "name": "Feelin' awe",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_89155faed81b205d59fbbefa4316952d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dice",
+    "name": "Dice",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_94191be95bb9c471ff17644f3639eb6d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "a_hint_of_clove",
+    "name": "A hint of clove",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_98555e40cc6802bd3a4fed906af1d992.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "neon_nibbles",
+    "name": "Neon Nibbles",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_126219d37fa9422dab6a075064453750.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "water",
+    "name": "Water",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_250640ab00a8837a1d56f35879138177.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dragon_s_smile",
+    "name": "Dragon's smile",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_445566ed965b2c1632a5b45c92f32d11.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "joystick",
+    "name": "Joystick",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_795573a62c6d9b583f3029100f90d56b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "spirit_embers",
+    "name": "Spirit Embers",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_1005898c6acf56a9ac5010baf444f6fd.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "got_xenoglossy",
+    "name": "Got xenoglossy",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_35713167cc82e0f408c26dfc032a7f0f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "kabuto",
+    "name": "Kabuto",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_084353360ae4f9b5b3b5f186e5525de0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "aurora",
+    "name": "Aurora",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_386445551be850bb16b73a225d0d0602.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dandelion_duo",
+    "name": "Dandelion Duo",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_629689577fa1da2ef0061a5a8c930de1.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "rage",
+    "name": "Rage",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a0db4314b8cc271c8f472357aa895005.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fresh_pine",
+    "name": "Fresh pine",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a0fafb7c7ee7f1e5b1442f44f3aa14b7.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "ruby_hearts",
+    "name": "Ruby hearts",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a1c0581971d4a296908829289fea2c47.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "city_walls",
+    "name": "city walls",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a4e8e02dbbba6889428c744df7aa5a81.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "polar_bear_hat",
+    "name": "Polar Bear hat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a7e6467b5332ab7a2b725aa225e6c752.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "dusk_and_dawn",
+    "name": "Dusk and Dawn",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a44e9335ea869639fdf812f3642a56a6.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "reyna_s_leer",
+    "name": "Reyna's leer",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a87e3efa4de2956331831681231ce63b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "baby_displacer_beast",
+    "name": "Baby Displacer Beast",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a842a9cf76fdaf91a6354937b31ecdef.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "oni_mask",
+    "name": "oni mask",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a21393f8a2cb8eafbdfb5364fb1cbbae.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fire",
+    "name": "Fire",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a065206df7b011a5510e4e5bca7d49be.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "bowler_hat",
+    "name": "Bowler hat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_a67833d0f3138d7dcdee98c39eae33d7.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "the_petal_pack",
+    "name": "The petal pack",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_ab95c78401ce4ec85c25a6d308db9d85.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "the_anomaly",
+    "name": "The Anomaly",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_af5ee420e5f860ff2cdbb5fa4633f2cf.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cypher_neural_theft",
+    "name": "cypher Neural Theft",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_b1efe77f379c6c9c6e47e6b6299d5a7d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "devil",
+    "name": "Devil",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_b4dcf63b6af2e20cba91af61c0e3a8a7.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "shocked",
+    "name": "shocked",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_b98e8b204d59882fb7f9f7c86922c0bf.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mooncaps",
+    "name": "Mooncaps",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_b13180be7866281f6fa588a49dd7feb0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "helmsman",
+    "name": "Helmsman",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_b98093bb7723235a4cd2792762795640.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cozy_headphones",
+    "name": "cozy Headphones",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_bb71042ccd2ca277a69f086a4f3354d0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "kitsune",
+    "name": "Kitsune",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_be111e4303d634c55500202a61656e0b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "brass_beats",
+    "name": "Brass beats",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_bfaeda83edb41e78250eedc71bed31fc.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "soul_leaving_body",
+    "name": "soul Leaving Body",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c3c09bd122898be35093d0d59850f627.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cat_ears",
+    "name": "cat Ears",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c3cffc19e9784f7d0b005eecdf1b566e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "aradiating_energy",
+    "name": "ARadiating Energy",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c7e1751e8122f1b475cb3006966fb28c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "wizard_hat",
+    "name": "Wizard Hat",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c25b962e5cabb9a656f02c50095d6496.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "shuriken_s_mark",
+    "name": "shuriken's mark",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c32ce5680d4be96e059790ad493aa0fe.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "omen_s_cowl",
+    "name": "omen's cowl",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c45abe8c7585fdb41b8d8d4d666f1588.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "autumn_crown",
+    "name": "Autumn crown",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_c509c4760e5e1a50fa341d68f3c1901b.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "digital_sunrise",
+    "name": "Digital Sunrise",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_cc83efd93ecd6e41857449c3c0ef9b22.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "golden_hex",
+    "name": "Golden Hex",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_ccee9031d66bc0f2d7ed0c6178d01784.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "e_d_hacker",
+    "name": "E.D Hacker",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_cdca4a092a03b16b94e50289fe3f7bd1.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "malefic_crown",
+    "name": "Malefic Crown",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d1ea7b8650bf3d64a03304c2ceb7d089.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "magical_wand",
+    "name": "Magical Wand",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d3a9c3a1c89ccb0e1ab8724a5c965f48.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "disxcore_headset",
+    "name": "DISXCORE Headset",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d3da36040163ee0f9176dfe7ced45cdc.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "flux_alchemy",
+    "name": "Flux Alchemy",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d8d93c7a53c0dd07a4074b745210434d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "glowing_runes",
+    "name": "Glowing Runes",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d650e22f6c4bab4fc0969e9d35edbcb0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "snake_s_hug",
+    "name": "Snake's Hug",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d859cee893cffd5dd0fa17a6caea44e0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "starry_eyed",
+    "name": "Starry Eyed",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_d72066b8cecbadd9fc951913ebcc384f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "yoru_bundle",
+    "name": "Yoru Bundle",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_da532f804b47f1681006c2996eb07b2a.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "wizard_s_staff",
+    "name": "Wizard's Staff",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_db9baf0ba7cf449d2b027c06309dbe8d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "the_hexcore",
+    "name": "The Hexcore",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_dbb1abd90367c1a31a94f7e162f3a3c3.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "juri",
+    "name": "Juri",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_dcfe10bac4a782ffb5eefef7a8003115.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "rumbling",
+    "name": "Rumbling",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_df5442048d7d5b8b8906f3a9cd93f0ab.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mix_string_light_bundle",
+    "name": "Mix string Light bundle",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_dff769a0f922bb56ab0d4ba2bcbacfae.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sakura_scholar",
+    "name": "Sakura scholar",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e0a2df84cf7eb8e098a13e37ec9027c1.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "rainy_mood",
+    "name": "Rainy Mood",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e8c11f139e55dac538cdaafb3caa2317.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "aim_for_love",
+    "name": "Aim For Love",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e60cc4d7f4d8a6e79dd8cc67d2b13d6c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "clyde_invaders",
+    "name": "Clyde invaders",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e72e44eeea89e92dc02c9bec8b02d158.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "glitch",
+    "name": "Glitch",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e90ebc0114e7bdc30353c8b11953ea41.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "uwu_xp",
+    "name": "UwU XP",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e257ca83b5b164968fd036f69dbb2ad9.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cozy_post_it",
+    "name": "Cozy POST-IT",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_e671277ab6d18c0de00871347eed94a7.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "eldritch_ring",
+    "name": "Eldritch Ring",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_ef6fe8b27123eacccebe51c92a61587c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "aracanist_bundle",
+    "name": "Aracanist Bundle",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_ef8d97374ffdbf140df1164be6c69e46.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "starlight_whales",
+    "name": "Starlight Whales",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_efe3081ee3359a77b515575b5f7bc8c0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "timekeeper_s_clock",
+    "name": "Timekeeper's Clock",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f1c60c026aa89971e360ba88643d92c0.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "ki_energy",
+    "name": "Ki Energy",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f3af281c65cf0cf590e9e1f59e9c6cf6.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "port_of_soul",
+    "name": "Port of Soul",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f4fcdab859b2eab1874fbe7182d5aa26.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "azure_dice_roll_bundle",
+    "name": "Azure Dice Roll Bundle",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f8ffeba6f389d1475c8794ca88b59785.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "feelin_panic",
+    "name": "Feelin' Panic",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f11c214394044d001d81c983dcab354f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "a_sphere_of_gusting_wind_swirls_around_the_avatar",
+    "name": "A sphere of gusting wind swirls around the avatar.",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f081c6b2c85c5ebe5df42f1c24d45bb5.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "bunny_zzzs",
+    "name": "Bunny Zzzs",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f438bb9b2f25ac55058fc169ecc8096e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "ken",
+    "name": "Ken",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f524554b7f42a214d15c226c344a5357.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "oasis",
+    "name": "Oasis",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_f740031cc97d1b7eb73c0d0ac1dd09f3.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "cat_ear_headset",
+    "name": "Cat Ear Headset",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fa39ba4d9eff38d2eeb47ebcb623e4ca.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "earht",
+    "name": "Earht",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fa014594d4b2b4249e1098c0adc85b47.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "gold_laurel_wreath",
+    "name": "Gold Laurel Wreath",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fcb0de14da228879b455f1f1d3919749.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "fairy_pixie_bundle",
+    "name": "Fairy & Pixie Bundle",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fe3c76cac2adf426832a7e495e8329d3.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "death_s_edge",
+    "name": "Death's Edge",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fe63036018fefb8abe3172383497e3bf.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "autumn_s_arbor",
+    "name": "Autumn's Arbor",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fead934c894e95e070d8a0301f9f0b27.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "futuristic_ui",
+    "name": "Futuristic UI",
+    "img": "https://cdn.discordapp.com/avatar-decoration-presets/a_fed43ab12698df65902ba06727e20c0e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "libya",
+    "name": "Libya",
+    "img": "https://i.ibb.co/VJ7q2FV/ezgif-7-a2ecd1b7f9.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "algeria",
+    "name": "Algeria",
+    "img": "https://i.ibb.co/C7Zdqnp/ezgif-1-148d3d8ea9.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "bahrain",
+    "name": "Bahrain",
+    "img": "https://i.ibb.co/Dr5gMvn/ezgif-1-bf03b81f9d.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "comoros",
+    "name": "Comoros",
+    "img": "https://i.ibb.co/9nqKx3b/ezgif-1-f0b73c7a9f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "tunisia",
+    "name": "Tunisia",
+    "img": "https://i.ibb.co/Ksqq6d7/ezgif-7-727033509f.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "uae",
+    "name": "UAE",
+    "img": "https://i.ibb.co/mSRswm8/ezgif-7-637d28d3db.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "somalia",
+    "name": "Somalia",
+    "img": "https://i.ibb.co/Sn84j7t/ezgif-7-0f127c7b46.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "sudan",
+    "name": "Sudan",
+    "img": "https://i.ibb.co/TLTD2Jk/ezgif-7-b07f2e63fe.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "syria",
+    "name": "Syria",
+    "img": "https://i.ibb.co/dQvcZQp/ezgif-7-369d86d58c.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "yemen",
+    "name": "Yemen",
+    "img": "https://i.ibb.co/kDF5G5v/ezgif-7-ea2030a439.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "overlay",
+    "name": "Overlay",
+    "img": "https://i.ibb.co/hZD0mmM/ezgif-7-699c07f6f4.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "palestine",
+    "name": "Palestine",
+    "img": "https://i.ibb.co/w6b12fc/ezgif-7-5217c6ff98.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "qatar",
+    "name": "Qatar",
+    "img": "https://i.ibb.co/xs2Lktj/ezgif-7-44263314da.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "saudi",
+    "name": "Saudi",
+    "img": "https://i.ibb.co/rGYFpWw/ezgif-7-8da0a9f5eb.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "jordan",
+    "name": "Jordan",
+    "img": "https://i.ibb.co/hyBBCB7/ezgif-7-df80ea6e6e.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "kuwait",
+    "name": "Kuwait",
+    "img": "https://i.ibb.co/y58DkH5/ezgif-7-af7e8c28ab.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "lebanon",
+    "name": "Lebanon",
+    "img": "https://i.ibb.co/LPYNzGG/ezgif-7-d9dc5b4cc6.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "mauritania",
+    "name": "Mauritania",
+    "img": "https://i.ibb.co/8mZKC19/ezgif-7-f78d395b85.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "morocco",
+    "name": "Morocco",
+    "img": "https://i.ibb.co/kSdbdCn/ezgif-7-f3b2fab832.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "djibouti",
+    "name": "Djibouti",
+    "img": "https://i.ibb.co/cQFNw8G/ezgif-1-92158fd061.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "egypt",
+    "name": "Egypt",
+    "img": "https://i.ibb.co/hs9GjBp/ezgif-7-f21e193074.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  },
+  {
+    "id": "iraq",
+    "name": "iraq",
+    "img": "https://i.ibb.co/Q6CLZyM/ezgif-7-126237475a.png?size=240&passthrough=true",
+    "price": 2.75,
+    "type": "deco"
+  }
 ];
 const SHOP_EFFECTS = [
   {
@@ -2837,7 +4413,7 @@ const SHOP_EFFECTS = [
   {
     "id": "midnight_celebration",
     "name": "Midnight Celebration",
-    "img": "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/midnight-celebration/frame.png",
+    "img": "https://cdn.discordapp.com/assets/profile_effects/effects/2024-02-01/midnight-celebration/intro.png",
     "price": 2.75,
     "type": "effect"
   },
