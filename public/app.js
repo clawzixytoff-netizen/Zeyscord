@@ -4635,26 +4635,33 @@ function renderEffectPickerGrid() {
   function select(id, name, img) {
     pickerTempEffect = id;
     grid.querySelectorAll('.picker-tile').forEach(t => t.classList.remove('active'));
-    const tile = grid.querySelector('[data-id="'+id+'"]');
+    const tile = grid.querySelector('.picker-tile[data-id="'+id+'"]');
     if (tile) tile.classList.add('active');
-    if (nameEl) nameEl.textContent = name;
+    if (nameEl) nameEl.textContent = name || 'Aucun';
     if (preview) {
+      preview.className = 'picker-preview-card';
       preview.innerHTML = '';
-      preview.style.background = (currentUser && (currentUser.primaryColor || currentUser.avatarColor)) || '#5865f2';
+      const card = document.createElement('div');
+      card.className = 'picker-fx-preview';
+      card.style.cssText = 'position:relative;width:100%;height:100%;border-radius:8px;overflow:hidden;background:#1e1f22;';
       if (img) {
-        const im = document.createElement('img');
-        im.src = img;
-        im.className = 'picker-preview-fx';
-        preview.appendChild(im);
+        const fx = document.createElement('img');
+        fx.src = img;
+        fx.className = 'picker-preview-fx';
+        fx.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;pointer-events:none;';
+        card.appendChild(fx);
       }
       const av = document.createElement('div');
       av.className = 'picker-preview-av';
-      av.textContent = ((currentUser && currentUser.username) || 'Z')[0].toUpperCase();
-      preview.appendChild(av);
+      av.style.cssText = 'position:absolute;left:16px;bottom:16px;width:56px;height:56px;border-radius:50%;background:'+(currentUser?.avatarColor||'#5865f2')+';z-index:2;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:22px;overflow:hidden;';
+      if (currentUser?.avatarUrl) av.innerHTML = '<img src="'+currentUser.avatarUrl+'" style="width:100%;height:100%;object-fit:cover;">';
+      else av.textContent = (currentUser?.username||'Z')[0].toUpperCase();
+      card.appendChild(av);
+      preview.appendChild(card);
     }
   }
 
-  // None
+  // Aucun
   const none = document.createElement('button');
   none.type = 'button';
   none.className = 'picker-tile' + (pickerTempEffect === 'none' ? ' active' : '');
@@ -4663,10 +4670,11 @@ function renderEffectPickerGrid() {
   none.onclick = () => select('none', 'Aucun', null);
   grid.appendChild(none);
 
-  // Shop shortcut
+  // Boutique
   const shop = document.createElement('button');
   shop.type = 'button';
   shop.className = 'picker-tile';
+  shop.dataset.id = 'shop';
   shop.innerHTML = '<div class="picker-tile-inner shop">🛒</div><span>Boutique</span>';
   shop.onclick = () => {
     document.getElementById('effect-picker-modal')?.classList.add('hidden');
@@ -4683,7 +4691,7 @@ function renderEffectPickerGrid() {
     btn.type = 'button';
     btn.className = 'picker-tile' + (pickerTempEffect === item.id ? ' active' : '') + (isOwned ? '' : ' locked');
     btn.dataset.id = item.id;
-    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>' + (isOwned ? '' : '<span class="picker-lock">🔒</span>');
+    btn.innerHTML = '<div class="picker-tile-inner picker-tile-fx"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>' + (isOwned ? '' : '<span class="picker-lock">🔒</span>');
     btn.onclick = () => {
       if (!isOwned) {
         document.getElementById('effect-picker-modal')?.classList.add('hidden');
@@ -4698,102 +4706,8 @@ function renderEffectPickerGrid() {
     grid.appendChild(btn);
   });
 
-  // init preview
   const cur = (SHOP_EFFECTS || []).find(i => i.id === pickerTempEffect);
   select(pickerTempEffect, cur ? cur.name : 'Aucun', cur ? cur.img : null);
-}
-
-function refreshDiscordTiles() {
-  try {
-    function fillAv(id) {
-      const el = document.getElementById(id);
-      if (!el || !currentUser) return;
-      el.style.background = currentUser.avatarColor || '#5865f2';
-      if (currentUser.avatarUrl) el.innerHTML = '<img src="'+currentUser.avatarUrl+'" alt="">';
-      else el.textContent = (currentUser.username || 'Z')[0].toUpperCase();
-    }
-    function fillDeco(id, decoId) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const d = decoId || 'none';
-      if (d && d !== 'none' && DECO_URLS[d]) el.innerHTML = '<img src="'+DECO_URLS[d]+'" alt="">';
-      else el.innerHTML = '<span class="discord-tile-plus">+</span>';
-    }
-    function fillFx(id, fxId) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const e = fxId || 'none';
-      if (e && e !== 'none' && EFFECT_URLS[e]) el.innerHTML = '<img src="'+EFFECT_URLS[e]+'" alt="">';
-      else el.innerHTML = '<span class="discord-tile-plus">+</span>';
-    }
-    fillAv('edit-avatar-tile-inner');
-    fillAv('settings-avatar-tile-inner');
-    const editDeco = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
-    const setDeco = (typeof selectedDeco !== 'undefined' ? selectedDeco : null) || currentUser?.avatarDeco || 'none';
-    fillDeco('edit-deco-tile-inner', editDeco);
-    fillDeco('settings-deco-tile-inner', setDeco);
-    const editFx = (typeof editSelectedEffect !== 'undefined' ? editSelectedEffect : null) || currentUser?.profileEffect || 'none';
-    const setFx = (typeof selectedEffect !== 'undefined' ? selectedEffect : null) || currentUser?.profileEffect || 'none';
-    fillFx('edit-effect-tile-inner', editFx);
-    fillFx('settings-effect-tile-inner', setFx);
-  } catch (e) {}
-}
-
-document.getElementById('edit-deco-tile')?.addEventListener('click', () => openDecoPicker());
-document.getElementById('edit-effect-tile')?.addEventListener('click', () => openEffectPicker());
-document.getElementById('edit-avatar-tile')?.addEventListener('click', () => {
-  document.getElementById('edit-avatar-file')?.click();
-});
-document.getElementById('settings-deco-tile')?.addEventListener('click', () => openDecoPicker());
-document.getElementById('settings-effect-tile')?.addEventListener('click', () => openEffectPicker());
-document.getElementById('settings-avatar-tile')?.addEventListener('click', () => {
-  document.getElementById('settings-avatar-file')?.click();
-});
-
-function openDecoPicker() {
-  pickerTempDeco = (typeof editSelectedDeco !== 'undefined' ? editSelectedDeco : null) || currentUser?.avatarDeco || 'none';
-  let modal = document.getElementById('deco-picker-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'deco-picker-modal';
-    modal.className = 'picker-modal hidden';
-    modal.innerHTML = `
-      <div class="picker-overlay" data-close="1"></div>
-      <div class="picker-panel">
-        <div class="picker-header">
-          <div>
-            <h2>Changer la déco d'avatar</h2>
-            <p class="picker-sub">Tes décorations</p>
-          </div>
-          <button type="button" class="picker-x" data-close="1">×</button>
-        </div>
-        <div class="picker-body">
-          <div class="picker-grid" id="deco-picker-grid"></div>
-          <div class="picker-preview-col">
-            <div class="picker-preview-card picker-preview-deco" id="deco-picker-preview"></div>
-            <div class="picker-item-meta">
-              <div class="picker-item-name" id="deco-picker-name">Aucune</div>
-            </div>
-          </div>
-        </div>
-        <div class="picker-footer">
-          <button type="button" class="btn-secondary" data-close="1">Annuler</button>
-          <button type="button" class="btn-primary" id="deco-picker-apply">Appliquer</button>
-        </div>
-      </div>`;
-    document.body.appendChild(modal);
-    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', () => modal.classList.add('hidden')));
-    document.getElementById('deco-picker-apply').onclick = () => {
-      editSelectedDeco = pickerTempDeco;
-      selectedDeco = pickerTempDeco;
-      if (typeof refreshDecoOptionsInSettings === 'function') refreshDecoOptionsInSettings();
-      if (typeof refreshEditPreview === 'function') refreshEditPreview();
-      if (typeof refreshDiscordTiles === 'function') refreshDiscordTiles();
-      modal.classList.add('hidden');
-    };
-  }
-  renderDecoPickerGrid();
-  modal.classList.remove('hidden');
 }
 
 function renderDecoPickerGrid() {
@@ -4807,32 +4721,33 @@ function renderDecoPickerGrid() {
   function select(id, name, img) {
     pickerTempDeco = id;
     grid.querySelectorAll('.picker-tile').forEach(t => t.classList.remove('active'));
-    const tile = grid.querySelector('[data-id="'+id+'"]');
+    const tile = grid.querySelector('.picker-tile[data-id="'+id+'"]');
     if (tile) tile.classList.add('active');
-    if (nameEl) nameEl.textContent = name;
+    if (nameEl) nameEl.textContent = name || 'Aucune';
     if (preview) {
+      preview.className = 'picker-preview-card picker-preview-deco';
       preview.innerHTML = '';
       const wrap = document.createElement('div');
       wrap.className = 'picker-deco-av-wrap';
+      wrap.style.cssText = 'position:relative;width:96px;height:96px;margin:0 auto;';
       const av = document.createElement('div');
       av.className = 'picker-preview-av';
-      av.style.background = (currentUser && currentUser.avatarColor) || '#5865f2';
-      if (currentUser && currentUser.avatarUrl) {
-        av.innerHTML = '<img src="'+currentUser.avatarUrl+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-      } else {
-        av.textContent = ((currentUser && currentUser.username) || 'Z')[0].toUpperCase();
-      }
+      av.style.cssText = 'width:80px;height:80px;border-radius:50%;background:'+(currentUser?.avatarColor||'#5865f2')+';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:28px;overflow:hidden;z-index:1;';
+      if (currentUser?.avatarUrl) av.innerHTML = '<img src="'+currentUser.avatarUrl+'" style="width:100%;height:100%;object-fit:cover;">';
+      else av.textContent = (currentUser?.username||'Z')[0].toUpperCase();
       wrap.appendChild(av);
       if (img) {
-        const d = document.createElement('img');
-        d.src = img;
-        d.className = 'picker-deco-overlay';
-        wrap.appendChild(d);
+        const deco = document.createElement('img');
+        deco.src = img;
+        deco.className = 'picker-deco-overlay';
+        deco.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:132%;height:132%;object-fit:contain;pointer-events:none;z-index:50;';
+        wrap.appendChild(deco);
       }
       preview.appendChild(wrap);
     }
   }
 
+  // Aucun
   const none = document.createElement('button');
   none.type = 'button';
   none.className = 'picker-tile' + (pickerTempDeco === 'none' ? ' active' : '');
@@ -4841,9 +4756,11 @@ function renderDecoPickerGrid() {
   none.onclick = () => select('none', 'Aucune', null);
   grid.appendChild(none);
 
+  // Boutique
   const shop = document.createElement('button');
   shop.type = 'button';
   shop.className = 'picker-tile';
+  shop.dataset.id = 'shop';
   shop.innerHTML = '<div class="picker-tile-inner shop">🛒</div><span>Boutique</span>';
   shop.onclick = () => {
     document.getElementById('deco-picker-modal')?.classList.add('hidden');
@@ -4860,7 +4777,7 @@ function renderDecoPickerGrid() {
     btn.type = 'button';
     btn.className = 'picker-tile' + (pickerTempDeco === item.id ? ' active' : '') + (isOwned ? '' : ' locked');
     btn.dataset.id = item.id;
-    btn.innerHTML = '<div class="picker-tile-inner"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>' + (isOwned ? '' : '<span class="picker-lock">🔒</span>');
+    btn.innerHTML = '<div class="picker-tile-inner picker-tile-deco"><img src="'+item.img+'" alt=""></div><span>'+item.name+'</span>' + (isOwned ? '' : '<span class="picker-lock">🔒</span>');
     btn.onclick = () => {
       if (!isOwned) {
         document.getElementById('deco-picker-modal')?.classList.add('hidden');

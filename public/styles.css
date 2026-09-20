@@ -8688,3 +8688,105 @@ img.avatar-deco-overlay {
   width: 132% !important;
   height: 132% !important;
 }
+
+
+/* Pickers déco + effet : même style */
+.picker-tile {
+  width: 96px !important;
+  min-height: 110px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 8px 4px !important;
+  background: #1e1f22 !important;
+  border: 2px solid transparent !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  position: relative !important;
+}
+.picker-tile.active {
+  border-color: #5865f2 !important;
+}
+.picker-tile-inner {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: #111214 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.picker-tile-inner img {
+  width: 100% !important;
+  height: 100% !important;
+}
+.picker-tile-fx img {
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+.picker-tile-deco img {
+  object-fit: contain !important;
+  object-position: center center !important;
+  padding: 4px !important;
+}
+.picker-tile span:not(.picker-lock) {
+  font-size: 11px !important;
+  color: #dbdee1 !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  max-width: 90px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.picker-lock {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  font-size: 12px !important;
+}
+.picker-tile.locked {
+  opacity: 0.85 !important;
+}
+.picker-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)) !important;
+  gap: 10px !important;
+  align-content: start !important;
+  overflow-y: auto !important;
+  padding: 4px !important;
+}
+.picker-body {
+  display: flex !important;
+  gap: 16px !important;
+  min-height: 320px !important;
+}
+.picker-preview-col {
+  width: 200px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+.picker-preview-card {
+  width: 180px !important;
+  height: 260px !important;
+  background: #1e1f22 !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+.picker-preview-deco {
+  height: 180px !important;
+}
+.picker-item-name {
+  color: #f2f3f5 !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  font-size: 14px !important;
+}
