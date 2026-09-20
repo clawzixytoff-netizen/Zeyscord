@@ -75,7 +75,7 @@ app.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (re
   res.json({ received: true });
 });
 
-app.use(express.json({ limit: '5mb' }));
+app.use(express.json({ limit: '12mb' }));
 const staticDir = fs.existsSync(path.join(__dirname, 'public'))
   ? path.join(__dirname, 'public')
   : path.join(__dirname, 'publique');
@@ -194,7 +194,7 @@ app.get('/api/check-purchase', (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] },
-  maxHttpBufferSize: 5e6 // 5 Mo pour images avatar/bannière en base64
+  maxHttpBufferSize: 12e6 // 12 Mo pour GIF avatar/bannière en base64
 });
 
 const users = new Map();
