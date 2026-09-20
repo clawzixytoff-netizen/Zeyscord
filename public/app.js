@@ -274,7 +274,7 @@ function applyAvatarDeco(el, deco) {
       else av = 32;
     }
     // Ratio type Discord (deco ~ 160% a 180% du cercle avatar)
-    const size = Math.round(av * 1.7);
+    const size = Math.round(av * 1.6);
 
     // Supprimer si deja place par un double appel
     if (wrap) wrap.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
@@ -907,7 +907,7 @@ function populateAccountMenu() {
 
   if (menuEl) {
     const hasFx = !!(currentUser.profileEffect && currentUser.profileEffect !== 'none');
-    // Couleur de theme SUR LA CARTE (derriere l'effet)
+    // Fond OPAQUE (sinon on voit les salons a travers sur mobile)
     if (hasTheme) {
       menuEl.style.setProperty('background', 'linear-gradient(180deg, ' + p + ' 0%, ' + s + ' 100%)', 'important');
     } else {
@@ -915,8 +915,14 @@ function populateAccountMenu() {
     }
   }
   if (bodyEl) {
-    // Body TOUJOURS transparent pour laisser voir l'effet sur tout le profil
-    bodyEl.style.setProperty('background', 'transparent', 'important');
+    const hasFx = !!(currentUser.profileEffect && currentUser.profileEffect !== 'none');
+    if (hasFx) {
+      bodyEl.style.setProperty('background', 'rgba(17,18,20,0.45)', 'important');
+    } else if (hasTheme) {
+      bodyEl.style.setProperty('background', 'transparent', 'important');
+    } else {
+      bodyEl.style.setProperty('background', '#111214', 'important');
+    }
   }
   // Banner color if no image
   if (banner && !currentUser.bannerUrl) {
@@ -943,8 +949,8 @@ function populateAccountMenu() {
   if (menuEl) {
     menuEl.style.position = 'absolute';
     menuEl.style.overflow = 'visible';
-    menuEl.style.background = 'transparent';
-    // Appliquer l'effet seulement si change (applyProfileEffect a un garde-fou)
+    // NE PAS remettre background transparent (casse le menu sur mobile)
+    menuEl.style.setProperty('z-index', '1000', 'important');
     applyProfileEffect(menuEl, currentUser.profileEffect || 'none');
   }
 
@@ -1057,6 +1063,9 @@ function closeAccountMenu() {
     document.getElementById('uam-accounts-submenu')?.classList.add('hidden');
     document.getElementById('uam-status-toggle')?.classList.remove('open');
     if (wasHidden) {
+      // Fermer tiroirs mobile pour pas superposer
+      document.body.classList.remove('mobile-channels-open', 'mobile-members-open');
+      document.getElementById('mobile-sidebar-overlay')?.classList.add('hidden');
       populateAccountMenu();
       menu.classList.remove('hidden');
     }

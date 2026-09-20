@@ -8038,3 +8038,56 @@ img.avatar-deco-overlay {
   overflow: hidden !important;
   position: relative !important;
 }
+
+
+/* Menu compte : fond opaque + z-index (mobile + PC) */
+#user-account-menu,
+.user-account-menu {
+  z-index: 1000 !important;
+  background: #111214 !important;
+  isolation: isolate;
+}
+#user-account-menu .uam-profile-body {
+  background: #111214;
+}
+#user-account-menu .uam-header-block,
+#user-account-menu .uam-banner {
+  z-index: 1 !important;
+}
+#user-account-menu .uam-avatar-wrap {
+  z-index: 20 !important;
+  overflow: visible !important;
+}
+#user-account-menu .uam-profile-body,
+#user-account-menu .uam-actions,
+#user-account-menu .uam-top-info {
+  z-index: 5 !important;
+  position: relative !important;
+}
+
+@media (max-width: 768px) {
+  #user-account-menu,
+  .user-account-menu {
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: max(64px, calc(env(safe-area-inset-bottom) + 56px)) !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: min(70dvh, 520px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    z-index: 1200 !important;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.65) !important;
+    border-radius: 12px !important;
+  }
+  /* Eviter le double fond qui laisse voir les salons */
+  #user-account-menu .uam-profile-body {
+    background: #1e1f22 !important;
+  }
+  /* Avatar menu mobile bien place */
+  #user-account-menu .uam-avatar-wrap {
+    left: 16px !important;
+    overflow: visible !important;
+  }
+}
