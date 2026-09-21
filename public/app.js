@@ -4966,47 +4966,120 @@ function openGiftModal(item) {
     modal.className = 'picker-modal';
     document.body.appendChild(modal);
   }
-  const price = Number(item.price || 2.75).toFixed(2).replace('.', ',') + ' €';
+  const priceNum = Number(item.price || 2.75);
+  const price = priceNum.toFixed(2).replace('.', ',') + ' €';
+  const nameSafe = String(item.name || 'Cadeau').replace(/</g, '');
+  const img = item.img || '';
+  const isDeco = item.type === 'deco';
+  const isFx = item.type === 'effect';
+
+  // Liste amis / membres connus
+  let friendOpts = '<option value="">Sélectionne un(e) ami(e)</option>';
+  try {
+    const friends = (typeof getFriendsList === 'function' ? getFriendsList() : null)
+      || (currentUser && currentUser.friends) || [];
+    const members = (typeof allUsers !== 'undefined' && Array.isArray(allUsers)) ? allUsers : [];
+    const names = new Set();
+    (friends || []).forEach(f => {
+      const n = (typeof f === 'string' ? f : (f.username || f.name || '')).trim();
+      if (n && n.toLowerCase() !== (currentUser?.username || '').toLowerCase()) names.add(n);
+    });
+    members.forEach(m => {
+      const n = (m.username || m.name || '').trim();
+      if (n && n.toLowerCase() !== (currentUser?.username || '').toLowerCase()) names.add(n);
+    });
+    // Aussi depuis localStorage messages / known users
+    try {
+      const known = JSON.parse(localStorage.getItem('zeyscord_known_users') || '[]');
+      known.forEach(n => { if (n && n.toLowerCase() !== (currentUser?.username || '').toLowerCase()) names.add(n); });
+    } catch (_) {}
+    [...names].sort((a,b) => a.localeCompare(b)).forEach(n => {
+      friendOpts += '<option value="' + n.replace(/"/g, '') + '">' + n.replace(/</g, '') + '</option>';
+    });
+  } catch (_) {}
+
+  const previewInner = isDeco
+    ? '<div class="gift-item-preview-deco"><div class="gift-av" style="background:' + ((currentUser && currentUser.avatarColor) || '#5865f2') + '">' +
+      ((currentUser && currentUser.avatarUrl) ? '<img src="' + currentUser.avatarUrl + '">' : ((currentUser?.username||'Z')[0].toUpperCase())) +
+      '</div><img class="gift-deco-img" src="' + img + '" alt=""></div>'
+    : isFx
+    ? '<div class="gift-item-preview-fx"><img src="' + img + '" alt=""></div>'
+    : '<div class="gift-item-preview-nitro"><img src="' + img + '" alt="Nitro"></div>';
+
   modal.classList.remove('hidden');
   modal.innerHTML = `
     <div class="picker-overlay" data-close-gift="1"></div>
-    <div class="picker-panel" style="max-width:420px;">
-      <div class="picker-header">
-        <div>
-          <h2>Offrir un cadeau</h2>
-          <p class="picker-sub">${(item.name || '').replace(/</g,'')} — <strong>${price}</strong></p>
-        </div>
+    <div class="gift-panel">
+      <div class="gift-header">
+        <h2>Envoyer un cadeau</h2>
         <button type="button" class="picker-x" data-close-gift="1">×</button>
       </div>
-      <div class="picker-body" style="display:block;padding:16px;">
-        <label style="color:#b5bac1;font-size:13px;display:block;margin-bottom:6px;">Nom d'utilisateur du destinataire</label>
-        <input type="text" id="gift-username" placeholder="ex: Ami123" style="width:100%;padding:12px;border-radius:8px;border:1px solid #3f4147;background:#1e1f22;color:#f2f3f5;font-size:15px;box-sizing:border-box;">
-        <p style="color:#949ba4;font-size:12px;margin:10px 0 16px;">Le destinataire recevra l'objet dans sa collection après paiement.</p>
-        <button type="button" class="btn-primary" id="gift-pay-btn" style="width:100%;padding:14px;font-size:15px;">
-          Offrir pour ${price}
-        </button>
-        <p id="gift-status" style="color:#ed4245;font-size:13px;margin-top:12px;display:none;"></p>
+      <div class="gift-body">
+        <div class="gift-left">
+          <div class="gift-art">
+            <div class="gift-art-box">
+              <div class="gift-art-emoji">🎁</div>
+              <div class="gift-art-title">Zeyscord</div>
+              <div class="gift-art-sub">Un cadeau t'attend</div>
+            </div>
+          </div>
+        </div>
+        <div class="gift-right">
+          <label class="gift-label">Envoyer vers</label>
+          <select id="gift-username" class="gift-select">
+            ${friendOpts}
+          </select>
+          <input type="text" id="gift-username-custom" class="gift-input" placeholder="Ou tape un nom d'utilisateur..." style="margin-top:8px;">
+
+          <label class="gift-label" style="margin-top:16px;">Ajoute un message (facultatif)</label>
+          <textarea id="gift-message" class="gift-textarea" maxlength="190" placeholder=""></textarea>
+          <div class="gift-char">190</div>
+
+          <label class="gift-label" style="margin-top:12px;">Ton cadeau</label>
+          <div class="gift-item-row">
+            ${previewInner}
+            <div class="gift-item-meta">
+              <div class="gift-item-name">${nameSafe}</div>
+              <div class="gift-item-price">${price}</div>
+            </div>
+          </div>
+        </div>
       </div>
+      <div class="gift-footer">
+        <div class="gift-footer-hint">🎁 Offre un cadeau à un ami sur Zeyscord</div>
+        <button type="button" class="btn-primary" id="gift-next-btn">Suivant</button>
+      </div>
+      <p id="gift-status" style="display:none;padding:0 20px 12px;font-size:13px;"></p>
     </div>`;
+
   modal.querySelectorAll('[data-close-gift]').forEach(el => {
     el.onclick = () => modal.classList.add('hidden');
   });
-  document.getElementById('gift-pay-btn').onclick = async () => {
-    const user = (document.getElementById('gift-username').value || '').trim();
+
+  const ta = document.getElementById('gift-message');
+  const charEl = modal.querySelector('.gift-char');
+  if (ta && charEl) {
+    ta.oninput = () => { charEl.textContent = String(190 - (ta.value || '').length); };
+  }
+
+  document.getElementById('gift-next-btn').onclick = async () => {
+    const sel = document.getElementById('gift-username');
+    const custom = document.getElementById('gift-username-custom');
+    const user = ((custom && custom.value.trim()) || (sel && sel.value) || '').trim();
     const status = document.getElementById('gift-status');
+    const msg = (document.getElementById('gift-message')?.value || '').trim();
     if (!user) {
       status.style.display = 'block';
-      status.textContent = "Entre un nom d'utilisateur.";
+      status.style.color = '#ed4245';
+      status.textContent = "Sélectionne ou entre un nom d'utilisateur.";
       return;
     }
-    const btn = document.getElementById('gift-pay-btn');
+    const btn = document.getElementById('gift-next-btn');
     btn.disabled = true;
     btn.textContent = 'Redirection...';
     status.style.display = 'none';
     try {
-      // Même flux paiement, avec destinataire
       if (currentUser && currentUser.isOwner) {
-        // Owner: gift free via localStorage for target user key
         const all = JSON.parse(localStorage.getItem('zeyscord_shop_by_user') || '{}');
         const key = user.toLowerCase();
         if (!all[key]) all[key] = { decos: [], effects: [], nitro: [] };
@@ -5014,11 +5087,17 @@ function openGiftModal(item) {
         const id = item.type === 'nitro' ? 'nitro' : item.id;
         if (!all[key][kind].includes(id)) all[key][kind].push(id);
         localStorage.setItem('zeyscord_shop_by_user', JSON.stringify(all));
+        // stocker message cadeau optionnel
+        try {
+          const gifts = JSON.parse(localStorage.getItem('zeyscord_gifts') || '[]');
+          gifts.push({ to: key, from: currentUser.username, itemId: id, itemName: item.name, message: msg, at: Date.now() });
+          localStorage.setItem('zeyscord_gifts', JSON.stringify(gifts));
+        } catch (_) {}
         status.style.display = 'block';
         status.style.color = '#23a559';
         status.textContent = 'Cadeau offert à ' + user + ' !';
         btn.textContent = 'Offert ✓';
-        setTimeout(() => modal.classList.add('hidden'), 1200);
+        setTimeout(() => modal.classList.add('hidden'), 1400);
         return;
       }
       const res = await fetch('/api/create-checkout', {
@@ -5031,7 +5110,8 @@ function openGiftModal(item) {
           price: item.price,
           username: currentUser && currentUser.username,
           email: currentUser && currentUser.email,
-          giftTo: user
+          giftTo: user,
+          giftMessage: msg
         })
       });
       const data = await res.json();
@@ -5043,7 +5123,7 @@ function openGiftModal(item) {
       status.style.color = '#ed4245';
       status.textContent = err.message || 'Erreur';
       btn.disabled = false;
-      btn.textContent = 'Offrir pour ' + price;
+      btn.textContent = 'Suivant';
     }
   };
 }
