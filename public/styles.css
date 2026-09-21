@@ -9639,11 +9639,7 @@ img.avatar-deco-overlay {
 .profile-wish-tile:hover .profile-wish-tile-gift {
   opacity: 1;
 }
-@media (max-width: 420px) {
-  .profile-wish-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
+
 
 /* Profil onglets */
 .profile-tabs {
@@ -9950,9 +9946,7 @@ img.avatar-deco-overlay {
     width: 100% !important;
     max-height: 45vh !important;
   }
-  .profile-wish-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+  
 }
 
 
@@ -10238,9 +10232,7 @@ img.avatar-deco-overlay {
 }
 @media (max-width: 520px) {
   .profile-wish-grid,
-  #profile-tab-wishlist .profile-wish-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+  #profile-tab-wishlist 
 }
 
 
@@ -10273,4 +10265,62 @@ img.avatar-deco-overlay {
   border-radius: 50% !important;
   overflow: hidden !important;
   z-index: 2 !important;
+}
+
+
+/* Wishlist TOUJOURS 3 colonnes (desktop + mobile) */
+#profile-tab-wishlist .profile-wish-grid,
+.profile-wish-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+#profile-tab-wishlist .profile-wish-tile,
+.profile-wish-tile {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  box-sizing: border-box !important;
+}
+
+/* Message avatar toujours présent */
+.message {
+  position: relative !important;
+  min-height: 44px !important;
+  padding: 4px 48px 4px 72px !important;
+}
+.message-avatar {
+  position: absolute !important;
+  left: 16px !important;
+  top: 4px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  z-index: 3 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  background: #5865f2 !important;
+}
+.message.grouped {
+  min-height: 22px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+.message.grouped .message-avatar {
+  visibility: hidden !important;
+}
+.message-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  display: block !important;
 }

@@ -1633,19 +1633,19 @@ function resolveUserAvatar(userId, fallbackAuthor) {
 function fillMessageAvatar(avEl, author, isGrouped) {
   if (!avEl) return;
   avEl.innerHTML = '';
-  avEl.style.overflow = 'hidden';
-  avEl.style.borderRadius = '50%';
-  avEl.style.width = '40px';
-  avEl.style.height = '40px';
+  avEl.classList.remove('has-deco');
+  // retirer anciennes deco
+  avEl.querySelectorAll && avEl.querySelectorAll('.avatar-deco-overlay').forEach(n => n.remove());
+  avEl.style.cssText = 'position:absolute;left:16px;top:2px;width:40px;height:40px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;color:#fff;flex-shrink:0;z-index:2;';
   if (isGrouped) {
     avEl.style.visibility = 'hidden';
+    avEl.style.pointerEvents = 'none';
     return;
   }
   avEl.style.visibility = 'visible';
-  avEl.style.display = 'flex';
-  avEl.style.alignItems = 'center';
-  avEl.style.justifyContent = 'center';
+  avEl.style.pointerEvents = 'auto';
   const info = resolveUserAvatar(author && author.id, author);
+  const letter = (info.username || author?.username || '?')[0].toUpperCase();
   if (info.avatarUrl) {
     avEl.style.background = 'transparent';
     const img = document.createElement('img');
@@ -1655,18 +1655,16 @@ function fillMessageAvatar(avEl, author, isGrouped) {
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
     img.onerror = () => {
       avEl.innerHTML = '';
-      avEl.style.background = info.avatarColor;
-      avEl.textContent = (info.username || '?')[0].toUpperCase();
+      avEl.style.background = info.avatarColor || '#5865f2';
+      avEl.textContent = letter;
     };
     avEl.appendChild(img);
   } else {
-    avEl.style.background = info.avatarColor;
-    avEl.textContent = (info.username || '?')[0].toUpperCase();
-  }
-  if (typeof applyAvatarDeco === 'function' && info.avatarDeco && info.avatarDeco !== 'none') {
-    try { applyAvatarDeco(avEl, info.avatarDeco); } catch (e) {}
+    avEl.style.background = info.avatarColor || '#5865f2';
+    avEl.textContent = letter;
   }
 }
+
 
 function appendMessage(message) {
   // Enrichir auteur avec PP live (DM / messages stockés)
@@ -1688,8 +1686,9 @@ function appendMessage(message) {
     }
   } catch (e) {}
 
-  const isGrouped = lastMessageAuthor === message.author.id;
-  lastMessageAuthor = message.author.id;
+  const authorId = message.author && message.author.id;
+  const isGrouped = !!(authorId && lastMessageAuthor && lastMessageAuthor === authorId);
+  lastMessageAuthor = authorId || null;
   const el = document.createElement('div');
   el.className = 'message' + (isGrouped ? ' grouped' : '');
   el.dataset.messageId = message.id;
@@ -2134,7 +2133,7 @@ function openProfile(userId) {
             + (canGift ? '<span class="profile-wish-tile-gift">Offrir</span>' : '')
             + '</button>';
         }).join('');
-        wishPane.innerHTML = header + '<div class="profile-wish-grid">' + cards + '</div>';
+        wishPane.innerHTML = header + '<div class="profile-wish-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;">' + cards + '</div>';
         wishPane.querySelectorAll('[data-gift-item]').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
