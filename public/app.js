@@ -1989,16 +1989,75 @@ function openProfile(userId) {
   });
   
   
-  // Liste de souhaits sur le profil (grille style Discord)
+
+  // Onglets profil : À propos | Liste de souhaits
   try {
-    let wishSec = document.getElementById('profile-wishlist');
-    if (!wishSec) {
-      wishSec = document.createElement('div');
-      wishSec.id = 'profile-wishlist';
-      wishSec.className = 'profile-wishlist';
-      const bodyEl = document.getElementById('profile-body') || document.querySelector('#profile-modal .profile-body') || modal;
-      bodyEl.appendChild(wishSec);
+    let tabsBar = document.getElementById('profile-tabs');
+    let aboutPane = document.getElementById('profile-tab-about');
+    let wishPane = document.getElementById('profile-tab-wishlist');
+    const bodyEl = document.getElementById('profile-body') || document.querySelector('#profile-modal .zpc-body') || modal;
+
+    // Wrapper about: éléments existants (sauf tabs)
+    if (!aboutPane) {
+      aboutPane = document.createElement('div');
+      aboutPane.id = 'profile-tab-about';
+      aboutPane.className = 'profile-tab-pane active';
+      // déplacer sections existantes dans about
+      const moveIds = ['profile-status', 'profile-about', 'profile-member-since-section', 'profile-actions'];
+      // aussi zpc-section parents
+      const toMove = [];
+      bodyEl.querySelectorAll('.zpc-status, .zpc-section, .zpc-actions, #profile-status, #profile-about, #profile-member-since-section, #profile-actions').forEach(el => {
+        if (!toMove.includes(el) && el.id !== 'profile-tabs' && el.id !== 'profile-tab-wishlist' && el.id !== 'profile-wishlist') {
+          // only direct-ish children
+          if (el.parentElement === bodyEl || el.parentElement?.classList?.contains('zpc-body') || el.closest('#profile-body') === bodyEl) {
+            if (!el.closest('#profile-tab-about') && !el.closest('#profile-tab-wishlist') && !el.closest('#profile-tabs')) {
+              toMove.push(el);
+            }
+          }
+        }
+      });
+      // Safer: insert about pane after handle/badges and move following siblings
+      const anchor = document.getElementById('profile-badges') || document.getElementById('profile-handle') || document.getElementById('profile-username');
+      if (anchor && anchor.parentElement) {
+        const parent = anchor.parentElement;
+        const nodes = [];
+        let n = anchor.nextSibling;
+        while (n) {
+          const next = n.nextSibling;
+          if (n.nodeType === 1 && (n.id === 'profile-tabs' || n.id === 'profile-tab-wishlist' || n.id === 'profile-tab-about')) {
+            n = next; continue;
+          }
+          nodes.push(n);
+          n = next;
+        }
+        nodes.forEach(node => aboutPane.appendChild(node));
+        parent.appendChild(aboutPane);
+      }
     }
+
+    if (!tabsBar) {
+      tabsBar = document.createElement('div');
+      tabsBar.id = 'profile-tabs';
+      tabsBar.className = 'profile-tabs';
+      tabsBar.innerHTML = '<button type="button" class="profile-tab active" data-ptab="about">À propos</button>'
+        + '<button type="button" class="profile-tab" data-ptab="wishlist">Liste de souhaits</button>';
+      const badgesEl = document.getElementById('profile-badges');
+      const insertAfter = badgesEl || document.getElementById('profile-handle') || document.getElementById('profile-username');
+      if (insertAfter && insertAfter.parentElement) {
+        insertAfter.parentElement.insertBefore(tabsBar, aboutPane || insertAfter.nextSibling);
+      } else {
+        bodyEl.insertBefore(tabsBar, bodyEl.firstChild);
+      }
+    }
+
+    if (!wishPane) {
+      wishPane = document.createElement('div');
+      wishPane.id = 'profile-tab-wishlist';
+      wishPane.className = 'profile-tab-pane';
+      bodyEl.appendChild(wishPane);
+    }
+
+    // Build wishlist content
     const wishIds = Array.isArray(user.wishlist) ? user.wishlist : (user.id === currentUser?.id ? getWishlist() : []);
     const allItems = [...(SHOP_DECOS||[]), ...(SHOP_EFFECTS||[]), ...(SHOP_NITRO||[])];
     const isMe = currentUser && user.id === currentUser.id;
@@ -2012,7 +2071,7 @@ function openProfile(userId) {
     header += '</div>';
 
     if (!wishIds.length) {
-      wishSec.innerHTML = header + '<div class="profile-wish-empty">Aucun article souhaité</div>';
+      wishPane.innerHTML = header + '<div class="profile-wish-empty">Aucun article souhaité</div>';
     } else {
       const cards = wishIds.map(id => {
         const item = allItems.find(x => x.id === id);
@@ -2025,8 +2084,8 @@ function openProfile(userId) {
           + (canGift ? '<span class="profile-wish-tile-gift">Offrir</span>' : '')
           + '</button>';
       }).join('');
-      wishSec.innerHTML = header + '<div class="profile-wish-grid">' + cards + '</div>';
-      wishSec.querySelectorAll('[data-gift-item]').forEach(btn => {
+      wishPane.innerHTML = header + '<div class="profile-wish-grid">' + cards + '</div>';
+      wishPane.querySelectorAll('[data-gift-item]').forEach(btn => {
         btn.onclick = (e) => {
           e.stopPropagation();
           const itemId = btn.getAttribute('data-gift-item');
@@ -2055,7 +2114,23 @@ function openProfile(userId) {
       closeProfile();
       if (typeof openShop === 'function') openShop();
     });
+
+    // Tab switching
+    const switchTab = (tab) => {
+      tabsBar.querySelectorAll('.profile-tab').forEach(b => b.classList.toggle('active', b.dataset.ptab === tab));
+      aboutPane.classList.toggle('active', tab === 'about');
+      wishPane.classList.toggle('active', tab === 'wishlist');
+    };
+    tabsBar.querySelectorAll('.profile-tab').forEach(b => {
+      b.onclick = (e) => { e.stopPropagation(); switchTab(b.dataset.ptab); };
+    });
+    switchTab('about');
+
+    // hide old profile-wishlist if any
+    const oldWish = document.getElementById('profile-wishlist');
+    if (oldWish) oldWish.style.display = 'none';
   } catch (e) { console.warn('wishlist profile', e); }
+
 
 
   modal.classList.remove('hidden');

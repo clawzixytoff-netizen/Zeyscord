@@ -9644,3 +9644,42 @@ img.avatar-deco-overlay {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
+
+/* Profil onglets */
+.profile-tabs {
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid #3f4147;
+  margin: 12px 0 0 0;
+  padding: 0 0 0 0;
+}
+.profile-tab {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #b5bac1;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 4px;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.profile-tab:hover { color: #dbdee1; }
+.profile-tab.active {
+  color: #f2f3f5;
+  border-bottom-color: #f2f3f5;
+}
+.profile-tab-pane {
+  display: none !important;
+  padding-top: 12px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.profile-tab-pane.active {
+  display: block !important;
+}
+#profile-tab-wishlist.profile-tab-pane.active {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
