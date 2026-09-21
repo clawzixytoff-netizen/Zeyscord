@@ -840,6 +840,10 @@ socket.on('init', data => {
   availableBadges = data.availableBadges || [];
   friends = data.friends || [];
   friendRequests = data.friendRequests || [];
+  if (data.user && Array.isArray(data.user.wishlist)) {
+    setWishlist(data.user.wishlist);
+  }
+
   try {
     const known = (friends || []).map(f => f.username).filter(Boolean);
     const prev = JSON.parse(localStorage.getItem('zeyscord_known_users') || '[]');
@@ -1983,6 +1987,62 @@ function openProfile(userId) {
   requestAnimationFrame(() => {
     applyAvatarDeco(avatar, user.avatarDeco);
   });
+  
+  // Liste de souhaits sur le profil
+  try {
+    let wishSec = document.getElementById('profile-wishlist');
+    if (!wishSec) {
+      wishSec = document.createElement('div');
+      wishSec.id = 'profile-wishlist';
+      wishSec.className = 'profile-wishlist';
+      const bodyEl = document.getElementById('profile-body') || document.querySelector('#profile-modal .profile-body') || modal;
+      bodyEl.appendChild(wishSec);
+    }
+    const wishIds = Array.isArray(user.wishlist) ? user.wishlist : (user.id === currentUser?.id ? getWishlist() : []);
+    const allItems = [...(SHOP_DECOS||[]), ...(SHOP_EFFECTS||[]), ...(SHOP_NITRO||[])];
+    if (!wishIds.length) {
+      wishSec.innerHTML = '<div class="profile-wish-title">Liste de souhaits</div><div class="profile-wish-empty">Aucun article souhaité</div>';
+    } else {
+      const cards = wishIds.map(id => {
+        const item = allItems.find(x => x.id === id);
+        if (!item) return '';
+        const canGift = currentUser && user.id !== currentUser.id;
+        return '<div class="profile-wish-card" data-id="'+item.id+'">'
+          + '<img src="'+(item.img||'')+'" alt="">'
+          + '<div class="profile-wish-meta"><div class="profile-wish-name">'+String(item.name||'').replace(/</g,'')+'</div>'
+          + '<div class="profile-wish-price">'+(Number(item.price||0).toFixed(2).replace('.',','))+' €</div></div>'
+          + (canGift ? '<button type="button" class="profile-wish-gift" data-gift-item="'+item.id+'" data-gift-to="'+user.id+'" data-gift-name="'+String(user.username||'').replace(/"/g,'')+'">Offrir 🎁</button>' : '')
+          + '</div>';
+      }).join('');
+      wishSec.innerHTML = '<div class="profile-wish-title">Liste de souhaits · '+wishIds.length+'</div><div class="profile-wish-grid">'+cards+'</div>';
+      wishSec.querySelectorAll('[data-gift-item]').forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          const itemId = btn.getAttribute('data-gift-item');
+          const item = allItems.find(x => x.id === itemId);
+          if (!item) return;
+          // Pré-sélectionner le destinataire
+          window.__giftForceTo = { id: user.id, name: user.username };
+          closeProfile();
+          openGiftModal(item);
+          // Appliquer destinataire après ouverture
+          setTimeout(() => {
+            const toId = document.getElementById('gift-to-id');
+            const toName = document.getElementById('gift-to-name');
+            const sel = document.getElementById('gift-friend-selected');
+            if (toId) toId.value = user.id;
+            if (toName) toName.value = user.username || '';
+            if (sel) {
+              const bg = user.avatarColor || '#5865f2';
+              const av = user.avatarUrl ? '<img src="'+user.avatarUrl+'">' : '<span>'+((user.username||'?')[0].toUpperCase())+'</span>';
+              sel.innerHTML = '<div class="gift-friend-av" style="background:'+bg+'">'+av+'</div><span class="gift-friend-name">'+String(user.username||'').replace(/</g,'')+'</span>';
+            }
+          }, 50);
+        };
+      });
+    }
+  } catch (e) { console.warn('wishlist profile', e); }
+
   modal.classList.remove('hidden');
 }
 
@@ -4617,6 +4677,10 @@ function toggleWishlist(id) {
   if (i >= 0) list.splice(i, 1);
   else list.push(id);
   setWishlist(list);
+  if (currentUser) {
+    currentUser.wishlist = list.slice();
+    try { socket.emit('updateProfile', { wishlist: list }); } catch (e) {}
+  }
   return list.includes(id);
 }
 
