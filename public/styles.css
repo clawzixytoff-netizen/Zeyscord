@@ -1,10 +1,10 @@
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg-primary:#313338;--bg-secondary:#2b2d31;--bg-tertiary:#1e1f22;--bg-hover:#35373c;--bg-active:#404249;--text-normal:#dbdee1;--text-muted:#949ba4;--text-link:#00a8fc;--header:#f2f3f5;--header2:#b5bac1;--brand:#5865f2;--brand-h:#4752c4;--green:#23a559;--channel:#80848e;--interactive:#b5bac1}
+:root{--bg-primary:#313338;--bg-secondary:#2b2d31;--bg-tertiary:#1e1f22;--bg-hover:#35373c;--bg-active:#404249;--text-normal:#dbdee1;--text-muted:#949ba4;--text-link:#00a8fc;--header:#f2f3f5;--header2:#b5bac1;--brand:#ff7a1a;--brand-h:#e8680f;--green:#23a559;--channel:#80848e;--interactive:#b5bac1}
 body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(--bg-tertiary);color:var(--text-normal);overflow:hidden;height:100vh}
 .hidden{display:none!important}
 
 /* Login */
-.login-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#5865f2 0%,#404eed 50%,#2b2d31 100%)}
+.login-screen{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#ff7a1a 0%,#404eed 50%,#2b2d31 100%)}
 .login-box{background:var(--bg-primary);border-radius:8px;padding:32px;width:100%;max-width:480px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
 .login-logo{text-align:center;margin-bottom:24px}
 .login-box h1{color:var(--header);font-size:24px;font-weight:600;text-align:center;margin-bottom:8px}
@@ -121,7 +121,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 }
 .profile-banner {
   height: 120px;
-  background: #5865f2;
+  background: #ff7a1a;
   background-size: cover;
   background-position: center;
 }
@@ -135,7 +135,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   height: 80px;
   border-radius: 50%;
   border: 6px solid #232428;
-  background: #5865f2;
+  background: #ff7a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,7 +280,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   outline: none;
 }
 .edit-card input:focus {
-  outline: 1px solid #5865f2;
+  outline: 1px solid #ff7a1a;
 }
 .edit-buttons {
   display: flex;
@@ -301,11 +301,11 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   color: #dbdee1;
 }
 .edit-buttons button.primary {
-  background: #5865f2;
+  background: #ff7a1a;
   color: white;
 }
 .edit-buttons button.primary:hover {
-  background: #4752c4;
+  background: #e8680f;
 }
 .badges-grid {
   display: grid;
@@ -389,7 +389,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   height: 80px;
   border-radius: 50%;
   border: 6px solid #111214;
-  background: #5865f2;
+  background: #ff7a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -645,12 +645,12 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 .settings-card input:focus,
 .settings-card textarea:focus,
 .settings-card select:focus {
-  outline: 1px solid #5865f2;
+  outline: 1px solid #ff7a1a;
 }
 .settings-save-btn {
   margin-top: 20px;
   padding: 10px 16px;
-  background: #5865f2;
+  background: #ff7a1a;
   color: white;
   border: none;
   border-radius: 4px;
@@ -659,7 +659,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   font-weight: 500;
 }
 .settings-save-btn:hover {
-  background: #4752c4;
+  background: #e8680f;
 }
 .toggle-row {
   display: flex !important;
@@ -701,13 +701,13 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
   transform: scale(1.05);
 }
 .deco-option.active, .effect-option.active {
-  border-color: #5865f2;
+  border-color: #ff7a1a;
 }
 .deco-preview {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #5865f2;
+  background: #ff7a1a;
   position: relative;
 }
 .deco-preview.none { box-shadow: none; }
@@ -1305,7 +1305,7 @@ img.profile-effect-overlay {
   transition: border-color 0.15s, transform 0.15s;
 }
 .shop-item:hover {
-  border-color: #5865f2;
+  border-color: #ff7a1a;
   transform: translateY(-2px);
 }
 .shop-item.owned {
@@ -1334,14 +1334,14 @@ img.profile-effect-overlay {
   padding: 8px;
   border: none;
   border-radius: 4px;
-  background: #5865f2;
+  background: #ff7a1a;
   color: white;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
 }
 .shop-item-btn:hover {
-  background: #4752c4;
+  background: #e8680f;
 }
 .shop-item-btn.owned {
   background: #23a559;
@@ -1487,11 +1487,11 @@ img.profile-effect-overlay {
 }
 .reaction-chip:hover {
   background: #3f4147;
-  border-color: #5865f2;
+  border-color: #ff7a1a;
 }
 .reaction-chip.mine {
   background: rgba(88, 101, 242, 0.25);
-  border-color: #5865f2;
+  border-color: #ff7a1a;
 }
 .reaction-chip span {
   font-size: 12px;
@@ -1860,14 +1860,14 @@ img.profile-effect-overlay {
 .nitro-progress-bar {
   height: 100%;
   width: 40%;
-  background: linear-gradient(90deg, #f0b232, #5865f2);
+  background: linear-gradient(90deg, #f0b232, #ff7a1a);
   border-radius: 3px;
   transition: width 0.3s;
 }
 .nitro-shop-btn {
   margin-top: 20px;
   padding: 12px 24px;
-  background: #5865f2;
+  background: #ff7a1a;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1875,7 +1875,7 @@ img.profile-effect-overlay {
   font-weight: 600;
   cursor: pointer;
 }
-.nitro-shop-btn:hover { background: #4752c4; }
+.nitro-shop-btn:hover { background: #e8680f; }
 .chat-area { position: relative; }
 .badge-move-up, .badge-move-down {
   background: #2b2d31;
@@ -1891,7 +1891,7 @@ img.profile-effect-overlay {
   line-height: 1;
 }
 .badge-move-up:hover, .badge-move-down:hover {
-  background: #5865f2;
+  background: #ff7a1a;
   color: white;
 }
 #badges-checkboxes .badge-check {
@@ -1943,7 +1943,7 @@ img.profile-effect-overlay {
   object-fit: cover;
 }
 .upload-btn {
-  background: #5865f2;
+  background: #ff7a1a;
   color: white;
   border: none;
   padding: 8px 14px;
@@ -1952,7 +1952,7 @@ img.profile-effect-overlay {
   font-size: 13px;
   font-weight: 500;
 }
-.upload-btn:hover { background: #4752c4; }
+.upload-btn:hover { background: #e8680f; }
 .upload-clear {
   background: transparent;
   color: #f23f43;
@@ -2115,7 +2115,7 @@ img.profile-effect-overlay {
 .pe-save {
   width: 100%;
   padding: 12px;
-  background: #5865f2;
+  background: #ff7a1a;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -2123,7 +2123,7 @@ img.profile-effect-overlay {
   font-weight: 500;
   cursor: pointer;
 }
-.pe-save:hover { background: #4752c4; }
+.pe-save:hover { background: #e8680f; }
 
 .pe-preview-wrap {
   flex: 1;
@@ -2287,7 +2287,7 @@ img.profile-effect-overlay {
 }
 .effect-option:hover { background: #35373c; }
 .effect-option.active {
-  border-color: #5865f2;
+  border-color: #ff7a1a;
   background: rgba(88,101,242,0.15);
   color: #fff;
 }
@@ -2310,7 +2310,7 @@ img.profile-effect-overlay {
   transition: border-color .15s;
 }
 .deco-option:hover { border-color: rgba(255,255,255,0.2); }
-.deco-option.active { border-color: #5865f2; }
+.deco-option.active { border-color: #ff7a1a; }
 .deco-option .deco-img {
   width: 100%;
   height: 100%;
@@ -2822,7 +2822,7 @@ img.profile-effect-overlay {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #5865f2;
+  background-color: #ff7a1a;
 }
 .zpc-body {
   position: relative;
@@ -2852,7 +2852,7 @@ img.profile-effect-overlay {
   font-size: 32px;
   font-weight: 600;
   color: #fff;
-  background: #5865f2;
+  background: #ff7a1a;
   position: relative;
   z-index: 2;
   overflow: hidden;
@@ -3376,7 +3376,7 @@ img.profile-effect-overlay {
   font-family: inherit;
 }
 .friends-add-btn {
-  background: #5865f2;
+  background: #ff7a1a;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -3387,7 +3387,7 @@ img.profile-effect-overlay {
   white-space: nowrap;
   font-family: inherit;
 }
-.friends-add-btn:hover { background: #4752c4; }
+.friends-add-btn:hover { background: #e8680f; }
 .friends-empty {
   text-align: center;
   color: #949ba4;
@@ -3554,7 +3554,7 @@ img.profile-effect-overlay {
   font-weight: 600;
   font-size: 20px;
   color: #fff;
-  background: #5865f2;
+  background: #ff7a1a;
   overflow: hidden;
   box-shadow: 0 0 0 3px #111214;
 }
@@ -4151,7 +4151,7 @@ img.profile-effect-overlay {
   min-height: 120px !important;
   width: 100% !important;
   border-radius: 8px 8px 0 0 !important;
-  background-color: #5865f2;
+  background-color: #ff7a1a;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -4186,7 +4186,7 @@ img.profile-effect-overlay {
   font-weight: 600 !important;
   color: #fff !important;
   overflow: hidden !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
 }
 
 .uam-profile-body .uam-avatar img {
@@ -4331,7 +4331,7 @@ img.profile-effect-overlay {
   min-height: 120px !important;
   width: 100% !important;
   border-radius: 8px 8px 0 0 !important;
-  background-color: #5865f2;
+  background-color: #ff7a1a;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -5033,7 +5033,7 @@ img.profile-effect-overlay {
   font-family: inherit !important;
 }
 .shop-tab.active, .shop-tab:hover {
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
 }
 .shop-grid {
@@ -5115,7 +5115,7 @@ img.profile-effect-overlay {
 }
 .shop-card-btn {
   width: 100% !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   border: none !important;
   border-radius: 8px !important;
@@ -5225,7 +5225,7 @@ img.profile-effect-overlay {
 }
 .shop-detail-buy {
   width: 100% !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   border: none !important;
   border-radius: 8px !important;
@@ -5235,7 +5235,7 @@ img.profile-effect-overlay {
   cursor: pointer !important;
   font-family: inherit !important;
 }
-.shop-detail-buy:hover { background: #4752c4 !important; }
+.shop-detail-buy:hover { background: #e8680f !important; }
 
 
 /* Banner a bit larger */
@@ -5304,7 +5304,7 @@ img.profile-effect-overlay {
   height: 88px !important;
   margin: 6px !important;
   font-size: 32px !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
 }
 .shop-card-deco {
   inset: -12px !important;
@@ -5435,7 +5435,7 @@ img.profile-effect-overlay {
   font-weight: 500 !important;
 }
 .shop-card-btn {
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   border: none !important;
   border-radius: 16px !important;
@@ -5446,7 +5446,7 @@ img.profile-effect-overlay {
   font-family: inherit !important;
   white-space: nowrap !important;
 }
-.shop-card-btn:hover { background: #4752c4 !important; }
+.shop-card-btn:hover { background: #e8680f !important; }
 .shop-card.owned .shop-card-btn {
   background: transparent !important;
   color: #23a559 !important;
@@ -6048,7 +6048,7 @@ img.profile-effect-overlay {
   text-align: left;
 }
 .scm-item:hover {
-  background: #5865f2;
+  background: #ff7a1a;
   color: #fff;
 }
 .scm-item.scm-boost:hover {
@@ -6812,7 +6812,7 @@ img.profile-effect-overlay {
   font-weight: 700 !important;
   color: #fff !important;
   overflow: hidden !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
 }
 #user-account-menu .uam-avatar img {
   width: 100% !important;
@@ -7340,7 +7340,7 @@ img.profile-effect-overlay {
   background: #2b2d31;
 }
 .effect-tile.active {
-  border-color: #5865f2;
+  border-color: #ff7a1a;
   background: #2b2d31;
 }
 .effect-tile-preview {
@@ -7433,7 +7433,7 @@ img.profile-effect-overlay {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
 }
 .picker-tile:hover { background: #2b2d31; }
-.picker-tile.active { border-color: #5865f2; }
+.picker-tile.active { border-color: #ff7a1a; }
 .picker-tile-inner {
   width: 72px; height: 72px; border-radius: 8px; overflow: hidden;
   background: #111214; display: flex; align-items: center; justify-content: center;
@@ -7452,7 +7452,7 @@ img.profile-effect-overlay {
 .picker-preview-av {
   position: absolute; left: 16px; bottom: 80px;
   width: 72px; height: 72px; border-radius: 50%;
-  background: #5865f2; color: #fff; font-weight: 700;
+  background: #ff7a1a; color: #fff; font-weight: 700;
   display: flex; align-items: center; justify-content: center; font-size: 28px;
   z-index: 2; border: 4px solid #1e1f22;
 }
@@ -7525,7 +7525,7 @@ img.profile-effect-overlay {
   position: relative;
 }
 .discord-tile:hover {
-  border-color: #5865f2;
+  border-color: #ff7a1a;
   background: #2b2d31;
 }
 .discord-tile-av,
@@ -8706,7 +8706,7 @@ img.avatar-deco-overlay {
   position: relative !important;
 }
 .picker-tile.active {
-  border-color: #5865f2 !important;
+  border-color: #ff7a1a !important;
 }
 .picker-tile-inner {
   width: 72px !important;
@@ -8838,7 +8838,7 @@ img.avatar-deco-overlay {
   background: #2b2d31 !important;
 }
 .picker-tile.active {
-  border-color: #5865f2 !important;
+  border-color: #ff7a1a !important;
 }
 .picker-tile-inner {
   width: 100% !important;
@@ -9111,7 +9111,7 @@ img.avatar-deco-overlay {
 }
 .shop-buy-btn {
   flex: 1 !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   border: 0 !important;
   border-radius: 8px !important;
@@ -9121,7 +9121,7 @@ img.avatar-deco-overlay {
   cursor: pointer !important;
 }
 .shop-buy-btn:hover {
-  background: #4752c4 !important;
+  background: #e8680f !important;
 }
 .shop-card-v2.owned .shop-buy-btn {
   background: #3ba55d !important;
@@ -9199,7 +9199,7 @@ img.avatar-deco-overlay {
   width: 100%;
   min-height: 260px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #5865f2 0%, #9b59b6 50%, #eb459e 100%);
+  background: linear-gradient(135deg, #ff7a1a 0%, #9b59b6 50%, #eb459e 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -9253,7 +9253,7 @@ img.avatar-deco-overlay {
 .gift-select:focus,
 .gift-input:focus,
 .gift-textarea:focus {
-  border-color: #5865f2;
+  border-color: #ff7a1a;
 }
 .gift-textarea {
   width: 100%;
@@ -9279,7 +9279,7 @@ img.avatar-deco-overlay {
   align-items: center;
   gap: 12px;
   background: #2b2d31;
-  border: 1px solid #5865f2;
+  border: 1px solid #ff7a1a;
   border-radius: 10px;
   padding: 12px;
 }
@@ -9438,7 +9438,7 @@ img.avatar-deco-overlay {
   cursor: pointer;
   text-align: left;
 }
-.gift-friend-opt:hover { background: #5865f2; }
+.gift-friend-opt:hover { background: #ff7a1a; }
 .gift-friend-av {
   width: 32px; height: 32px;
   border-radius: 50%;
@@ -9461,7 +9461,7 @@ img.avatar-deco-overlay {
   gap: 12px;
   align-items: flex-start;
   background: #2b2d31;
-  border: 1px solid #5865f2;
+  border: 1px solid #ff7a1a;
   border-radius: 12px;
   padding: 14px;
   max-width: 360px;
@@ -9626,7 +9626,7 @@ img.avatar-deco-overlay {
   left: 6px;
   right: 6px;
   bottom: 6px;
-  background: #5865f2;
+  background: #ff7a1a;
   color: #fff;
   font-size: 11px;
   font-weight: 700;
@@ -9776,7 +9776,7 @@ img.avatar-deco-overlay {
   font-size: 32px !important;
   font-weight: 700 !important;
   color: #fff !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
 }
 .zpc-avatar img {
   width: 100% !important;
@@ -9806,7 +9806,7 @@ img.avatar-deco-overlay {
   margin-bottom: 14px !important;
 }
 .zpc-actions button {
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   border: 0 !important;
   color: #fff !important;
   padding: 8px 14px !important;
@@ -9816,7 +9816,7 @@ img.avatar-deco-overlay {
   cursor: pointer !important;
   text-align: center !important;
 }
-.zpc-actions button:hover { background: #4752c4 !important; }
+.zpc-actions button:hover { background: #e8680f !important; }
 .zpc-status, .zpc-section {
   background: transparent !important;
   border: none !important;
@@ -9915,7 +9915,7 @@ img.avatar-deco-overlay {
   left: 8px !important;
   right: 8px !important;
   bottom: 8px !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   font-size: 12px !important;
   font-weight: 700 !important;
@@ -10123,7 +10123,7 @@ img.avatar-deco-overlay {
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   border: 0 !important;
   border-radius: 8px !important;
@@ -10134,7 +10134,7 @@ img.avatar-deco-overlay {
   height: 36px !important;
   text-align: center !important;
 }
-.zpc-btn-primary:hover { background: #4752c4 !important; }
+.zpc-btn-primary:hover { background: #e8680f !important; }
 .zpc-btn-primary:disabled {
   opacity: 0.7 !important;
   cursor: default !important;
@@ -10186,7 +10186,7 @@ img.avatar-deco-overlay {
   cursor: pointer !important;
 }
 .zpc-more-item:hover {
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
 }
 
@@ -10203,7 +10203,7 @@ img.avatar-deco-overlay {
   align-items: center !important;
   justify-content: center !important;
   flex-shrink: 0 !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
 }
 .message-avatar img {
   width: 100% !important;
@@ -10307,7 +10307,7 @@ img.avatar-deco-overlay {
   color: #fff !important;
   font-weight: 600 !important;
   font-size: 16px !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
 }
 .message.grouped {
   min-height: 22px !important;
@@ -10428,7 +10428,7 @@ img.avatar-deco-overlay {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #5865f2;
+  background: #ff7a1a;
   color: #fff;
   font-weight: 700;
   flex-shrink: 0;
@@ -10463,7 +10463,7 @@ img.avatar-deco-overlay {
   margin-top: 16px;
   width: 100%;
   background: #232428;
-  border: 1px solid #5865f2;
+  border: 1px solid #ff7a1a;
   color: #fff;
   border-radius: 8px;
   padding: 12px 16px;
@@ -10471,7 +10471,7 @@ img.avatar-deco-overlay {
   font-weight: 600;
   cursor: pointer;
 }
-.install-app-btn:hover { background: #5865f2; }
+.install-app-btn:hover { background: #ff7a1a; }
 .install-app-btn.hidden { display: none !important; }
 
 /* Standalone app: safe areas */
@@ -10488,7 +10488,7 @@ img.avatar-deco-overlay {
   bottom: 20px !important;
   right: 20px !important;
   z-index: 99999 !important;
-  background: #5865f2 !important;
+  background: #ff7a1a !important;
   color: #fff !important;
   border: none !important;
   border-radius: 8px !important;
@@ -10498,7 +10498,7 @@ img.avatar-deco-overlay {
   cursor: pointer !important;
   box-shadow: 0 4px 14px rgba(0,0,0,0.45) !important;
 }
-.install-app-btn:hover { background: #4752c4 !important; }
+.install-app-btn:hover { background: #e8680f !important; }
 .install-app-btn.hidden { display: none !important; }
 
 /* ===== Download on login ===== */
@@ -10564,4 +10564,86 @@ img.avatar-deco-overlay {
 .user-avatar img,
 .app-logo img {
   object-fit: cover;
+}
+
+/* ===== Zeyscord Orange Theme ===== */
+:root {
+  --z-blurple: #ff7a1a;
+  --z-blurple-hover: #e8680f;
+  --z-blurple-dark: #c4550c;
+  --z-orange: #ff7a1a;
+  --z-orange-soft: #ff9a4d;
+  --z-orange-bg: #2a1a0f;
+  --z-login-bg1: #3d1f0a;
+  --z-login-bg2: #1a0f08;
+  --z-login-bg3: #4a2810;
+}
+
+/* Login screen background */
+.login-screen {
+  background: radial-gradient(ellipse at 20% 30%, #5c2e0e 0%, transparent 55%),
+              radial-gradient(ellipse at 80% 70%, #3d1a08 0%, transparent 50%),
+              linear-gradient(160deg, #1a0f0a 0%, #2a1810 40%, #1f120c 100%) !important;
+}
+
+/* Primary buttons (Se connecter, etc.) */
+.login-box button[type="submit"],
+.login-box .btn-primary,
+button.primary,
+.btn-primary {
+  background: #ff7a1a !important;
+  background-color: #ff7a1a !important;
+  color: #fff !important;
+}
+.login-box button[type="submit"]:hover,
+.btn-primary:hover {
+  background: #e8680f !important;
+  background-color: #e8680f !important;
+}
+
+/* Links */
+.login-box a,
+.login-footer a {
+  color: #ff9a4d !important;
+}
+.login-box a:hover {
+  color: #ffb87a !important;
+}
+
+/* Theme color meta is separate */
+
+/* Focus rings */
+.login-box input:focus {
+  border-color: #ff7a1a !important;
+  outline-color: #ff7a1a !important;
+  box-shadow: 0 0 0 2px rgba(255, 122, 26, 0.25) !important;
+}
+
+/* Download button stays white for contrast; hint ok */
+.btn-dl-win {
+  background: #fff !important;
+  color: #1a0f0a !important;
+}
+.btn-dl-win:hover {
+  background: #fff5eb !important;
+}
+
+/* Brand accents in app shell if blurple used */
+.guild-add,
+.accent,
+[data-accent] {
+  /* soft override for common accent classes */
+}
+
+/* Install PWA btn */
+.install-app-btn {
+  background: #ff7a1a !important;
+}
+.install-app-btn:hover {
+  background: #e8680f !important;
+}
+
+/* Scrollbar subtle */
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 122, 26, 0.35) !important;
 }
