@@ -199,13 +199,15 @@ const io = new Server(server, {
 
 const users = new Map();
 const usersById = new Map();
-const friendRequests = {};
-const friendships = {};
+const usernameToId = {}; // usernameLower -> stable userId
+let friendRequests = {};
+let friendships = {};
 const savedProfiles = {};
 const PROFILES_FILE = path.join(__dirname, 'profiles.json');
 const MESSAGES_FILE = path.join(__dirname, 'messages.json');
 const GUILDS_FILE = path.join(__dirname, 'guilds.json');
 const DMS_FILE = path.join(__dirname, 'dms.json');
+const FRIENDS_FILE = path.join(__dirname, 'friends.json');
 function loadJSON(file, fallback) {
   try {
     if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -215,6 +217,54 @@ function loadJSON(file, fallback) {
 function saveJSON(file, data) {
   try { fs.writeFileSync(file, JSON.stringify(data, null, 2)); } catch (e) {}
 }
+function loadFriends() {
+  try {
+    const data = loadJSON(FRIENDS_FILE, null);
+    if (data) {
+      friendships = data.friendships || {};
+      friendRequests = data.friendRequests || {};
+      if (data.usernameToId) Object.assign(usernameToId, data.usernameToId);
+      console.log('[Friends] Chargé:', Object.keys(friendships).length, 'users avec amis');
+    }
+  } catch (e) { console.log('[Friends] load error', e.message); }
+}
+function saveFriends() {
+  try {
+    saveJSON(FRIENDS_FILE, { friendships, friendRequests, usernameToId });
+  } catch (e) { console.log('[Friends] save error', e.message); }
+}
+function stableUserId(email, username) {
+  const key = (email && String(email).toLowerCase()) || ('name:' + String(username || '').toLowerCase());
+  return 'u_' + crypto.createHash('sha256').update(key + '|zeyscord-uid').digest('hex').slice(0, 16);
+}
+function resolveFriendPublic(fid) {
+  if (usersById.has(fid)) return publicUser(usersById.get(fid));
+  // offline: chercher dans profiles via usernameToId inverse
+  let uname = null;
+  for (const [n, id] of Object.entries(usernameToId)) {
+    if (id === fid) { uname = n; break; }
+  }
+  if (!uname) return { id: fid, username: 'Ami', avatarColor: '#5865f2', avatarUrl: null, badges: [], customStatus: '', avatarDeco: 'none', profileEffect: 'none', presenceStatus: 'offline' };
+  const saved = savedProfiles[uname] || {};
+  return {
+    id: fid,
+    username: saved.username || uname,
+    avatarColor: saved.avatarColor || '#5865f2',
+    avatarUrl: saved.avatarUrl || null,
+    bannerUrl: saved.bannerUrl || null,
+    badges: saved.badges || [],
+    customStatus: saved.customStatus || '',
+    avatarDeco: saved.avatarDeco || 'none',
+    profileEffect: saved.profileEffect || 'none',
+    primaryColor: saved.primaryColor || null,
+    secondaryColor: saved.secondaryColor || null,
+    presenceStatus: 'offline',
+    isOwner: false,
+    hasNitro: !!saved.hasNitro,
+    createdAt: saved.createdAt || null
+  };
+}
+loadFriends();
 try {
   if (fs.existsSync(PROFILES_FILE)) Object.assign(savedProfiles, JSON.parse(fs.readFileSync(PROFILES_FILE, 'utf8')));
 } catch (e) {}
@@ -430,11 +480,26 @@ io.on('connection', (socket) => {
     const email = (payload && typeof payload === 'object') ? (payload.email || '') : '';
     const cleanName = (username || 'User' + Math.floor(Math.random() * 1000)).trim().substring(0, 32);
     const owner = isOwner(cleanName) || isOwnerEmail(email);
-    const saved = savedProfiles[cleanName.toLowerCase()] || {};
+    const nameKey = cleanName.toLowerCase();
+    const saved = savedProfiles[nameKey] || {};
+    // ID stable : même compte = même id après reboot / redeploy
+    let uid = (saved.userId) || (usernameToId[nameKey]) || stableUserId(email, cleanName);
+    if (email) {
+      // préférer id lié à l'email si dispo
+      const emailId = stableUserId(email, cleanName);
+      if (!saved.userId) uid = emailId;
+    }
+    usernameToId[nameKey] = uid;
+    if (!savedProfiles[nameKey]) savedProfiles[nameKey] = {};
+    savedProfiles[nameKey].userId = uid;
+    savedProfiles[nameKey].username = cleanName;
+    saveProfilesToDisk();
+    saveFriends();
+
     const user = {
-      id: generateId(),
+      id: uid,
       username: cleanName,
-      avatarColor: getRandomColor(),
+      avatarColor: saved.avatarColor || getRandomColor(),
       avatarUrl: saved.avatarUrl || null,
       bannerUrl: saved.bannerUrl || null,
       badges: saved.badges || (owner ? ['owner', 'nitro', 'nitro24', 'staff', 'early_supporter', 'hypesquad', 'partner', 'bughunter2'] : []),
@@ -469,7 +534,7 @@ io.on('connection', (socket) => {
       messages: messages.zeyscord_general || [],
       onlineUsers: Array.from(users.values()).map(publicUser),
       availableBadges: AVAILABLE_BADGES,
-      friends: (friendships[user.id] || []).map(fid => usersById.get(fid) ? publicUser(usersById.get(fid)) : null).filter(Boolean),
+      friends: (friendships[user.id] || []).map(fid => resolveFriendPublic(fid)),
       friendRequests: friendRequests[user.id] || []
     });
     io.emit('onlineUsers', Array.from(users.values()).map(publicUser));
@@ -654,19 +719,36 @@ io.on('connection', (socket) => {
   socket.on('sendFriendRequest', (targetUsername) => {
     const me = users.get(socket.id);
     if (!me) return;
+    const tname = String(targetUsername || '').trim();
+    if (!tname) { socket.emit('error', { message: 'Pseudo requis' }); return; }
+    const tkey = tname.toLowerCase();
+    if (tkey === me.username.toLowerCase()) { socket.emit('error', { message: "Tu ne peux pas t'ajouter toi-même" }); return; }
+
+    // Chercher en ligne d'abord
     let target = null;
     for (const u of users.values()) {
-      if (u.username.toLowerCase() === (targetUsername || '').toLowerCase()) { target = u; break; }
+      if (u.username.toLowerCase() === tkey) { target = u; break; }
     }
-    if (!target) { socket.emit('error', { message: 'Utilisateur non trouvé (il doit être en ligne)' }); return; }
-    if (target.id === me.id) { socket.emit('error', { message: "Tu ne peux pas t'ajouter toi-même" }); return; }
-    if ((friendships[me.id] || []).includes(target.id)) { socket.emit('error', { message: 'Vous êtes déjà amis' }); return; }
-    if (!friendRequests[target.id]) friendRequests[target.id] = [];
-    if (friendRequests[target.id].some(r => r.fromId === me.id)) { socket.emit('error', { message: 'Demande déjà envoyée' }); return; }
+    // Sinon offline via profils / comptes
+    let targetId = target ? target.id : (usernameToId[tkey] || null);
+    if (!targetId && savedProfiles[tkey] && savedProfiles[tkey].userId) targetId = savedProfiles[tkey].userId;
+    if (!targetId) {
+      // créer un id stable pour ce pseudo (il pourra accepter plus tard)
+      targetId = stableUserId('', tname);
+      usernameToId[tkey] = targetId;
+      if (!savedProfiles[tkey]) savedProfiles[tkey] = { username: tname, userId: targetId };
+      else { savedProfiles[tkey].userId = targetId; savedProfiles[tkey].username = savedProfiles[tkey].username || tname; }
+      saveProfilesToDisk();
+    }
+
+    if ((friendships[me.id] || []).includes(targetId)) { socket.emit('error', { message: 'Vous êtes déjà amis' }); return; }
+    if (!friendRequests[targetId]) friendRequests[targetId] = [];
+    if (friendRequests[targetId].some(r => r.fromId === me.id)) { socket.emit('error', { message: 'Demande déjà envoyée' }); return; }
     const req = { fromId: me.id, fromUsername: me.username, fromAvatar: me.avatarUrl, fromColor: me.avatarColor };
-    friendRequests[target.id].push(req);
-    for (const [sid, u] of users) { if (u.id === target.id) io.to(sid).emit('friendRequest', req); }
-    socket.emit('friendRequestSent', { to: target.username });
+    friendRequests[targetId].push(req);
+    saveFriends();
+    for (const [sid, u] of users) { if (u.id === targetId) io.to(sid).emit('friendRequest', req); }
+    socket.emit('friendRequestSent', { to: target ? target.username : tname });
   });
 
   socket.on('acceptFriendRequest', (fromId) => {
@@ -677,8 +759,8 @@ io.on('connection', (socket) => {
     if (!friendships[fromId]) friendships[fromId] = [];
     if (!friendships[me.id].includes(fromId)) friendships[me.id].push(fromId);
     if (!friendships[fromId].includes(me.id)) friendships[fromId].push(me.id);
-    const friendUser = usersById.get(fromId);
-    socket.emit('friendAdded', friendUser ? publicUser(friendUser) : { id: fromId });
+    saveFriends();
+    socket.emit('friendAdded', resolveFriendPublic(fromId));
     for (const [sid, u] of users) { if (u.id === fromId) io.to(sid).emit('friendAdded', publicUser(me)); }
   });
 
@@ -686,6 +768,7 @@ io.on('connection', (socket) => {
     const me = users.get(socket.id);
     if (!me) return;
     friendRequests[me.id] = (friendRequests[me.id] || []).filter(r => r.fromId !== fromId);
+    saveFriends();
   });
 
   socket.on('removeFriend', (friendId) => {
@@ -693,6 +776,7 @@ io.on('connection', (socket) => {
     if (!me) return;
     friendships[me.id] = (friendships[me.id] || []).filter(id => id !== friendId);
     friendships[friendId] = (friendships[friendId] || []).filter(id => id !== me.id);
+    saveFriends();
     socket.emit('friendRemoved', friendId);
     for (const [sid, u] of users) { if (u.id === friendId) io.to(sid).emit('friendRemoved', me.id); }
   });
