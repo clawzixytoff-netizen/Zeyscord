@@ -4960,11 +4960,11 @@ img.profile-effect-overlay {
   background: #111214 !important;
   border-radius: 8px !important;
 }
-/* uam-user-card always visible when it has status content */
-.uam-user-card:empty {
+.uam-user-card:empty,
+.uam-user-card:has(#uam-custom-status[style*="display: none"]),
+.uam-user-card:has(#uam-custom-status:empty) {
   display: none !important;
 }
-
 
 /* ===== Discord-style Shop ===== */
 .shop-modal {
@@ -10769,62 +10769,4 @@ button.primary,
 .member-info .status-bubble {
   background: #2b2d31 !important;
   color: #dbdee1 !important;
-}
-
-
-/* ===== FIX statut + poubelle orange (force) ===== */
-#user-account-menu .uam-user-card {
-  display: block !important;
-  visibility: visible !important;
-  background: rgba(0,0,0,0.35) !important;
-  border-radius: 8px !important;
-  padding: 10px 12px !important;
-  margin-top: 8px !important;
-  min-height: 20px !important;
-}
-#user-account-menu #uam-custom-status {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-  white-space: normal !important;
-  text-overflow: unset !important;
-  color: #f2f3f5 !important;
-  font-size: 13px !important;
-  line-height: 1.35 !important;
-}
-#user-account-menu #uam-custom-status:empty {
-  display: none !important;
-}
-#user-account-menu #uam-custom-status .status-bubble,
-#user-account-menu .status-bubble--uam {
-  display: block !important;
-  background: rgba(0,0,0,0.5) !important;
-  color: #fff !important;
-  padding: 8px 12px !important;
-  border-radius: 8px !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  max-width: 100% !important;
-  word-break: break-word !important;
-  white-space: normal !important;
-}
-.wish-trash-btn,
-button.wish-trash-btn {
-  background: #ff7a1a !important;
-  background-color: #ff7a1a !important;
-  color: #fff !important;
-}
-.wish-trash-btn:hover,
-button.wish-trash-btn:hover {
-  background: #e8680f !important;
-  background-color: #e8680f !important;
-}
-.shop-heart {
-  background: rgba(0,0,0,0.55) !important;
-  color: #fff !important;
-}
-.shop-heart.on {
-  color: #ff7a1a !important;
 }
