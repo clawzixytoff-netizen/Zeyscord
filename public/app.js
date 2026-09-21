@@ -1803,6 +1803,35 @@ function renderFriends() {
   }
 }
 
+
+function isGiftMessageContent(content) {
+  return typeof content === 'string' && content.startsWith('🎁 CADEAU|');
+}
+function renderGiftMessageHtml(content) {
+  const parts = content.split('|');
+  // 🎁 CADEAU|giftId|name|type\nmessage?
+  const giftId = parts[1] || '';
+  let rest = parts.slice(2).join('|');
+  let itemName = rest;
+  let itemType = 'deco';
+  let msg = '';
+  const nl = rest.indexOf('\n');
+  if (nl >= 0) {
+    msg = rest.slice(nl + 1);
+    rest = rest.slice(0, nl);
+  }
+  const segs = rest.split('|');
+  itemName = segs[0] || 'Cadeau';
+  if (segs[1]) itemType = segs[1];
+  return '<div class="gift-dm-card" data-gift-id="'+giftId+'">'
+    + '<div class="gift-dm-icon">🎁</div>'
+    + '<div class="gift-dm-body">'
+    + '<div class="gift-dm-title">Cadeau : '+escapeHtml(itemName)+'</div>'
+    + (msg ? '<div class="gift-dm-msg">'+escapeHtml(msg)+'</div>' : '')
+    + '<button type="button" class="gift-dm-claim btn-primary" data-claim="'+giftId+'">Ouvrir le cadeau</button>'
+    + '</div></div>';
+}
+
 function openDM(userId) {
   currentDM = userId;
   socket.emit('joinDM', userId);
@@ -2511,12 +2540,26 @@ document.getElementById('home-btn')?.addEventListener('click', () => {
 });
 document.getElementById('server-btn')?.addEventListener('click', () => switchView('server'));
 
-// Open DM also switches to home view
+// Open DM also switches to home view + affiche le chat
 const _openDM = openDM;
 openDM = function(userId) {
+  if (!userId) return;
   switchView('home');
   currentDM = userId;
   socket.emit('joinDM', userId);
+  document.getElementById('friends-panel')?.classList.add('hidden');
+  document.getElementById('messages-container')?.classList.remove('hidden');
+  document.getElementById('message-form')?.classList.remove('hidden');
+  const ch = document.querySelector('.chat-header');
+  if (ch) ch.style.display = '';
+  const target = (typeof onlineUsers !== 'undefined' ? onlineUsers.find(u => u.id === userId) : null)
+    || (typeof friends !== 'undefined' ? friends.find(u => u.id === userId) : null);
+  if (target && typeof currentChannelName !== 'undefined' && currentChannelName) {
+    currentChannelName.textContent = '@' + target.username;
+  }
+  const mi = document.getElementById('message-input');
+  if (mi && target) mi.placeholder = 'Message @' + target.username;
+  if (typeof renderFriends === 'function') renderFriends();
 };
 
 
@@ -4567,15 +4610,19 @@ function getOwnedEffects() {
 function setOwnedEffects(list) { shopSet('effects', list); }
 function getOwnedNitro() { return shopGet('nitro'); }
 function ownNitro() {
-  shopSet('nitro', ['nitro']);
-  // Equip badge immediately
-  const badges = [...(currentUser.badges || [])];
-  if (!badges.includes('nitro')) badges.push('nitro');
-  currentUser.badges = badges;
-  currentUser.hasNitro = true;
-  socket.emit('updateProfile', { hasNitro: true });
-  updateUserPanel();
-  renderMembers();
+  const list = getOwnedNitro();
+  if (!list.includes('nitro')) {
+    list.push('nitro');
+    setOwnedNitro(list);
+  }
+  if (currentUser) {
+    currentUser.hasNitro = true;
+    if (!Array.isArray(currentUser.badges)) currentUser.badges = [];
+    if (!currentUser.badges.includes('nitro')) currentUser.badges.push('nitro');
+    socket.emit('updateProfile', { hasNitro: true });
+  }
+  if (typeof updateUserPanel === 'function') updateUserPanel();
+  if (typeof renderMembers === 'function') renderMembers();
 }
 function ownEffect(id) {
   const list = getOwnedEffects();
@@ -4867,6 +4914,33 @@ document.getElementById('edit-avatar-tile')?.addEventListener('click', () => {
   document.getElementById('edit-avatar-file')?.click();
 });
 
+
+socket.on('giftClaimed', function(data) {
+  if (!data) return;
+  if (data.itemType === 'deco') ownDeco(data.itemId);
+  else if (data.itemType === 'effect') ownEffect(data.itemId);
+  else if (data.itemType === 'nitro') {
+    ownNitro();
+    if (currentUser) {
+      currentUser.hasNitro = true;
+      if (!Array.isArray(currentUser.badges)) currentUser.badges = [];
+      if (!currentUser.badges.includes('nitro')) currentUser.badges.push('nitro');
+      socket.emit('updateProfile', { hasNitro: true, badges: currentUser.badges });
+      if (typeof updateUserPanel === 'function') updateUserPanel();
+      if (typeof renderMembers === 'function') renderMembers();
+    }
+  }
+  alert('Cadeau réclamé : ' + (data.itemName || data.itemId));
+});
+
+socket.on('giftSent', function(data) {
+  if (data && data.toUsername) {
+    // ouvrir le DM du destinataire
+    const f = (friends || []).find(x => (x.username || '').toLowerCase() === String(data.toUsername).toLowerCase());
+    if (f) openDM(f.id);
+  }
+});
+
 function openShop() {
   const grid = document.getElementById('shop-grid');
   if (!grid) return;
@@ -4987,38 +5061,28 @@ function openGiftModal(item) {
   const isDeco = item.type === 'deco';
   const isFx = item.type === 'effect';
 
-  // Liste amis / membres connus
-  let friendOpts = '<option value="">Sélectionne un(e) ami(e)</option>';
-  try {
-    const friends = (typeof getFriendsList === 'function' ? getFriendsList() : null)
-      || (currentUser && currentUser.friends) || [];
-    const members = (typeof allUsers !== 'undefined' && Array.isArray(allUsers)) ? allUsers : [];
-    const names = new Set();
-    (friends || []).forEach(f => {
-      const n = (typeof f === 'string' ? f : (f.username || f.name || '')).trim();
-      if (n && n.toLowerCase() !== (currentUser?.username || '').toLowerCase()) names.add(n);
-    });
-    members.forEach(m => {
-      const n = (m.username || m.name || '').trim();
-      if (n && n.toLowerCase() !== (currentUser?.username || '').toLowerCase()) names.add(n);
-    });
-    // Aussi depuis localStorage messages / known users
-    try {
-      const known = JSON.parse(localStorage.getItem('zeyscord_known_users') || '[]');
-      known.forEach(n => { if (n && n.toLowerCase() !== (currentUser?.username || '').toLowerCase()) names.add(n); });
-    } catch (_) {}
-    [...names].sort((a,b) => a.localeCompare(b)).forEach(n => {
-      friendOpts += '<option value="' + n.replace(/"/g, '') + '">' + n.replace(/</g, '') + '</option>';
-    });
-  } catch (_) {}
+  const friendList = (friends || []).slice().sort((a,b) => (a.username||'').localeCompare(b.username||''));
+  let friendRows = '';
+  friendList.forEach(f => {
+    const av = f.avatarUrl
+      ? '<img src="'+f.avatarUrl+'" alt="">'
+      : '<span>'+((f.username||'?')[0].toUpperCase())+'</span>';
+    const bg = f.avatarColor || '#5865f2';
+    friendRows += '<button type="button" class="gift-friend-opt" data-id="'+f.id+'" data-name="'+String(f.username||'').replace(/"/g,'')+'">'
+      + '<div class="gift-friend-av" style="background:'+bg+'">'+av+'</div>'
+      + '<span class="gift-friend-name">'+String(f.username||'').replace(/</g,'')+'</span></button>';
+  });
+  if (!friendRows) {
+    friendRows = "<div class=\"gift-no-friends\">Aucun ami — ajoute des amis d'abord</div>";
+  }
 
   const previewInner = isDeco
-    ? '<div class="gift-item-preview-deco"><div class="gift-av" style="background:' + ((currentUser && currentUser.avatarColor) || '#5865f2') + '">' +
-      ((currentUser && currentUser.avatarUrl) ? '<img src="' + currentUser.avatarUrl + '">' : ((currentUser?.username||'Z')[0].toUpperCase())) +
-      '</div><img class="gift-deco-img" src="' + img + '" alt=""></div>'
+    ? '<div class="gift-item-preview-deco"><div class="gift-av" style="background:'+((currentUser&&currentUser.avatarColor)||'#5865f2')+'">'
+      + ((currentUser&&currentUser.avatarUrl)?'<img src="'+currentUser.avatarUrl+'">':((currentUser?.username||'Z')[0].toUpperCase()))
+      + '</div><img class="gift-deco-img" src="'+img+'" alt=""></div>'
     : isFx
-    ? '<div class="gift-item-preview-fx"><img src="' + img + '" alt=""></div>'
-    : '<div class="gift-item-preview-nitro"><img src="' + img + '" alt="Nitro"></div>';
+    ? '<div class="gift-item-preview-fx"><img src="'+img+'" alt=""></div>'
+    : '<div class="gift-item-preview-nitro"><img src="'+img+'" alt="Nitro"></div>';
 
   modal.classList.remove('hidden');
   modal.innerHTML = `
@@ -5040,10 +5104,16 @@ function openGiftModal(item) {
         </div>
         <div class="gift-right">
           <label class="gift-label">Envoyer vers</label>
-          <select id="gift-username" class="gift-select">
-            ${friendOpts}
-          </select>
-          <input type="text" id="gift-username-custom" class="gift-input" placeholder="Ou tape un nom d'utilisateur..." style="margin-top:8px;">
+          <div class="gift-friend-picker" id="gift-friend-picker">
+            <button type="button" class="gift-friend-selected" id="gift-friend-selected">
+              <span class="gift-friend-placeholder">Sélectionne un(e) ami(e)</span>
+            </button>
+            <div class="gift-friend-dropdown hidden" id="gift-friend-dropdown">
+              ${friendRows}
+            </div>
+          </div>
+          <input type="hidden" id="gift-to-id" value="">
+          <input type="hidden" id="gift-to-name" value="">
 
           <label class="gift-label" style="margin-top:16px;">Ajoute un message (facultatif)</label>
           <textarea id="gift-message" class="gift-textarea" maxlength="190" placeholder=""></textarea>
@@ -5060,8 +5130,8 @@ function openGiftModal(item) {
         </div>
       </div>
       <div class="gift-footer">
-        <div class="gift-footer-hint">🎁 Offre un cadeau à un ami sur Zeyscord</div>
-        <button type="button" class="btn-primary" id="gift-next-btn">Suivant</button>
+        <div class="gift-footer-hint">🎁 Le cadeau sera envoyé en DM — ton ami devra cliquer pour l'ouvrir</div>
+        <button type="button" class="btn-primary" id="gift-next-btn">Envoyer</button>
       </div>
       <p id="gift-status" style="display:none;padding:0 20px 12px;font-size:13px;"></p>
     </div>`;
@@ -5070,74 +5140,89 @@ function openGiftModal(item) {
     el.onclick = () => modal.classList.add('hidden');
   });
 
+  const selBtn = document.getElementById('gift-friend-selected');
+  const drop = document.getElementById('gift-friend-dropdown');
+  selBtn.onclick = (e) => {
+    e.stopPropagation();
+    drop.classList.toggle('hidden');
+  };
+  drop.querySelectorAll('.gift-friend-opt').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById('gift-to-id').value = btn.dataset.id || '';
+      document.getElementById('gift-to-name').value = btn.dataset.name || '';
+      selBtn.innerHTML = btn.innerHTML;
+      drop.classList.add('hidden');
+    };
+  });
+  modal.querySelector('.picker-overlay')?.addEventListener('click', () => drop.classList.add('hidden'));
+
   const ta = document.getElementById('gift-message');
   const charEl = modal.querySelector('.gift-char');
-  if (ta && charEl) {
-    ta.oninput = () => { charEl.textContent = String(190 - (ta.value || '').length); };
-  }
+  if (ta && charEl) ta.oninput = () => { charEl.textContent = String(190 - (ta.value || '').length); };
 
-  document.getElementById('gift-next-btn').onclick = async () => {
-    const sel = document.getElementById('gift-username');
-    const custom = document.getElementById('gift-username-custom');
-    const user = ((custom && custom.value.trim()) || (sel && sel.value) || '').trim();
+  document.getElementById('gift-next-btn').onclick = () => {
+    const toId = document.getElementById('gift-to-id').value;
+    const toName = document.getElementById('gift-to-name').value;
     const status = document.getElementById('gift-status');
     const msg = (document.getElementById('gift-message')?.value || '').trim();
-    if (!user) {
+    if (!toId && !toName) {
       status.style.display = 'block';
       status.style.color = '#ed4245';
-      status.textContent = "Sélectionne ou entre un nom d'utilisateur.";
+      status.textContent = "Sélectionne un ami.";
       return;
     }
     const btn = document.getElementById('gift-next-btn');
     btn.disabled = true;
-    btn.textContent = 'Redirection...';
+    btn.textContent = 'Envoi...';
     status.style.display = 'none';
-    try {
-      if (currentUser && currentUser.isOwner) {
-        const all = JSON.parse(localStorage.getItem('zeyscord_shop_by_user') || '{}');
-        const key = user.toLowerCase();
-        if (!all[key]) all[key] = { decos: [], effects: [], nitro: [] };
-        const kind = item.type === 'effect' ? 'effects' : item.type === 'nitro' ? 'nitro' : 'decos';
-        const id = item.type === 'nitro' ? 'nitro' : item.id;
-        if (!all[key][kind].includes(id)) all[key][kind].push(id);
-        localStorage.setItem('zeyscord_shop_by_user', JSON.stringify(all));
-        // stocker message cadeau optionnel
-        try {
-          const gifts = JSON.parse(localStorage.getItem('zeyscord_gifts') || '[]');
-          gifts.push({ to: key, from: currentUser.username, itemId: id, itemName: item.name, message: msg, at: Date.now() });
-          localStorage.setItem('zeyscord_gifts', JSON.stringify(gifts));
-        } catch (_) {}
-        status.style.display = 'block';
-        status.style.color = '#23a559';
-        status.textContent = 'Cadeau offert à ' + user + ' !';
-        btn.textContent = 'Offert ✓';
-        setTimeout(() => modal.classList.add('hidden'), 1400);
-        return;
-      }
-      const res = await fetch('/api/create-checkout', {
+
+    // Owner / free path OR payment then send — pour l'instant envoi DM direct (owner gratuit)
+    const doSend = () => {
+      socket.emit('sendGiftDM', {
+        toUserId: toId,
+        toUsername: toName,
+        itemId: item.id,
+        itemType: item.type,
+        itemName: item.name,
+        itemImg: item.img,
+        price: item.price,
+        message: msg
+      });
+      status.style.display = 'block';
+      status.style.color = '#23a559';
+      status.textContent = 'Cadeau envoyé en DM à ' + toName + ' !';
+      btn.textContent = 'Envoyé ✓';
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        if (toId) openDM(toId);
+      }, 900);
+    };
+
+    if (currentUser && currentUser.isOwner) {
+      doSend();
+      return;
+    }
+    // Non-owner: ouvrir paiement puis après succès le webhook devrait gérer —
+    // en attendant on envoie aussi le lien DM (simulation) après confirm
+    if (confirm('Payer ' + price + ' et envoyer le cadeau à ' + toName + ' ?')) {
+      // Tente Stripe, sinon envoi local
+      fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          itemId: item.id,
-          itemName: item.name,
-          itemType: item.type,
-          price: item.price,
+          itemId: item.id, itemName: item.name, itemType: item.type, price: item.price,
           username: currentUser && currentUser.username,
           email: currentUser && currentUser.email,
-          giftTo: user,
-          giftMessage: msg
+          giftTo: toName
         })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erreur Stripe');
-      if (data.url) window.location.href = data.url;
-      else throw new Error("Pas d'URL de paiement");
-    } catch (err) {
-      status.style.display = 'block';
-      status.style.color = '#ed4245';
-      status.textContent = err.message || 'Erreur';
+      }).then(r => r.json()).then(data => {
+        if (data.url) window.location.href = data.url;
+        else doSend();
+      }).catch(() => doSend());
+    } else {
       btn.disabled = false;
-      btn.textContent = 'Suivant';
+      btn.textContent = 'Envoyer';
     }
   };
 }

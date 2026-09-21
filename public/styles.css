@@ -9396,3 +9396,84 @@ img.avatar-deco-overlay {
     min-height: 160px;
   }
 }
+
+/* Gift friend picker with PP */
+.gift-friend-picker { position: relative; }
+.gift-friend-selected {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #1e1f22;
+  border: 1px solid #3f4147;
+  border-radius: 8px;
+  color: #f2f3f5;
+  cursor: pointer;
+  text-align: left;
+}
+.gift-friend-placeholder { color: #949ba4; }
+.gift-friend-dropdown {
+  position: absolute;
+  left: 0; right: 0;
+  top: calc(100% + 4px);
+  background: #1e1f22;
+  border: 1px solid #3f4147;
+  border-radius: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 20;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.gift-friend-dropdown.hidden { display: none !important; }
+.gift-friend-opt {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  color: #f2f3f5;
+  cursor: pointer;
+  text-align: left;
+}
+.gift-friend-opt:hover { background: #5865f2; }
+.gift-friend-av {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.gift-friend-av img { width: 100%; height: 100%; object-fit: cover; }
+.gift-friend-name { font-size: 15px; }
+.gift-no-friends { padding: 12px; color: #949ba4; font-size: 13px; }
+
+/* Gift message card in DM */
+.gift-dm-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #2b2d31;
+  border: 1px solid #5865f2;
+  border-radius: 12px;
+  padding: 14px;
+  max-width: 360px;
+  margin-top: 4px;
+}
+.gift-dm-icon { font-size: 32px; line-height: 1; }
+.gift-dm-title { color: #f2f3f5; font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.gift-dm-msg { color: #b5bac1; font-size: 13px; margin-bottom: 10px; }
+.gift-dm-claim {
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+  border: 0;
+  cursor: pointer;
+}
