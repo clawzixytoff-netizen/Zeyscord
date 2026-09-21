@@ -258,8 +258,8 @@ function resolveFriendPublic(fid) {
     avatarDeco: saved.avatarDeco || 'none',
     profileEffect: saved.profileEffect || 'none',
       wishlist: Array.isArray(saved.wishlist) ? saved.wishlist : [],
-    primaryColor: saved.primaryColor || null,
-    secondaryColor: saved.secondaryColor || null,
+    primaryColor: saved.primaryColor || '#000000',
+    secondaryColor: saved.secondaryColor || '#000000',
     presenceStatus: 'offline',
     isOwner: false,
     hasNitro: !!saved.hasNitro,
@@ -466,8 +466,8 @@ function publicUser(u) {
     avatarUrl: u.avatarUrl, bannerUrl: u.bannerUrl,
     badges: u.badges || [], customStatus: u.customStatus || '',
     avatarDeco: u.avatarDeco || 'none', profileEffect: u.profileEffect || 'none',
-    primaryColor: u.primaryColor || null,
-    secondaryColor: u.secondaryColor || null,
+    primaryColor: u.primaryColor || '#000000',
+    secondaryColor: u.secondaryColor || '#000000',
     presenceStatus: u.presenceStatus || 'online',
     isOwner: !!u.isOwner, hasNitro: !!u.hasNitro, createdAt: u.createdAt || null,
     wishlist: Array.isArray(u.wishlist) ? u.wishlist : []
@@ -517,8 +517,8 @@ io.on('connection', (socket) => {
       customStatus: saved.customStatus || '',
       avatarDeco: saved.avatarDeco || 'none',
       profileEffect: saved.profileEffect || 'none',
-      primaryColor: saved.primaryColor || null,
-      secondaryColor: saved.secondaryColor || null,
+      primaryColor: saved.primaryColor || '#000000',
+      secondaryColor: saved.secondaryColor || '#000000',
       presenceStatus: saved.presenceStatus || 'online',
       hasNitro: !!(saved.hasNitro || owner),
       createdAt: saved.createdAt || new Date().toISOString(),
@@ -536,6 +536,10 @@ io.on('connection', (socket) => {
     socket.join('zeyscord_general');
     socket.currentChannel = 'zeyscord_general';
     socket.userId = user.id;
+
+    
+    if (!user.primaryColor) user.primaryColor = '#000000';
+    if (!user.secondaryColor) user.secondaryColor = '#000000';
 
     socket.emit('init', {
       user: publicUser(user),
