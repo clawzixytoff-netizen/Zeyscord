@@ -10548,3 +10548,20 @@ img.avatar-deco-overlay {
   font-size: 11px;
   color: #6d6f78;
 }
+
+/* Logo Zeyscord orange */
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.login-logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 20px;
+}
+.user-avatar img,
+.app-logo img {
+  object-fit: cover;
+}
