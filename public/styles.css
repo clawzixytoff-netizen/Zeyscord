@@ -9685,150 +9685,147 @@ img.avatar-deco-overlay {
 }
 
 
-/* ===== Profil grand style Discord ===== */
+
+
+/* ===== Profil Discord LARGE (pas plus haut) ===== */
 .profile-modal {
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
+.profile-modal.hidden { display: none !important; }
+
 .zpc, #profile-card-main {
-  width: min(920px, 96vw) !important;
-  max-width: 96vw !important;
-  max-height: 90vh !important;
-  display: grid !important;
-  grid-template-columns: 340px 1fr !important;
-  grid-template-rows: auto 1fr !important;
+  width: min(560px, 94vw) !important;
+  max-width: 94vw !important;
+  max-height: 85vh !important;
+  display: block !important;
+  grid-template-columns: none !important;
   overflow: hidden !important;
   background: #111214 !important;
   border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.55) !important;
 }
-/* Bannière full width top spanning both cols */
+
 .zpc-banner, #profile-banner {
-  grid-column: 1 / -1 !important;
-  height: 140px !important;
-  min-height: 140px !important;
+  display: block !important;
+  width: 100% !important;
+  height: 120px !important;
+  min-height: 120px !important;
+  grid-column: auto !important;
   border-radius: 12px 12px 0 0 !important;
 }
-/* Body becomes left + right content area */
+
 .zpc-body, #profile-body {
-  grid-column: 1 / -1 !important;
-  display: grid !important;
-  grid-template-columns: 320px 1fr !important;
-  gap: 0 !important;
-  padding: 0 !important;
-  padding-top: 0 !important;
-  min-height: 360px !important;
-  max-height: calc(90vh - 140px) !important;
-  background: #111214 !important;
+  display: block !important;
+  grid-template-columns: none !important;
+  padding: 16px 20px 20px !important;
+  padding-top: 52px !important;
   position: relative !important;
-  overflow: hidden !important;
+  min-height: 180px !important;
+  max-height: calc(85vh - 120px) !important;
+  overflow-y: auto !important;
+  background: #111214 !important;
 }
-/* Avatar overlays banner bottom-left */
+
 .zpc-avatar-wrap, #profile-avatar-wrap {
   position: absolute !important;
-  top: -52px !important;
+  top: -46px !important;
   left: 20px !important;
-  width: 100px !important;
-  height: 100px !important;
-  z-index: 30 !important;
+  width: 92px !important;
+  height: 92px !important;
+  z-index: 20 !important;
+  overflow: visible !important;
 }
-.zpc-avatar, #profile-avatar {
-  width: 88px !important;
-  height: 88px !important;
-  border-width: 6px !important;
-  border-color: #111214 !important;
-  font-size: 36px !important;
-}
-/* Left column: info */
-.zpc-info {
-  grid-column: 1 !important;
-  padding: 56px 16px 16px 16px !important;
-  background: #1e1f22 !important;
-  border-right: 1px solid #2b2d31 !important;
-  overflow-y: auto !important;
-  max-height: calc(90vh - 140px) !important;
-}
-.zpc-name { font-size: 22px !important; }
-.zpc-handle { font-size: 14px !important; margin-bottom: 10px !important; }
-.zpc-badges { margin-bottom: 12px !important; }
 
-/* Tabs + panes on the right */
+.zpc-avatar, #profile-avatar {
+  width: 80px !important;
+  height: 80px !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+}
+
+.zpc-info {
+  display: block !important;
+  position: relative !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  max-height: none !important;
+  overflow: visible !important;
+  grid-column: auto !important;
+}
+
+.zpc-name { font-size: 20px !important; color: #fff !important; }
+.zpc-handle { font-size: 14px !important; color: #b5bac1 !important; }
+.zpc-badges { display: flex !important; flex-wrap: wrap !important; gap: 4px !important; margin-bottom: 10px !important; }
+
+/* Tabs visibles */
 .profile-tabs {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
-  margin: 0 !important;
-  padding: 12px 20px 0 20px !important;
-  background: #111214 !important;
-  border-bottom: 1px solid #2b2d31 !important;
-  align-self: start !important;
+  display: flex !important;
+  gap: 18px !important;
+  border-bottom: 1px solid #3f4147 !important;
+  margin: 12px 0 0 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  grid-column: auto !important;
 }
 .profile-tab {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 2px solid transparent !important;
+  color: #b5bac1 !important;
   font-size: 14px !important;
-  padding: 12px 8px !important;
+  font-weight: 600 !important;
+  padding: 10px 2px !important;
+  cursor: pointer !important;
+  margin-bottom: -1px !important;
+}
+.profile-tab.active {
+  color: #fff !important;
+  border-bottom-color: #fff !important;
 }
 .profile-tab-pane {
-  grid-column: 2 !important;
-  padding: 16px 20px 20px !important;
-  max-height: none !important;
+  display: none !important;
+  padding-top: 14px !important;
+  max-height: 320px !important;
   overflow-y: auto !important;
-  background: #111214 !important;
-  height: 100% !important;
 }
 .profile-tab-pane.active {
   display: block !important;
 }
-#profile-tab-about.profile-tab-pane {
-  /* about content may live in zpc-info; keep pane for moved content */
-}
-#profile-tab-wishlist.profile-tab-pane.active {
-  max-height: calc(90vh - 200px) !important;
-  overflow-y: auto !important;
-}
+
+/* Wishlist grid */
 .profile-wish-grid {
+  display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
-  gap: 12px !important;
+  gap: 10px !important;
 }
 .profile-wish-tile {
-  min-height: 110px !important;
-  border-radius: 12px !important;
+  aspect-ratio: 1 !important;
   background: #1e1f22 !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 10px !important;
+  cursor: pointer !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.profile-wish-tile-media img {
+  max-width: 85% !important;
+  max-height: 85% !important;
+  object-fit: contain !important;
 }
 .profile-wish-header {
-  margin-bottom: 14px !important;
-}
-.profile-wish-title {
-  font-size: 13px !important;
-  color: #b5bac1 !important;
-}
-.profile-wish-browse {
-  font-size: 13px !important;
-  padding: 8px 14px !important;
-  border-radius: 18px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 12px !important;
 }
 
-/* Mobile: stack */
-@media (max-width: 720px) {
-  .zpc, #profile-card-main {
-    width: 96vw !important;
-    grid-template-columns: 1fr !important;
-    max-height: 92vh !important;
-  }
-  .zpc-body, #profile-body {
-    grid-template-columns: 1fr !important;
-    max-height: calc(92vh - 120px) !important;
-    overflow-y: auto !important;
-  }
-  .zpc-info {
-    border-right: none !important;
-    border-bottom: 1px solid #2b2d31 !important;
-    max-height: none !important;
-  }
-  .profile-tabs {
-    grid-column: 1 !important;
-  }
-  .profile-tab-pane {
-    grid-column: 1 !important;
-  }
-  .profile-wish-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+@media (max-width: 520px) {
+  .zpc, #profile-card-main { width: 96vw !important; }
+  .profile-wish-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
