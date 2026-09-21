@@ -1905,34 +1905,85 @@ function openProfile(userId) {
   }
 
   actions.innerHTML = '';
-  if (currentUser?.id === user.id) {
-    const btn = document.createElement('button');
-    btn.textContent = '✏️ Modifier le profil';
-    btn.onclick = () => { closeProfile(); openEditProfile(); };
-    actions.appendChild(btn);
+  actions.className = 'zpc-actions profile-actions zpc-actions-row';
+  const isSelf = currentUser?.id === user.id;
+  const isFriend = !!(friends || []).find(f => f.id === user.id);
+
+  if (isSelf) {
+    const editBtn = document.createElement('button');
+    editBtn.className = 'zpc-btn-primary';
+    editBtn.innerHTML = '<span>✏️</span> Modifier le profil';
+    editBtn.onclick = () => { closeProfile(); openEditProfile(); };
+    actions.appendChild(editBtn);
   } else {
+    // Bouton principal : Ajouter / Ami
+    const mainBtn = document.createElement('button');
+    mainBtn.className = 'zpc-btn-primary';
+    if (isFriend) {
+      mainBtn.innerHTML = '<span>👤</span> Ami';
+      mainBtn.title = 'Déjà ami';
+      mainBtn.onclick = () => {};
+    } else {
+      mainBtn.innerHTML = '<span>👤+</span> Ajouter';
+      mainBtn.onclick = () => {
+        socket.emit('sendFriendRequest', user.username);
+        mainBtn.textContent = 'Demande envoyée';
+        mainBtn.disabled = true;
+      };
+    }
+    actions.appendChild(mainBtn);
+
+    // Bouton Message (icône)
     const dmBtn = document.createElement('button');
-    dmBtn.textContent = '💬 Envoyer un message';
+    dmBtn.className = 'zpc-btn-icon';
+    dmBtn.title = 'Envoyer un message';
+    dmBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
     dmBtn.onclick = () => { closeProfile(); openDM(user.id); };
     actions.appendChild(dmBtn);
-    if (!friends.find(f => f.id === user.id)) {
-      const frBtn = document.createElement('button');
-      frBtn.textContent = '➕ Ajouter en ami';
-      frBtn.onclick = () => { socket.emit('sendFriendRequest', user.username); closeProfile(); };
-      actions.appendChild(frBtn);
-    }
   }
+
+  // Menu ... (plus d'options)
+  const moreWrap = document.createElement('div');
+  moreWrap.className = 'zpc-more-wrap';
+  const moreBtn = document.createElement('button');
+  moreBtn.className = 'zpc-btn-icon';
+  moreBtn.title = 'Plus';
+  moreBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>';
+  const moreMenu = document.createElement('div');
+  moreMenu.className = 'zpc-more-menu hidden';
+  const addItem = (label, fn) => {
+    const it = document.createElement('button');
+    it.type = 'button';
+    it.className = 'zpc-more-item';
+    it.textContent = label;
+    it.onclick = (e) => { e.stopPropagation(); moreMenu.classList.add('hidden'); fn(); };
+    moreMenu.appendChild(it);
+  };
   if (currentUser?.isOwner) {
-    const bBtn = document.createElement('button');
-    bBtn.textContent = '🏅 Gérer les badges';
-    bBtn.onclick = () => { closeProfile(); openBadgesManager(user); };
-    actions.appendChild(bBtn);
+    addItem('Gérer les badges', () => { closeProfile(); openBadgesManager(user); });
   }
-  if (currentUser?.id === user.id || currentUser?.isOwner) {
-    const oBtn = document.createElement('button');
-    oBtn.textContent = '↕️ Ordre des badges';
-    oBtn.onclick = () => { closeProfile(); openBadgesManager(user); };
-    actions.appendChild(oBtn);
+  if (isSelf || currentUser?.isOwner) {
+    addItem('Ordre des badges', () => { closeProfile(); openBadgesManager(user); });
+  }
+  if (isFriend && !isSelf) {
+    addItem('Retirer des amis', () => {
+      socket.emit('removeFriend', user.id);
+      closeProfile();
+    });
+  }
+  if (!isSelf) {
+    addItem('Copier le pseudo', () => {
+      try { navigator.clipboard.writeText(user.username || ''); } catch (e) {}
+    });
+  }
+  if (moreMenu.children.length) {
+    moreBtn.onclick = (e) => {
+      e.stopPropagation();
+      moreMenu.classList.toggle('hidden');
+    };
+    moreWrap.appendChild(moreBtn);
+    moreWrap.appendChild(moreMenu);
+    actions.appendChild(moreWrap);
   }
 
   // Theme
