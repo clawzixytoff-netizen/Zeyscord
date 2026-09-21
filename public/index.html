@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zeyscord</title>
-  <link rel="stylesheet" href="styles.css?v=20260921black">
+  <link rel="stylesheet" href="styles.css?v=20260921mutual">
   <script src="/socket.io/socket.io.js"></script>
 <style id="wish-grid-force">
 #profile-tab-wishlist .profile-wish-grid,.profile-wish-grid{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:12px!important;width:100%!important}
@@ -351,8 +351,12 @@
       <div class="zpc-right" id="profile-body">
         <div class="profile-tabs" id="profile-tabs">
           <button type="button" class="profile-tab active" data-ptab="wishlist">Liste de souhaits</button>
+          <button type="button" class="profile-tab" data-ptab="mutual-friends">Amis en commun</button>
+          <button type="button" class="profile-tab" data-ptab="mutual-servers">Serveurs en commun</button>
         </div>
         <div id="profile-tab-wishlist" class="profile-tab-pane active"></div>
+        <div id="profile-tab-mutual-friends" class="profile-tab-pane"></div>
+        <div id="profile-tab-mutual-servers" class="profile-tab-pane"></div>
       </div>
     </div>
   </div>
@@ -738,7 +742,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260921black"></script>
+  <script src="app.js?v=20260921mutual"></script>
 </body>
 </html>
 

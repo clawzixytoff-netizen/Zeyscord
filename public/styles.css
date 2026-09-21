@@ -10369,3 +10369,90 @@ img.avatar-deco-overlay {
   min-height: 120px !important;
   aspect-ratio: 1 / 1 !important;
 }
+
+
+/* Menu ... profil Discord */
+.zpc-more-menu {
+  min-width: 220px !important;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.zpc-more-danger {
+  color: #f23f43 !important;
+}
+.zpc-more-danger:hover {
+  background: #f23f43 !important;
+  color: #fff !important;
+}
+.zpc-invite-sub {
+  padding-left: 8px;
+  border-left: 2px solid #3f4147;
+  margin: 4px 0 4px 8px;
+}
+.zpc-invite-sub.hidden { display: none !important; }
+
+/* Mutual friends/servers */
+.profile-mutual-empty {
+  color: #6d6f78;
+  font-size: 14px;
+  padding: 24px 8px;
+  text-align: center;
+}
+.profile-mutual-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.profile-mutual-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: #f2f3f5;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-size: 14px;
+}
+.profile-mutual-row:hover {
+  background: #2b2d31;
+}
+.profile-mutual-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #5865f2;
+  color: #fff;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.profile-mutual-av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-mutual-gicon {
+  border-radius: 12px !important;
+  background: #313338 !important;
+}
+.profile-mutual-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-tabs {
+  flex-wrap: wrap !important;
+  gap: 8px 14px !important;
+}
+.profile-tab {
+  white-space: nowrap !important;
+  font-size: 13px !important;
+}

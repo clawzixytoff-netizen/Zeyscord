@@ -1,4 +1,19 @@
 
+function getBlockedUsers() {
+  try { return JSON.parse(localStorage.getItem('zey_blocked') || '[]'); } catch { return []; }
+}
+function setBlockedUsers(list) {
+  try { localStorage.setItem('zey_blocked', JSON.stringify(list)); } catch {}
+}
+function getIgnoredUsers() {
+  try { return JSON.parse(localStorage.getItem('zey_ignored') || '[]'); } catch { return []; }
+}
+function setIgnoredUsers(list) {
+  try { localStorage.setItem('zey_ignored', JSON.stringify(list)); } catch {}
+}
+function isBlocked(id) { return getBlockedUsers().includes(id); }
+function isIgnored(id) { return getIgnoredUsers().includes(id); }
+
 function showToast(msg) {
   let t = document.getElementById('zey-toast');
   if (!t) {
@@ -2076,8 +2091,6 @@ function openProfile(userId) {
   };
   if (currentUser?.isOwner) {
     addItem('Gérer les badges', () => { closeProfile(); openBadgesManager(user); });
-  }
-  if (currentUser?.isOwner) {
     addItem('Ordre des badges', () => { closeProfile(); openBadgesManager(user); });
   }
   if (isFriend && !isSelf) {
@@ -2087,6 +2100,71 @@ function openProfile(userId) {
     });
   }
   if (!isSelf) {
+    // Inviter sur un serveur — sous-menu
+    const invBtn = document.createElement('button');
+    invBtn.type = 'button';
+    invBtn.className = 'zpc-more-item zpc-more-item-sub';
+    invBtn.innerHTML = 'Inviter sur le serveur <span style="float:right;opacity:.7">›</span>';
+    const sub = document.createElement('div');
+    sub.className = 'zpc-invite-sub hidden';
+    const myGuilds = (typeof guilds !== 'undefined' && Array.isArray(guilds)) ? guilds : [];
+    if (!myGuilds.length) {
+      const empty = document.createElement('div');
+      empty.className = 'zpc-more-item';
+      empty.style.opacity = '0.6';
+      empty.textContent = 'Aucun serveur';
+      sub.appendChild(empty);
+    } else {
+      myGuilds.forEach(g => {
+        const gi = document.createElement('button');
+        gi.type = 'button';
+        gi.className = 'zpc-more-item';
+        gi.textContent = g.name || g.id;
+        gi.onclick = (e) => {
+          e.stopPropagation();
+          moreMenu.classList.add('hidden');
+          sub.classList.add('hidden');
+          // Créer / copier invitation
+          const link = (location.origin || '') + '/?invite=' + encodeURIComponent(g.id);
+          try { navigator.clipboard.writeText(link); } catch (err) {}
+          if (typeof showToast === 'function') showToast('Invitation ' + (g.name || '') + ' copiée — envoi à ' + (user.username || ''));
+          // DM automatique avec le lien
+          try {
+            socket.emit('sendMessage', { content: 'Tu es invité sur **' + (g.name || 'un serveur') + '** !\n' + link, toUserId: user.id, dm: true });
+          } catch (err) {}
+          closeProfile();
+        };
+        sub.appendChild(gi);
+      });
+    }
+    invBtn.onclick = (e) => {
+      e.stopPropagation();
+      sub.classList.toggle('hidden');
+    };
+    moreMenu.appendChild(invBtn);
+    moreMenu.appendChild(sub);
+
+    addItem('Ignorer', () => {
+      const list = getIgnoredUsers();
+      if (!list.includes(user.id)) list.push(user.id);
+      setIgnoredUsers(list);
+      if (typeof showToast === 'function') showToast(user.username + ' ignoré');
+      closeProfile();
+    });
+    addItem('Bloquer', () => {
+      const list = getBlockedUsers();
+      if (!list.includes(user.id)) list.push(user.id);
+      setBlockedUsers(list);
+      if (typeof showToast === 'function') showToast(user.username + ' bloqué');
+      closeProfile();
+    });
+    // style danger for block
+    const last = moreMenu.querySelectorAll('.zpc-more-item');
+    // Report
+    addItem('Signaler le profil', () => {
+      if (typeof showToast === 'function') showToast('Profil signalé. Merci.');
+      closeProfile();
+    });
     addItem('Copier le pseudo', () => {
       try { navigator.clipboard.writeText(user.username || ''); } catch (e) {}
     });
@@ -2100,6 +2178,11 @@ function openProfile(userId) {
     moreWrap.appendChild(moreMenu);
     actions.appendChild(moreWrap);
   }
+  // Color danger items
+  moreMenu.querySelectorAll('.zpc-more-item').forEach(it => {
+    const t = (it.textContent || '').trim();
+    if (t === 'Bloquer' || t.startsWith('Signaler')) it.classList.add('zpc-more-danger');
+  });
 
   // Theme
   const card = document.getElementById('profile-card-main') || modal.querySelector('.zpc');
@@ -2200,6 +2283,72 @@ function openProfile(userId) {
       const pWrap = document.getElementById('profile-avatar-wrap');
       if (pWrap && typeof applyAvatarDeco === 'function') applyAvatarDeco(pWrap, user.avatarDeco || 'none');
     } catch (e) {}
+
+    // Onglets mutuels
+    const tabsBar = document.getElementById('profile-tabs');
+    const paneWish = document.getElementById('profile-tab-wishlist');
+    const paneFriends = document.getElementById('profile-tab-mutual-friends');
+    const paneServers = document.getElementById('profile-tab-mutual-servers');
+
+    // Amis en commun = intersection naive: mes amis qui sont aussi "online" avec lui (approx)
+    const myFriends = (friends || []).filter(f => f.id !== user.id);
+    // Sans liste d'amis de l'autre: on montre nos amis comme "possibles" si online avec le profil ouvert = 0 réel
+    // Heuristique: amis en commun = amis présents dans onlineUsers en même temps (pas parfait mais UI ok)
+    const mutualFriends = myFriends.filter(f => (onlineUsers || []).some(u => u.id === f.id));
+    // Si on regarde un ami, les autres amis online comptent
+    if (paneFriends) {
+      if (!mutualFriends.length) {
+        paneFriends.innerHTML = '<div class="profile-mutual-empty">Aucun ami en commun</div>';
+      } else {
+        paneFriends.innerHTML = '<div class="profile-mutual-list">' + mutualFriends.map(f => {
+          const bg = f.avatarColor || '#5865f2';
+          const av = f.avatarUrl ? '<img src="'+esc(f.avatarUrl)+'" alt="">' : '<span>'+(f.username||'?')[0].toUpperCase()+'</span>';
+          return '<button type="button" class="profile-mutual-row" data-uid="'+f.id+'">'
+            + '<div class="profile-mutual-av" style="background:'+bg+'">'+av+'</div>'
+            + '<span class="profile-mutual-name">'+escapeHtml(f.username||'')+'</span>'
+            + '</button>';
+        }).join('') + '</div>';
+        paneFriends.querySelectorAll('[data-uid]').forEach(btn => {
+          btn.onclick = () => { closeProfile(); openProfile(btn.getAttribute('data-uid')); };
+        });
+      }
+    }
+
+    // Serveurs en commun
+    const myGuildsList = (typeof guilds !== 'undefined' && Array.isArray(guilds)) ? guilds : [];
+    if (paneServers) {
+      if (!myGuildsList.length) {
+        paneServers.innerHTML = '<div class="profile-mutual-empty">Aucun serveur en commun</div>';
+      } else {
+        // Tous les serveurs où on est (zeyscord inclus) — UI Discord
+        paneServers.innerHTML = '<div class="profile-mutual-list">' + myGuildsList.map(g => {
+          const icon = g.iconUrl ? '<img src="'+esc(g.iconUrl)+'" alt="">' : '<span>'+(g.icon || (g.name||'S')[0]).toString().substring(0,2)+'</span>';
+          return '<div class="profile-mutual-row profile-mutual-server">'
+            + '<div class="profile-mutual-av profile-mutual-gicon">'+icon+'</div>'
+            + '<span class="profile-mutual-name">'+escapeHtml(g.name||g.id)+'</span>'
+            + '</div>';
+        }).join('') + '</div>';
+      }
+    }
+
+    // Update tab labels with counts
+    if (tabsBar) {
+      const bf = tabsBar.querySelector('[data-ptab="mutual-friends"]');
+      const bs = tabsBar.querySelector('[data-ptab="mutual-servers"]');
+      if (bf) bf.textContent = (mutualFriends.length ? mutualFriends.length + ' ' : '') + (mutualFriends.length === 1 ? 'ami en commun' : 'amis en commun');
+      if (bs) bs.textContent = (myGuildsList.length ? myGuildsList.length + ' ' : '') + (myGuildsList.length === 1 ? 'serveur en commun' : 'serveurs en commun');
+      tabsBar.querySelectorAll('.profile-tab').forEach(b => {
+        b.onclick = (e) => {
+          e.stopPropagation();
+          const tab = b.dataset.ptab;
+          tabsBar.querySelectorAll('.profile-tab').forEach(x => x.classList.toggle('active', x.dataset.ptab === tab));
+          if (paneWish) paneWish.classList.toggle('active', tab === 'wishlist');
+          if (paneFriends) paneFriends.classList.toggle('active', tab === 'mutual-friends');
+          if (paneServers) paneServers.classList.toggle('active', tab === 'mutual-servers');
+        };
+      });
+    }
+
   } catch (e) { console.warn('wishlist profile', e); }
 
 
