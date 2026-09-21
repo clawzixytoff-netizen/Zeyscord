@@ -4856,6 +4856,9 @@ document.getElementById('edit-avatar-tile')?.addEventListener('click', () => {
 function openShop() {
   const grid = document.getElementById('shop-grid');
   if (!grid) return;
+  const modal = document.getElementById('shop-modal');
+  if (modal) modal.classList.remove('hidden');
+
   const ownedD = getOwnedDecos();
   const ownedE = getOwnedEffects();
   const ownedN = getOwnedNitro();
@@ -4868,55 +4871,75 @@ function openShop() {
     : activeTab === 'nitro' ? ownedN
     : ownedD;
 
+  grid.className = 'shop-grid shop-grid-discord';
   grid.innerHTML = '';
 
   items.forEach(item => {
-    const isOwned = owned.includes(item.id);
+    const isOwned = owned.includes(item.id) || (item.type === 'nitro' && ownedN.includes('nitro'));
     const isFreeForOwner = currentUser && currentUser.isOwner;
-    const priceText = isOwned ? 'Possédé' : (isFreeForOwner ? 'Gratuit (Owner)' : (Number(item.price).toFixed(2).replace('.', ',') + ' €'));
+    const priceNum = Number(item.price) || 2.75;
+    const priceText = isOwned ? 'Possédé' : (isFreeForOwner ? 'Gratuit' : (priceNum.toFixed(2).replace('.', ',') + ' €'));
+    const buyLabel = isOwned ? 'Possédé ✓' : ('Acheter pour ' + priceNum.toFixed(2).replace('.', ',') + ' €');
+
     const el = document.createElement('div');
-    el.className = 'shop-card' + (isOwned ? ' owned' : '');
+    el.className = 'shop-card shop-card-v2' + (isOwned ? ' owned' : '') + (item.type === 'deco' ? ' is-deco' : item.type === 'effect' ? ' is-effect' : ' is-nitro');
+    el.dataset.id = item.id;
+
+    const avBg = (currentUser && currentUser.avatarColor) || '#5865f2';
+    const avInner = (currentUser && currentUser.avatarUrl)
+      ? '<img src="' + currentUser.avatarUrl + '" alt="">'
+      : '<span class="shop-av-letter">' + (((currentUser && currentUser.username) || 'Z')[0].toUpperCase()) + '</span>';
 
     if (item.type === 'nitro') {
-      // Nitro: just the logo
       el.innerHTML = `
-        <div class="shop-card-preview shop-nitro-preview">
+        <div class="shop-card-media">
           <img class="shop-nitro-logo" src="${item.img}" alt="Nitro">
         </div>
-        <div class="shop-card-footer">
-          <div class="shop-card-name">Nitro</div>
-          <div class="shop-card-meta">
-            <span class="shop-card-price">${priceText}</span>
-            <button class="shop-card-btn" type="button">${isOwned ? 'Possédé ✓' : 'Obtenir'}</button>
-          </div>
+        <div class="shop-card-info">
+          <div class="shop-card-name">${item.name}</div>
+          <div class="shop-card-price">${priceText}</div>
+        </div>
+        <div class="shop-card-hover">
+          <button type="button" class="shop-buy-btn" data-action="buy">${isOwned ? 'Possédé ✓' : buyLabel}</button>
+          <button type="button" class="shop-gift-btn" data-action="gift" title="Offrir en cadeau">🎁</button>
         </div>`;
-    } else {
-      const avBg = (currentUser && currentUser.avatarColor) || '#5865f2';
-      const avInner = (currentUser && currentUser.avatarUrl)
-        ? '<img src="' + currentUser.avatarUrl + '" alt="">'
-        : ((currentUser && currentUser.username) || 'Z')[0].toUpperCase();
-      const overlay = item.type === 'deco'
-        ? '<img class="shop-card-deco" src="' + item.img + '" alt="">'
-        : '<img class="shop-card-effect" src="' + item.img + '" alt="">';
+    } else if (item.type === 'deco') {
       el.innerHTML = `
-        <div class="shop-card-preview">
+        <div class="shop-card-media">
           <div class="shop-card-avatar-wrap">
             <div class="shop-card-avatar" style="background:${avBg}">${avInner}</div>
-            ${overlay}
+            <img class="shop-card-deco" src="${item.img}" alt="">
           </div>
         </div>
-        <div class="shop-card-footer">
+        <div class="shop-card-info">
           <div class="shop-card-name">${item.name}</div>
-          <div class="shop-card-meta">
-            <span class="shop-card-price">${priceText}</span>
-            <button class="shop-card-btn" type="button">${isOwned ? 'Possédé ✓' : 'Obtenir'}</button>
-          </div>
+          <div class="shop-card-price">${priceText}</div>
+        </div>
+        <div class="shop-card-hover">
+          <button type="button" class="shop-buy-btn" data-action="buy">${isOwned ? 'Possédé ✓' : buyLabel}</button>
+          <button type="button" class="shop-gift-btn" data-action="gift" title="Offrir en cadeau">🎁</button>
+        </div>`;
+    } else {
+      // effect
+      el.innerHTML = `
+        <div class="shop-card-media shop-card-media-fx">
+          <img class="shop-card-effect" src="${item.img}" alt="">
+          <div class="shop-card-avatar shop-fx-av" style="background:${avBg}">${avInner}</div>
+        </div>
+        <div class="shop-card-info">
+          <div class="shop-card-name">${item.name}</div>
+          <div class="shop-card-price">${priceText}</div>
+        </div>
+        <div class="shop-card-hover">
+          <button type="button" class="shop-buy-btn" data-action="buy">${isOwned ? 'Possédé ✓' : buyLabel}</button>
+          <button type="button" class="shop-gift-btn" data-action="gift" title="Offrir en cadeau">🎁</button>
         </div>`;
     }
 
-    const buy = () => {
+    el.querySelector('[data-action="buy"]').addEventListener('click', (e) => {
+      e.stopPropagation();
       if (isOwned) return;
-      if (currentUser && currentUser.isOwner) {
+      if (isFreeForOwner) {
         if (item.type === 'deco') ownDeco(item.id);
         else if (item.type === 'effect') ownEffect(item.id);
         else if (item.type === 'nitro') ownNitro();
@@ -4924,74 +4947,105 @@ function openShop() {
         return;
       }
       openPaymentModal(item);
-    };
-
-    el.querySelector('.shop-card-btn').addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      buy();
     });
-    el.addEventListener('click', (e) => {
-      if (e.target.closest('.shop-card-btn')) return;
-      buy();
+
+    el.querySelector('[data-action="gift"]').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openGiftModal(item);
     });
 
     grid.appendChild(el);
   });
-
-  document.getElementById('shop-modal').classList.remove('hidden');
 }
 
-function showShopDetail(item, isOwned) {
-  const detail = document.getElementById('shop-detail');
-  if (!detail) return;
-  const uname = (currentUser && currentUser.username) || 'User';
-  const avColor = (currentUser && currentUser.avatarColor) || '#5865f2';
-  const avUrl = currentUser && currentUser.avatarUrl;
-  detail.innerHTML = `
-    <div class="shop-detail-preview" style="background:linear-gradient(135deg,#7b2ff7,#f107a3);">
-      <div class="shop-detail-card">
-        <div class="shop-detail-av-wrap">
-          <div class="shop-detail-av" style="background:${avUrl ? 'transparent' : avColor}">
-            ${avUrl ? '<img src="' + avUrl + '" alt="">' : uname[0].toUpperCase()}
-          </div>
-          ${item.type === 'deco' ? '<img class="shop-detail-deco" src="' + item.img + '" alt="">' : ''}
-        </div>
-        <div class="shop-detail-uname">${escapeHtml(uname)}</div>
-      </div>
-    </div>
-    <div class="shop-detail-info">
-      <div class="shop-detail-large-preview">
-        <div class="shop-detail-av-wrap big">
-          <div class="shop-detail-av" style="background:${avUrl ? 'transparent' : avColor}">
-            ${avUrl ? '<img src="' + avUrl + '" alt="">' : uname[0].toUpperCase()}
-          </div>
-          ${item.type === 'deco' ? '<img class="shop-detail-deco" src="' + item.img + '" alt="">' : ''}
-          ${item.type === 'effect' ? '<img class="shop-detail-effect" src="' + item.img + '" alt="">' : ''}
-        </div>
-      </div>
-      <h3 class="shop-detail-title">${escapeHtml(item.name)}</h3>
-      <p class="shop-detail-desc">${item.type === 'deco' ? 'Donne un nouveau look à ton avatar.' : item.type === 'effect' ? 'Anime ton profil avec un effet.' : (item.desc || 'Avantages Nitro')}</p>
-      <div class="shop-detail-price">${item.price === 0 ? 'Gratuit' : item.price + ' €'}</div>
-      <button type="button" class="shop-detail-buy" id="shop-detail-buy-btn">
-        ${isOwned ? 'Possédé ✓' : (item.price === 0 ? 'Obtenir' : 'Acheter pour ' + item.price + ' €')}
-      </button>
-    </div>
-  `;
-  const buyBtn = document.getElementById('shop-detail-buy-btn');
-  if (buyBtn && !isOwned) {
-    buyBtn.onclick = () => {
-      if (currentUser && currentUser.isOwner) {
-        if (item.type === 'deco') ownDeco(item.id);
-        else if (item.type === 'effect') ownEffect(item.id);
-        else if (item.type === 'nitro') ownNitro();
-        openShop();
-        showShopDetail(item, true);
-      } else {
-        openPaymentModal(item);
-      }
-    };
+function openGiftModal(item) {
+  let modal = document.getElementById('gift-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'gift-modal';
+    modal.className = 'picker-modal';
+    document.body.appendChild(modal);
   }
+  const price = Number(item.price || 2.75).toFixed(2).replace('.', ',') + ' €';
+  modal.classList.remove('hidden');
+  modal.innerHTML = `
+    <div class="picker-overlay" data-close-gift="1"></div>
+    <div class="picker-panel" style="max-width:420px;">
+      <div class="picker-header">
+        <div>
+          <h2>Offrir un cadeau</h2>
+          <p class="picker-sub">${(item.name || '').replace(/</g,'')} — <strong>${price}</strong></p>
+        </div>
+        <button type="button" class="picker-x" data-close-gift="1">×</button>
+      </div>
+      <div class="picker-body" style="display:block;padding:16px;">
+        <label style="color:#b5bac1;font-size:13px;display:block;margin-bottom:6px;">Nom d'utilisateur du destinataire</label>
+        <input type="text" id="gift-username" placeholder="ex: Ami123" style="width:100%;padding:12px;border-radius:8px;border:1px solid #3f4147;background:#1e1f22;color:#f2f3f5;font-size:15px;box-sizing:border-box;">
+        <p style="color:#949ba4;font-size:12px;margin:10px 0 16px;">Le destinataire recevra l'objet dans sa collection après paiement.</p>
+        <button type="button" class="btn-primary" id="gift-pay-btn" style="width:100%;padding:14px;font-size:15px;">
+          Offrir pour ${price}
+        </button>
+        <p id="gift-status" style="color:#ed4245;font-size:13px;margin-top:12px;display:none;"></p>
+      </div>
+    </div>`;
+  modal.querySelectorAll('[data-close-gift]').forEach(el => {
+    el.onclick = () => modal.classList.add('hidden');
+  });
+  document.getElementById('gift-pay-btn').onclick = async () => {
+    const user = (document.getElementById('gift-username').value || '').trim();
+    const status = document.getElementById('gift-status');
+    if (!user) {
+      status.style.display = 'block';
+      status.textContent = "Entre un nom d'utilisateur.";
+      return;
+    }
+    const btn = document.getElementById('gift-pay-btn');
+    btn.disabled = true;
+    btn.textContent = 'Redirection...';
+    status.style.display = 'none';
+    try {
+      // Même flux paiement, avec destinataire
+      if (currentUser && currentUser.isOwner) {
+        // Owner: gift free via localStorage for target user key
+        const all = JSON.parse(localStorage.getItem('zeyscord_shop_by_user') || '{}');
+        const key = user.toLowerCase();
+        if (!all[key]) all[key] = { decos: [], effects: [], nitro: [] };
+        const kind = item.type === 'effect' ? 'effects' : item.type === 'nitro' ? 'nitro' : 'decos';
+        const id = item.type === 'nitro' ? 'nitro' : item.id;
+        if (!all[key][kind].includes(id)) all[key][kind].push(id);
+        localStorage.setItem('zeyscord_shop_by_user', JSON.stringify(all));
+        status.style.display = 'block';
+        status.style.color = '#23a559';
+        status.textContent = 'Cadeau offert à ' + user + ' !';
+        btn.textContent = 'Offert ✓';
+        setTimeout(() => modal.classList.add('hidden'), 1200);
+        return;
+      }
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: item.id,
+          itemName: item.name,
+          itemType: item.type,
+          price: item.price,
+          username: currentUser && currentUser.username,
+          email: currentUser && currentUser.email,
+          giftTo: user
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur Stripe');
+      if (data.url) window.location.href = data.url;
+      else throw new Error("Pas d'URL de paiement");
+    } catch (err) {
+      status.style.display = 'block';
+      status.style.color = '#ed4245';
+      status.textContent = err.message || 'Erreur';
+      btn.disabled = false;
+      btn.textContent = 'Offrir pour ' + price;
+    }
+  };
 }
 
 function openPaymentModal(item) {
