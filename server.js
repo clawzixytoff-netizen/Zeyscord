@@ -208,6 +208,7 @@ const MESSAGES_FILE = path.join(__dirname, 'messages.json');
 const GUILDS_FILE = path.join(__dirname, 'guilds.json');
 const DMS_FILE = path.join(__dirname, 'dms.json');
 const FRIENDS_FILE = path.join(__dirname, 'friends.json');
+const PENDING_GIFTS_FILE = path.join(__dirname, 'pending-gifts.json');
 function loadJSON(file, fallback) {
   try {
     if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -265,6 +266,14 @@ function resolveFriendPublic(fid) {
   };
 }
 loadFriends();
+let pendingGifts = {};
+function loadPendingGifts() {
+  pendingGifts = loadJSON(PENDING_GIFTS_FILE, {});
+}
+function savePendingGifts() {
+  saveJSON(PENDING_GIFTS_FILE, pendingGifts);
+}
+loadPendingGifts();
 try {
   if (fs.existsSync(PROFILES_FILE)) Object.assign(savedProfiles, JSON.parse(fs.readFileSync(PROFILES_FILE, 'utf8')));
 } catch (e) {}
@@ -780,6 +789,92 @@ io.on('connection', (socket) => {
     socket.emit('friendRemoved', friendId);
     for (const [sid, u] of users) { if (u.id === friendId) io.to(sid).emit('friendRemoved', me.id); }
   });
+
+  socket.on('sendGiftDM', (data) => {
+    const me = users.get(socket.id);
+    if (!me) return;
+    const toUsername = String(data.toUsername || '').trim();
+    const toId = data.toUserId || usernameToId[toUsername.toLowerCase()] || null;
+    if (!toId) { socket.emit('error', { message: 'Destinataire introuvable' }); return; }
+    if (toId === me.id) { socket.emit('error', { message: 'Tu ne peux pas t\'offrir un cadeau' }); return; }
+
+    const giftId = 'gift_' + generateId() + Date.now().toString(36);
+    const gift = {
+      id: giftId,
+      fromId: me.id,
+      fromUsername: me.username,
+      toId,
+      toUsername,
+      itemId: data.itemId,
+      itemType: data.itemType,
+      itemName: data.itemName,
+      itemImg: data.itemImg || null,
+      price: data.price || 0,
+      message: (data.message || '').substring(0, 190),
+      claimed: false,
+      createdAt: new Date().toISOString()
+    };
+    pendingGifts[giftId] = gift;
+    savePendingGifts();
+
+    const key = dmKey(me.id, toId);
+    const content = '🎁 CADEAU|' + giftId + '|' + (gift.itemName || 'Cadeau') + '|' + (gift.itemType || 'deco') + (gift.message ? ('\n' + gift.message) : '');
+    const message = {
+      id: generateId(),
+      content,
+      author: publicUser(me),
+      timestamp: new Date().toISOString(),
+      channelId: 'dm_' + key,
+      isGift: true,
+      giftId
+    };
+    if (!dmMessages[key]) dmMessages[key] = [];
+    dmMessages[key].push(message);
+    if (dmMessages[key].length > 100) dmMessages[key] = dmMessages[key].slice(-100);
+    saveMessages();
+    io.to('dm_' + key).emit('newMessage', message);
+    // Notifier destinataire
+    for (const [sid, u] of users) {
+      if (u.id === toId) {
+        io.to(sid).emit('dmNotification', { from: publicUser(me), message });
+        io.to(sid).emit('giftReceived', gift);
+      }
+    }
+    socket.emit('giftSent', { giftId, toUsername });
+  });
+
+  socket.on('claimGift', (giftId) => {
+    const me = users.get(socket.id);
+    if (!me) return;
+    const gift = pendingGifts[giftId];
+    if (!gift) { socket.emit('error', { message: 'Cadeau introuvable' }); return; }
+    if (gift.claimed) { socket.emit('error', { message: 'Cadeau déjà réclamé' }); return; }
+    if (gift.toId !== me.id) { socket.emit('error', { message: 'Ce cadeau ne t\'est pas destiné' }); return; }
+    gift.claimed = true;
+    gift.claimedAt = new Date().toISOString();
+    savePendingGifts();
+
+    // Appliquer sur le profil serveur
+    if (gift.itemType === 'nitro') {
+      me.hasNitro = true;
+      if (!(me.badges || []).includes('nitro')) me.badges = [...(me.badges || []), 'nitro'];
+      const pk = (me.username || '').toLowerCase();
+      if (!savedProfiles[pk]) savedProfiles[pk] = {};
+      savedProfiles[pk].hasNitro = true;
+      savedProfiles[pk].badges = me.badges;
+      saveProfilesToDisk();
+      users.set(socket.id, me);
+      usersById.set(me.id, me);
+      io.emit('userUpdated', publicUser(me));
+    }
+    socket.emit('giftClaimed', {
+      giftId,
+      itemId: gift.itemId,
+      itemType: gift.itemType,
+      itemName: gift.itemName
+    });
+  });
+
 
 
   socket.on('createChannel', (data) => {
