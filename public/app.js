@@ -2133,6 +2133,26 @@ function openProfile(userId) {
 
 
 
+  
+  // Layout Discord 2 colonnes
+  try {
+    const card = document.getElementById('profile-card-main');
+    const body = document.getElementById('profile-body');
+    const info = body && body.querySelector('.zpc-info');
+    const tabs = document.getElementById('profile-tabs');
+    const about = document.getElementById('profile-tab-about');
+    const wish = document.getElementById('profile-tab-wishlist');
+    if (body && info) {
+      // ensure info is first child area
+      if (info.parentElement !== body) body.appendChild(info);
+      if (tabs && tabs.parentElement !== body) body.appendChild(tabs);
+      if (about && about.parentElement !== body) body.appendChild(about);
+      if (wish && wish.parentElement !== body) body.appendChild(wish);
+      // CSS grid places them; also set styles
+      body.style.display = 'grid';
+    }
+  } catch (e) {}
+
   modal.classList.remove('hidden');
 }
 

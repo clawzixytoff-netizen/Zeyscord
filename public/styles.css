@@ -9683,3 +9683,152 @@ img.avatar-deco-overlay {
   overflow-y: auto;
   padding-bottom: 8px;
 }
+
+
+/* ===== Profil grand style Discord ===== */
+.profile-modal {
+  align-items: center !important;
+  justify-content: center !important;
+}
+.zpc, #profile-card-main {
+  width: min(920px, 96vw) !important;
+  max-width: 96vw !important;
+  max-height: 90vh !important;
+  display: grid !important;
+  grid-template-columns: 340px 1fr !important;
+  grid-template-rows: auto 1fr !important;
+  overflow: hidden !important;
+  background: #111214 !important;
+  border-radius: 12px !important;
+}
+/* Bannière full width top spanning both cols */
+.zpc-banner, #profile-banner {
+  grid-column: 1 / -1 !important;
+  height: 140px !important;
+  min-height: 140px !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+/* Body becomes left + right content area */
+.zpc-body, #profile-body {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: 320px 1fr !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  padding-top: 0 !important;
+  min-height: 360px !important;
+  max-height: calc(90vh - 140px) !important;
+  background: #111214 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+/* Avatar overlays banner bottom-left */
+.zpc-avatar-wrap, #profile-avatar-wrap {
+  position: absolute !important;
+  top: -52px !important;
+  left: 20px !important;
+  width: 100px !important;
+  height: 100px !important;
+  z-index: 30 !important;
+}
+.zpc-avatar, #profile-avatar {
+  width: 88px !important;
+  height: 88px !important;
+  border-width: 6px !important;
+  border-color: #111214 !important;
+  font-size: 36px !important;
+}
+/* Left column: info */
+.zpc-info {
+  grid-column: 1 !important;
+  padding: 56px 16px 16px 16px !important;
+  background: #1e1f22 !important;
+  border-right: 1px solid #2b2d31 !important;
+  overflow-y: auto !important;
+  max-height: calc(90vh - 140px) !important;
+}
+.zpc-name { font-size: 22px !important; }
+.zpc-handle { font-size: 14px !important; margin-bottom: 10px !important; }
+.zpc-badges { margin-bottom: 12px !important; }
+
+/* Tabs + panes on the right */
+.profile-tabs {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+  padding: 12px 20px 0 20px !important;
+  background: #111214 !important;
+  border-bottom: 1px solid #2b2d31 !important;
+  align-self: start !important;
+}
+.profile-tab {
+  font-size: 14px !important;
+  padding: 12px 8px !important;
+}
+.profile-tab-pane {
+  grid-column: 2 !important;
+  padding: 16px 20px 20px !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  background: #111214 !important;
+  height: 100% !important;
+}
+.profile-tab-pane.active {
+  display: block !important;
+}
+#profile-tab-about.profile-tab-pane {
+  /* about content may live in zpc-info; keep pane for moved content */
+}
+#profile-tab-wishlist.profile-tab-pane.active {
+  max-height: calc(90vh - 200px) !important;
+  overflow-y: auto !important;
+}
+.profile-wish-grid {
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+}
+.profile-wish-tile {
+  min-height: 110px !important;
+  border-radius: 12px !important;
+  background: #1e1f22 !important;
+}
+.profile-wish-header {
+  margin-bottom: 14px !important;
+}
+.profile-wish-title {
+  font-size: 13px !important;
+  color: #b5bac1 !important;
+}
+.profile-wish-browse {
+  font-size: 13px !important;
+  padding: 8px 14px !important;
+  border-radius: 18px !important;
+}
+
+/* Mobile: stack */
+@media (max-width: 720px) {
+  .zpc, #profile-card-main {
+    width: 96vw !important;
+    grid-template-columns: 1fr !important;
+    max-height: 92vh !important;
+  }
+  .zpc-body, #profile-body {
+    grid-template-columns: 1fr !important;
+    max-height: calc(92vh - 120px) !important;
+    overflow-y: auto !important;
+  }
+  .zpc-info {
+    border-right: none !important;
+    border-bottom: 1px solid #2b2d31 !important;
+    max-height: none !important;
+  }
+  .profile-tabs {
+    grid-column: 1 !important;
+  }
+  .profile-tab-pane {
+    grid-column: 1 !important;
+  }
+  .profile-wish-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
