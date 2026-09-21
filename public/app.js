@@ -897,11 +897,13 @@ socket.on('newMessage', msg => {
 
   const isDM = msg.channelId && String(msg.channelId).startsWith('dm_');
   let show = false;
-  if (isDM && currentDM) {
-    // show if DM involves current user and selected DM partner
-    show = true;
+  if (isDM && currentDM && currentUser) {
+    const key = 'dm_' + [currentUser.id, currentDM].sort().join('_');
+    show = (msg.channelId === key || msg.channelId === socket.currentChannel);
+    // fallback: if we're in any DM view with this partner, show
+    if (!show && msg.channelId.includes(currentUser.id) && msg.channelId.includes(currentDM)) show = true;
+    if (!show) show = true; // if joinDM room matches, server only sends to room - safe to show when currentDM set
   } else if (!isDM && !currentDM && msg.channelId) {
-    // update currentChannel if server sent message for room we're in
     if (msg.channelId === currentChannel) show = true;
   }
   if (show) {
@@ -1658,7 +1660,7 @@ function appendMessage(message) {
     });
   });
   messagesList.appendChild(el);
-  applyAvatarDeco(avEl, message.author.avatarDeco);
+  applyAvatarDeco(avEl, message.author.avatarDeco || 'none');
   bindBadgeTooltips(el);
 }
 
