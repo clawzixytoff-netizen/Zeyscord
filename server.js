@@ -257,6 +257,7 @@ function resolveFriendPublic(fid) {
     customStatus: saved.customStatus || '',
     avatarDeco: saved.avatarDeco || 'none',
     profileEffect: saved.profileEffect || 'none',
+      wishlist: Array.isArray(saved.wishlist) ? saved.wishlist : [],
     primaryColor: saved.primaryColor || null,
     secondaryColor: saved.secondaryColor || null,
     presenceStatus: 'offline',
@@ -468,7 +469,8 @@ function publicUser(u) {
     primaryColor: u.primaryColor || null,
     secondaryColor: u.secondaryColor || null,
     presenceStatus: u.presenceStatus || 'online',
-    isOwner: !!u.isOwner, hasNitro: !!u.hasNitro, createdAt: u.createdAt || null
+    isOwner: !!u.isOwner, hasNitro: !!u.hasNitro, createdAt: u.createdAt || null,
+    wishlist: Array.isArray(u.wishlist) ? u.wishlist : []
   };
 }
 function publicGuild(g) {
@@ -676,6 +678,7 @@ io.on('connection', (socket) => {
       user.presenceStatus = ok.includes(data.presenceStatus) ? data.presenceStatus : 'online';
     }
     if (data.hasNitro !== undefined) user.hasNitro = !!data.hasNitro;
+    if (data.wishlist !== undefined) user.wishlist = Array.isArray(data.wishlist) ? data.wishlist.slice(0, 50) : [];
     if (data.createdAt !== undefined) {
       if (!user.isOwner) { socket.emit('error', { message: 'Seul le propriétaire peut modifier la date de création' }); }
       else { user.createdAt = data.createdAt; }
@@ -691,6 +694,7 @@ io.on('connection', (socket) => {
     savedProfiles[newKey] = Object.assign({}, prev, {
       avatarUrl: user.avatarUrl, bannerUrl: user.bannerUrl, customStatus: user.customStatus,
       avatarDeco: user.avatarDeco, profileEffect: user.profileEffect,
+      wishlist: user.wishlist || [],
       primaryColor: user.primaryColor, secondaryColor: user.secondaryColor,
       presenceStatus: user.presenceStatus,
       badges: user.badges, hasNitro: user.hasNitro, createdAt: user.createdAt
