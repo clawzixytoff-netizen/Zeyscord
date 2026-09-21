@@ -79,7 +79,20 @@ app.use(express.json({ limit: '12mb' }));
 const staticDir = fs.existsSync(path.join(__dirname, 'public'))
   ? path.join(__dirname, 'public')
   : path.join(__dirname, 'publique');
-app.use(express.static(staticDir));
+app.use(express.static(staticDir, {
+  setHeaders: (res, filePath) => {
+    if (String(filePath).endsWith('.webmanifest')) res.setHeader('Content-Type', 'application/manifest+json');
+  }
+}));
+app.get('/manifest.webmanifest', (req, res) => {
+  res.type('application/manifest+json');
+  res.sendFile(path.join(staticDir, 'manifest.webmanifest'));
+});
+app.get('/sw.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Service-Worker-Allowed', '/');
+  res.sendFile(path.join(staticDir, 'sw.js'));
+});
 
 console.log('[Static]', staticDir);
 // Alias dossiers FR -> EN (si renommés sur GitHub)
