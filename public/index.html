@@ -754,13 +754,15 @@
 
   <script src="app.js?v=20260921pwa"></script>
 
+<button type="button" id="install-app-btn" class="install-app-btn hidden" onclick="installZeyscordApp()" title="Installer Zeyscord">⬇ Installer l'app</button>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('/sw.js')
+      .then(r => console.log('[PWA] SW enregistré', r.scope))
+      .catch(e => console.warn('[PWA] SW erreur', e));
   });
 }
-// Bouton installer l'app
 let deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -768,9 +770,18 @@ window.addEventListener('beforeinstallprompt', (e) => {
   const btn = document.getElementById('install-app-btn');
   if (btn) btn.classList.remove('hidden');
 });
-window.installZeyscordApp = async function() {
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.classList.add('hidden');
+});
+window.installZeyscordApp = async function () {
   if (!deferredPrompt) {
-    alert('Pour installer : menu du navigateur → "Installer l\'application" / "Ajouter à l\'écran d\'accueil".');
+    alert("Pour installer Zeyscord :
+• Chrome/Edge : menu ⋮ → Installer l'application
+• Safari iOS : Partager → Sur l'écran d'accueil
+
+(HTTPS ou localhost requis)");
     return;
   }
   deferredPrompt.prompt();
@@ -778,11 +789,6 @@ window.installZeyscordApp = async function() {
   deferredPrompt = null;
   const btn = document.getElementById('install-app-btn');
   if (btn) btn.classList.add('hidden');
-
-<button type="button" id="install-app-btn" class="install-app-btn hidden" onclick="installZeyscordApp()">
-  ⬇ Installer l’app
-</button>
-
 };
 </script>
 </body>
