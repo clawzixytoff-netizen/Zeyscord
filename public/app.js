@@ -840,6 +840,12 @@ socket.on('init', data => {
   availableBadges = data.availableBadges || [];
   friends = data.friends || [];
   friendRequests = data.friendRequests || [];
+  try {
+    const known = (friends || []).map(f => f.username).filter(Boolean);
+    const prev = JSON.parse(localStorage.getItem('zeyscord_known_users') || '[]');
+    localStorage.setItem('zeyscord_known_users', JSON.stringify([...new Set([...prev, ...known])]));
+  } catch(_) {}
+
   guilds = data.guilds || [];
   currentGuild = data.currentGuild || (guilds[0] && guilds[0].id);
   currentChannel = (data.channels && data.channels[0] && data.channels[0].id) || data.messages?.[0]?.channelId || 'zeyscord_general';
@@ -950,6 +956,14 @@ socket.on('friendAdded', friend => {
   if (!friends.find(f => f.id === friend.id)) friends.push(friend);
   friendRequests = friendRequests.filter(r => r.fromId !== friend.id);
   renderFriends();
+  try {
+    const known = JSON.parse(localStorage.getItem('zeyscord_known_users') || '[]');
+    if (friend.username && !known.includes(friend.username)) {
+      known.push(friend.username);
+      localStorage.setItem('zeyscord_known_users', JSON.stringify(known));
+    }
+  } catch(_) {}
+
 });
 
 socket.on('friendRemoved', friendId => {
