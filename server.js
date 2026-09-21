@@ -634,6 +634,13 @@ io.on('connection', (socket) => {
     if (!user) return;
     if (data.dmTargetId) {
       const key = dmKey(user.id, data.dmTargetId);
+      try {
+        const sk = (user.username || '').toLowerCase();
+        const sv = savedProfiles[sk] || {};
+        if (sv.avatarUrl && !user.avatarUrl) user.avatarUrl = sv.avatarUrl;
+        if (sv.avatarColor) user.avatarColor = sv.avatarColor;
+        if (sv.avatarDeco) user.avatarDeco = sv.avatarDeco;
+      } catch(e) {}
       const message = { id: generateId(), content: data.content, author: publicUser(user), timestamp: new Date().toISOString(), channelId: 'dm_' + key };
       if (!dmMessages[key]) dmMessages[key] = [];
       dmMessages[key].push(message);
@@ -646,6 +653,13 @@ io.on('connection', (socket) => {
       return;
     }
     const channelId = data.channelId || socket.currentChannel || 'zeyscord_general';
+    try {
+      const sk = (user.username || '').toLowerCase();
+      const sv = savedProfiles[sk] || {};
+      if (sv.avatarUrl && !user.avatarUrl) user.avatarUrl = sv.avatarUrl;
+      if (sv.avatarColor) user.avatarColor = sv.avatarColor;
+      if (sv.avatarDeco) user.avatarDeco = sv.avatarDeco;
+    } catch(e) {}
     const message = { id: generateId(), content: data.content, author: publicUser(user), timestamp: new Date().toISOString(), channelId };
     if (!messages[channelId]) messages[channelId] = [];
     messages[channelId].push(message);
