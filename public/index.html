@@ -4,7 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zeyscord</title>
-  <link rel="stylesheet" href="styles.css?v=20260921mutual">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#5865f2">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Zeyscord">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+
+  <link rel="stylesheet" href="styles.css?v=20260921pwa">
   <script src="/socket.io/socket.io.js"></script>
 <style id="wish-grid-force">
 #profile-tab-wishlist .profile-wish-grid,.profile-wish-grid{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:12px!important;width:100%!important}
@@ -742,7 +752,34 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260921mutual"></script>
+  <script src="app.js?v=20260921pwa"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+// Bouton installer l'app
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.classList.remove('hidden');
+});
+window.installZeyscordApp = async function() {
+  if (!deferredPrompt) {
+    alert('Pour installer : menu du navigateur → "Installer l\'application" / "Ajouter à l\'écran d\'accueil".');
+    return;
+  }
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  const btn = document.getElementById('install-app-btn');
+  if (btn) btn.classList.add('hidden');
+};
+</script>
 </body>
 </html>
 
