@@ -1057,6 +1057,17 @@ function setStatusDot(el, status) {
 }
 
 /** Met a jour TOUS les indicateurs de statut (PC + mobile) */
+
+function statusBubbleHtml(text, presence) {
+  if (!text) return '';
+  const t = escapeHtml(String(text)).slice(0, 128);
+  return '<div class="status-bubble-wrap" title="'+t+'">'
+    + '<div class="status-bubble">'
+    +   '<span class="status-bubble-text">'+t+'</span>'
+    + '</div>'
+    + '</div>';
+}
+
 function applyPresenceStatus(status) {
   const s = status || 'online';
   if (currentUser) currentUser.presenceStatus = s;
@@ -1218,8 +1229,14 @@ function populateAccountMenu() {
   // Custom status
   const cs = document.getElementById('uam-custom-status');
   if (cs) {
-    cs.textContent = currentUser.customStatus || '';
-    cs.style.display = currentUser.customStatus ? 'block' : 'none';
+    if (currentUser.customStatus) {
+      cs.className = 'uam-custom-status status-bubble-text';
+      cs.innerHTML = '<span class="status-bubble">'+escapeHtml(currentUser.customStatus)+'</span>';
+      cs.style.display = 'block';
+    } else {
+      cs.textContent = '';
+      cs.style.display = 'none';
+    }
   }
 
   // Status — synchronise tous les points / labels
@@ -1794,7 +1811,7 @@ function renderMembers() {
           <span class="member-name">${escapeHtml(user.username)}</span>
           <span class="member-badges">${badgesStr}</span>
         </div>
-        ${user.customStatus ? `<div class="member-status">${escapeHtml(user.customStatus)}</div>` : ''}
+        ${user.customStatus ? statusBubbleHtml(user.customStatus, st) : ''}
       </div>`;
     const avEl = el.querySelector('.member-avatar');
     if (user.avatarUrl) {
@@ -1830,7 +1847,7 @@ function friendRowHtml(f) {
     </div>
     <div class="friend-row-info">
       <div class="friend-row-name">${escapeHtml(f.username)}</div>
-      <div class="friend-row-status">${custom}</div>
+      ${f.customStatus ? statusBubbleHtml(f.customStatus, st) : `<div class="friend-row-status">${custom}</div>`}
     </div>
     <div class="friend-row-actions">
       <button type="button" class="friend-msg-btn" title="Message">
@@ -5412,7 +5429,7 @@ function openWishlist() {
     if (!item) return '';
     const img = item.img || '';
     return '<div class="wish-card" data-id="'+item.id+'">'
-      + '<button type="button" class="shop-heart on" data-unwish="'+item.id+'" title="Retirer">♥</button>'
+      + '<button type="button" class="wish-trash-btn" data-unwish="'+item.id+'" title="Retirer de la liste de souhaits" aria-label="Retirer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 6h2v9h-2V9zm4 0h2v9h-2V9zM7 9h2v9H7V9zm-1 12h12a1 1 0 001-1V7H5v13a1 1 0 001 1z"/></svg></button>'
       + '<div class="wish-card-media"><img src="'+img+'" alt=""></div>'
       + '<div class="wish-card-name">'+String(item.name||'').replace(/</g,'')+'</div>'
       + '<div class="wish-card-price">'+(Number(item.price||0).toFixed(2).replace('.',','))+' €</div>'
