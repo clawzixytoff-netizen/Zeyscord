@@ -10030,3 +10030,61 @@ img.avatar-deco-overlay {
 .zpc-left-body {
   padding-top: 56px !important;
 }
+
+
+/* PP plus haute (dans la bannière) + effet au-dessus du fond */
+.zpc-left {
+  position: relative !important;
+  overflow: hidden !important;
+}
+.zpc-left .zpc-banner,
+#profile-banner {
+  height: 120px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+.zpc-left-body {
+  position: relative !important;
+  z-index: 5 !important;
+  padding-top: 48px !important;
+}
+.zpc-avatar-wrap,
+#profile-avatar-wrap {
+  position: absolute !important;
+  top: -72px !important;
+  left: 16px !important;
+  width: 104px !important;
+  height: 104px !important;
+  z-index: 30 !important;
+  overflow: visible !important;
+}
+.zpc-avatar,
+#profile-avatar {
+  width: 88px !important;
+  height: 88px !important;
+  border: 6px solid transparent !important;
+  box-sizing: content-box !important;
+}
+/* bordure avatar suit le fond - JS mettra border-color */
+.zpc-left .profile-effect-overlay {
+  z-index: 8 !important;
+}
+.zpc-left .zpc-banner { z-index: 3 !important; }
+.zpc-left .zpc-left-body { z-index: 10 !important; }
+.zpc-left .zpc-avatar-wrap { z-index: 40 !important; }
+.zpc-left .zpc-info { position: relative !important; z-index: 15 !important; }
+
+/* effet bien visible au-dessus du fond coloré */
+.profile-effect-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 8 !important;
+  overflow: hidden !important;
+}
+.profile-effect-overlay img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+}

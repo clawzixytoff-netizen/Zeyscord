@@ -595,82 +595,58 @@ function applyProfileEffect(card, effect) {
   }
 
   card.querySelectorAll('.profile-effect-overlay').forEach(n => n.remove());
-  Array.from(card.classList).forEach(c => { if (c.startsWith('effect-')) card.classList.remove(c); });
+  Array.from(card.classList).forEach(cl => { if (cl.startsWith('effect-')) card.classList.remove(cl); });
   card.dataset.appliedEffect = next;
   if (next === 'none') return;
 
   card.classList.add('effect-' + next);
   card.style.setProperty('position', 'relative', 'important');
-  // clip a la carte pour voir l'effet sur TOUTE la surface
-  card.style.setProperty('overflow', 'hidden', 'important');
-
-  const layer = document.createElement('div');
-  layer.className = 'profile-effect-overlay';
-  layer.dataset.effectId = next;
-  layer.style.cssText = [
-    'position:absolute',
-    'inset:0',
-    'width:100%',
-    'height:100%',
-    'z-index:10',
-    'pointer-events:none',
-    'border-radius:inherit',
-    'overflow:hidden'
-  ].join(';');
-
-  function makeFxImg(src) {
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = '';
-    img.draggable = false;
-    img.decoding = 'async';
-    img.loading = 'eager';
-    img.style.setProperty('position', 'absolute', 'important');
-    img.style.setProperty('left', '0', 'important');
-    img.style.setProperty('top', '0', 'important');
-    img.style.setProperty('width', '100%', 'important');
-    img.style.setProperty('height', '100%', 'important');
-    img.style.setProperty('object-fit', 'cover', 'important');
-    img.style.setProperty('object-position', 'center top', 'important');
-    img.style.setProperty('image-rendering', 'auto', 'important');
-    img.style.setProperty('opacity', '1', 'important');
-    img.style.setProperty('mix-blend-mode', 'normal', 'important');
-    return img;
+  // ne pas clipper trop fort: laisser l'effet visible
+  if (!card.classList.contains('zpc-left')) {
+    card.style.setProperty('overflow', 'hidden', 'important');
   }
-  // Discord : intro + loop superposes pour effet complet (ex: Shatter)
-  const layers = (typeof EFFECT_LAYERS !== 'undefined' && EFFECT_LAYERS[next]) ? EFFECT_LAYERS[next] : null;
-  const urls = [];
-  if (layers && layers.intro) urls.push(layers.intro);
-  if (layers && layers.loop) urls.push(layers.loop);
-  if (!urls.length && EFFECT_URLS[next]) urls.push(EFFECT_URLS[next]);
-  urls.forEach(u => layer.appendChild(makeFxImg(u)));
-  card.appendChild(layer);
 
-  // Banniere derriere l'effet
-  card.querySelectorAll('.uam-header-block, .uam-banner, .zpc-banner, .profile-banner').forEach(el => {
-    el.style.setProperty('position', 'relative', 'important');
-    el.style.setProperty('z-index', '1', 'important');
-  });
-  // Body 100% transparent = effet visible sur TOUT le profil
-  card.querySelectorAll('.uam-profile-body, .zpc-body, .profile-content').forEach(el => {
-    el.style.setProperty('position', 'relative', 'important');
-    el.style.setProperty('z-index', '15', 'important');
-    el.style.setProperty('background', 'transparent', 'important');
-    el.style.setProperty('background-image', 'none', 'important');
-  });
-  // Boutons lisibles sans masquer l'effet partout
-  card.querySelectorAll('.uam-item, .uam-actions .uam-item').forEach(el => {
-    el.style.setProperty('background', 'rgba(0,0,0,0.35)', 'important');
-    el.style.setProperty('backdrop-filter', 'blur(6px)', 'important');
-  });
-  card.querySelectorAll('.uam-top-info, .uam-actions, .uam-user-card, .uam-name, .uam-handle, .uam-badges, .zpc-info').forEach(el => {
-    el.style.setProperty('position', 'relative', 'important');
-    el.style.setProperty('z-index', '16', 'important');
-  });
-  card.querySelectorAll('.uam-avatar-wrap, .zpc-avatar-wrap, .profile-avatar-wrapper').forEach(el => {
-    el.style.setProperty('z-index', '30', 'important');
-  });
+  const urls = EFFECT_URLS[next];
+  const wrap = document.createElement('div');
+  wrap.className = 'profile-effect-overlay';
+  wrap.setAttribute('data-profile-effect', next);
+  wrap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:12;overflow:hidden;border-radius:inherit;';
+
+  // intro + loop si dispo
+  const intro = (urls && urls.intro) ? urls.intro : (typeof urls === 'string' ? urls : null);
+  const loop = (urls && urls.loop) ? urls.loop : intro;
+  if (intro) {
+    const img1 = document.createElement('img');
+    img1.src = intro;
+    img1.alt = '';
+    img1.className = 'profile-effect-img profile-effect-intro';
+    img1.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;pointer-events:none;z-index:1;';
+    wrap.appendChild(img1);
+    if (loop && loop !== intro) {
+      const img2 = document.createElement('img');
+      img2.src = loop;
+      img2.alt = '';
+      img2.className = 'profile-effect-img profile-effect-loop';
+      img2.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;pointer-events:none;z-index:2;opacity:0;transition:opacity 0.3s;';
+      wrap.appendChild(img2);
+      img1.onload = () => {
+        // apres intro courte, montrer loop
+        setTimeout(() => {
+          img2.style.opacity = '1';
+          img1.style.opacity = '0';
+        }, 2500);
+      };
+    }
+  }
+  // inserer derriere le contenu texte mais AU-DESSUS du fond
+  const firstContent = card.querySelector('.zpc-banner, .zpc-left-body, .zpc-body, .zpc-info');
+  if (firstContent && firstContent.parentElement === card) {
+    card.insertBefore(wrap, firstContent);
+  } else {
+    card.insertBefore(wrap, card.firstChild);
+  }
 }
+
 
 
 // DOM
@@ -2068,6 +2044,36 @@ function openProfile(userId) {
   
 
   
+  
+  // Couleurs de profil sur la colonne gauche
+  try {
+    const left = document.querySelector('#profile-card-main .zpc-left') || document.querySelector('.zpc-left');
+    const leftBody = document.querySelector('.zpc-left-body');
+    if (left) {
+      const c1 = user.primaryColor || user.avatarColor || '#5865f2';
+      const c2 = user.secondaryColor || c1;
+      left.style.setProperty('background', c1, 'important');
+      const avEl = document.getElementById('profile-avatar');
+      if (avEl) avEl.style.setProperty('border-color', c1, 'important');
+      const wrap = document.getElementById('profile-avatar-wrap');
+      // PP plus haute
+      if (wrap) {
+        wrap.style.setProperty('top', '-72px', 'important');
+        wrap.style.setProperty('z-index', '40', 'important');
+      }
+
+      if (leftBody) {
+        leftBody.style.setProperty('background', 'linear-gradient(180deg, ' + c1 + ' 0%, ' + c2 + ' 120%)', 'important');
+      }
+      // sections un peu transparentes pour voir la couleur
+      left.querySelectorAll('.zpc-status, .zpc-section').forEach(el => {
+        el.style.setProperty('background', 'rgba(0,0,0,0.25)', 'important');
+        el.style.setProperty('border-radius', '8px', 'important');
+        el.style.setProperty('padding', '10px 12px', 'important');
+      });
+    }
+  } catch (e) {}
+
   modal.classList.remove('hidden');
 }
 
