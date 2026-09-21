@@ -823,6 +823,8 @@ document.getElementById('accounts-add')?.addEventListener('click', () => {
 
 socket.on('init', data => {
   currentUser = data.user;
+  if (currentUser && !currentUser.primaryColor) currentUser.primaryColor = '#000000';
+  if (currentUser && !currentUser.secondaryColor) currentUser.secondaryColor = '#000000';
   if (window.matchMedia('(max-width: 768px)').matches) {
     document.body.classList.remove('mobile-in-chat');
   }
@@ -1957,8 +1959,8 @@ function openProfile(userId) {
   const memberSince = document.getElementById('profile-member-since');
   const actions = document.getElementById('profile-actions');
 
-  const p = user.primaryColor || null;
-  const s = user.secondaryColor || p;
+  const p = user.primaryColor || '#000000';
+  const s = user.secondaryColor || p || '#000000';
   const ac = user.avatarColor || '#5865f2';
 
   // Banner
@@ -2075,7 +2077,7 @@ function openProfile(userId) {
   if (currentUser?.isOwner) {
     addItem('Gérer les badges', () => { closeProfile(); openBadgesManager(user); });
   }
-  if (isSelf || currentUser?.isOwner) {
+  if (currentUser?.isOwner) {
     addItem('Ordre des badges', () => { closeProfile(); openBadgesManager(user); });
   }
   if (isFriend && !isSelf) {
@@ -2214,8 +2216,8 @@ function openProfile(userId) {
     const left = document.querySelector('#profile-card-main .zpc-left') || document.querySelector('.zpc-left');
     const leftBody = document.querySelector('.zpc-left-body');
     if (left) {
-      const c1 = user.primaryColor || user.avatarColor || '#5865f2';
-      const c2 = user.secondaryColor || c1;
+      const c1 = user.primaryColor || '#000000';
+      const c2 = user.secondaryColor || '#000000';
       left.style.setProperty('background', c1, 'important');
       const avEl = document.getElementById('profile-avatar');
       if (avEl) avEl.style.setProperty('border-color', c1, 'important');
