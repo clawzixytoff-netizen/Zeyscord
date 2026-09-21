@@ -1896,22 +1896,7 @@ function openProfile(userId) {
   }
   avatar.style.borderColor = p || '#232428';
   setStatusDot(document.getElementById('profile-status-dot'), user.presenceStatus || 'online');
-  const pWrap = document.getElementById('profile-avatar-wrap') || avatar.parentElement;
-  if (pWrap) {
-    pWrap.style.cssText = 'position:absolute;top:-56px;left:24px;width:104px;height:104px;z-index:50;overflow:visible;margin:0;';
-  }
-  if (avatar) {
-    avatar.style.cssText = avatar.style.cssText; // keep bg/img
-    avatar.style.width = '92px';
-    avatar.style.height = '92px';
-    avatar.style.borderRadius = '50%';
-    avatar.style.border = '6px solid #111214';
-    avatar.style.boxSizing = 'content-box';
-    avatar.style.overflow = 'hidden';
-    avatar.style.display = 'flex';
-    avatar.style.alignItems = 'center';
-    avatar.style.justifyContent = 'center';
-  }
+  
 
   uname.textContent = user.username;
   if (handle) {
@@ -2125,6 +2110,56 @@ function openProfile(userId) {
 
 
   
+
+  
+  // FORCE layout profil large + PP visible
+  try {
+    const card = document.getElementById('profile-card-main');
+    if (card) {
+      card.style.setProperty('width', 'min(720px, 96vw)', 'important');
+      card.style.setProperty('max-width', '96vw', 'important');
+      card.style.setProperty('max-height', '88vh', 'important');
+      card.style.setProperty('overflow', 'visible', 'important');
+      card.style.setProperty('display', 'flex', 'important');
+      card.style.setProperty('flex-direction', 'column', 'important');
+    }
+    const body = document.getElementById('profile-body');
+    if (body) {
+      body.style.setProperty('padding-top', '64px', 'important');
+      body.style.setProperty('padding-left', '24px', 'important');
+      body.style.setProperty('padding-right', '24px', 'important');
+      body.style.setProperty('overflow', 'visible', 'important');
+      body.style.setProperty('position', 'relative', 'important');
+    }
+    const pWrap = document.getElementById('profile-avatar-wrap');
+    if (pWrap) {
+      pWrap.style.setProperty('position', 'absolute', 'important');
+      pWrap.style.setProperty('top', '-56px', 'important');
+      pWrap.style.setProperty('left', '24px', 'important');
+      pWrap.style.setProperty('width', '104px', 'important');
+      pWrap.style.setProperty('height', '104px', 'important');
+      pWrap.style.setProperty('z-index', '100', 'important');
+      pWrap.style.setProperty('overflow', 'visible', 'important');
+      pWrap.style.setProperty('margin', '0', 'important');
+    }
+    const av = document.getElementById('profile-avatar');
+    if (av) {
+      av.style.setProperty('width', '92px', 'important');
+      av.style.setProperty('height', '92px', 'important');
+      av.style.setProperty('border-radius', '50%', 'important');
+      av.style.setProperty('border', '6px solid #111214', 'important');
+      av.style.setProperty('box-sizing', 'content-box', 'important');
+      av.style.setProperty('overflow', 'hidden', 'important');
+      av.style.setProperty('display', 'flex', 'important');
+      av.style.setProperty('align-items', 'center', 'important');
+      av.style.setProperty('justify-content', 'center', 'important');
+      av.style.setProperty('position', 'relative', 'important');
+      av.style.setProperty('z-index', '2', 'important');
+    }
+    if (typeof applyAvatarDeco === 'function') {
+      applyAvatarDeco(pWrap || av, user.avatarDeco || 'none');
+    }
+  } catch (e) { console.warn('profile layout', e); }
 
   modal.classList.remove('hidden');
 }
