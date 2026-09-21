@@ -86,12 +86,27 @@ app.use(express.static(staticDir, {
 }));
 app.get('/manifest.webmanifest', (req, res) => {
   res.type('application/manifest+json');
-  res.sendFile(path.join(staticDir, 'manifest.webmanifest'));
+  const candidates = [
+    path.join(staticDir, 'manifest.webmanifest'),
+    path.join(__dirname, 'manifest.webmanifest'),
+    path.join(__dirname, 'public', 'manifest.webmanifest')
+  ];
+  const file = candidates.find(f => fs.existsSync(f));
+  if (!file) return res.status(404).send('manifest not found');
+  res.sendFile(file);
 });
 app.get('/sw.js', (req, res) => {
-  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
   res.setHeader('Service-Worker-Allowed', '/');
-  res.sendFile(path.join(staticDir, 'sw.js'));
+  res.setHeader('Cache-Control', 'no-cache');
+  const candidates = [
+    path.join(staticDir, 'sw.js'),
+    path.join(__dirname, 'sw.js'),
+    path.join(__dirname, 'public', 'sw.js')
+  ];
+  const file = candidates.find(f => fs.existsSync(f));
+  if (!file) return res.status(404).send('sw not found');
+  res.sendFile(file);
 });
 
 console.log('[Static]', staticDir);
