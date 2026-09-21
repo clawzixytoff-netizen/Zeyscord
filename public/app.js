@@ -1226,33 +1226,26 @@ function populateAccountMenu() {
     bindBadgeTooltips(badgesEl);
   }
 
-  // Custom status (bulle style Discord) — force visible
-  const customTxt = String(currentUser.customStatus || currentUser.bio || currentUser.statusText || '').trim();
+  // Custom status (bulle style Discord)
   const cs = document.getElementById('uam-custom-status');
-  const card = document.querySelector('#user-account-menu .uam-user-card');
+  const customTxt = (currentUser.customStatus || currentUser.bio || '').trim();
   if (cs) {
     if (customTxt) {
       cs.className = 'uam-custom-status';
-      cs.innerHTML = '<div class="status-bubble status-bubble--uam">'+escapeHtml(customTxt)+'</div>';
-      cs.removeAttribute('hidden');
-      cs.style.setProperty('display', 'block', 'important');
-      cs.style.setProperty('visibility', 'visible', 'important');
-      cs.style.setProperty('opacity', '1', 'important');
-      if (card) {
-        card.style.setProperty('display', 'block', 'important');
-        card.style.setProperty('visibility', 'visible', 'important');
-      }
+      cs.innerHTML = '<div class="status-bubble status-bubble--uam"><span class="status-bubble-text">'+escapeHtml(customTxt)+'</span></div>';
+      cs.style.cssText = 'display:block!important;visibility:visible!important;opacity:1!important;margin-top:8px;';
     } else {
       cs.innerHTML = '';
-      cs.style.setProperty('display', 'none', 'important');
+      cs.style.display = 'none';
     }
   }
+  // Barre du bas
   const csBar = document.getElementById('user-custom-status');
   if (csBar) {
     csBar.textContent = customTxt;
     csBar.title = customTxt;
+    csBar.style.display = customTxt ? '' : 'none';
   }
-  console.log('[Zeyscord] customStatus=', customTxt);
 
   // Status — synchronise tous les points / labels
   const st = currentUser.presenceStatus || 'online';
