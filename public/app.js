@@ -6276,3 +6276,13 @@ function switchAccount(username) {
 
   updateMobileBackBtn();
 })();
+
+document.addEventListener('click', function(ev) {
+  const claimBtn = ev.target && ev.target.closest && ev.target.closest('[data-claim]');
+  if (!claimBtn) return;
+  const gid = claimBtn.getAttribute('data-claim');
+  if (!gid || !socket) return;
+  claimBtn.disabled = true;
+  claimBtn.textContent = 'Ouverture...';
+  socket.emit('claimGift', gid);
+});
