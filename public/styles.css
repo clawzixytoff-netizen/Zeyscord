@@ -10088,3 +10088,28 @@ img.avatar-deco-overlay {
   object-fit: cover !important;
   object-position: center top !important;
 }
+
+
+/* PP a mi-chemin banniere / corps (comme menu compte Discord) */
+.zpc-left .zpc-banner,
+#profile-banner {
+  height: 120px !important;
+}
+.zpc-left-body {
+  padding-top: 52px !important;
+}
+.zpc-avatar-wrap,
+#profile-avatar-wrap {
+  top: -48px !important;
+  left: 16px !important;
+  width: 100px !important;
+  height: 100px !important;
+  z-index: 40 !important;
+}
+.zpc-avatar,
+#profile-avatar {
+  width: 88px !important;
+  height: 88px !important;
+  border-width: 6px !important;
+  box-sizing: content-box !important;
+}

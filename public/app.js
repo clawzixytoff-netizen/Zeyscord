@@ -2058,7 +2058,7 @@ function openProfile(userId) {
       const wrap = document.getElementById('profile-avatar-wrap');
       // PP plus haute
       if (wrap) {
-        wrap.style.setProperty('top', '-72px', 'important');
+        wrap.style.setProperty('top', '-48px', 'important');
         wrap.style.setProperty('z-index', '40', 'important');
       }
 
