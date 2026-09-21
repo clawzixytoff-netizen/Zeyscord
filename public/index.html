@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Zeyscord</title>
-  <link rel="stylesheet" href="styles.css?v=20260921pfinal">
+  <link rel="stylesheet" href="styles.css?v=20260921discprof">
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -313,32 +313,45 @@
   <!-- Profile Popup Zeyscord (style Discord) -->
   <div id="profile-modal" class="profile-modal hidden">
     <div class="profile-overlay" id="profile-overlay"></div>
-    <div class="zpc" id="profile-card-main">
-      <div class="zpc-banner" id="profile-banner"></div>
-      <div class="zpc-body" id="profile-body">
-        <div class="zpc-avatar-wrap" id="profile-avatar-wrap">
-          <div class="zpc-avatar" id="profile-avatar"></div>
-          <div class="zpc-online" id="profile-status-dot"></div>
-        </div>
-        <div class="zpc-info">
-          <h2 class="zpc-name" id="profile-username"></h2>
-          <div class="zpc-handle" id="profile-handle"></div>
-          <div id="profile-badges" class="zpc-badges profile-badges"></div>
-          <div class="zpc-status" id="profile-status"></div>
-          <div class="zpc-section">
-            <h3>À PROPOS DE MOI</h3>
-            <p id="profile-about">Aucune bio pour le moment.</p>
+    <div class="zpc zpc-discord" id="profile-card-main">
+      <button type="button" class="zpc-close" id="profile-close-btn" aria-label="Fermer">×</button>
+      <div class="zpc-left">
+        <div class="zpc-banner" id="profile-banner"></div>
+        <div class="zpc-left-body">
+          <div class="zpc-avatar-wrap" id="profile-avatar-wrap">
+            <div class="zpc-avatar" id="profile-avatar"></div>
+            <div class="zpc-online" id="profile-status-dot"></div>
           </div>
-          <div class="zpc-section" id="profile-member-since-section">
-            <h3>MEMBRE DEPUIS</h3>
-            <p id="profile-member-since">—</p>
-            <div id="profile-created-edit" class="hidden" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-              <input type="date" id="profile-created-input" style="padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px">
-              <button type="button" id="profile-created-save" style="padding:8px 12px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px;font-weight:500">Changer la date</button>
+          <div class="zpc-info">
+            <h2 class="zpc-name" id="profile-username"></h2>
+            <div class="zpc-handle" id="profile-handle"></div>
+            <div id="profile-badges" class="zpc-badges profile-badges"></div>
+            <div class="zpc-actions profile-actions" id="profile-actions"></div>
+            <div class="zpc-status" id="profile-status"></div>
+            <div class="zpc-section">
+              <h3>À propos de moi</h3>
+              <p id="profile-about">Aucune bio pour le moment.</p>
+            </div>
+            <div class="zpc-section" id="profile-member-since-section">
+              <h3>Membre depuis</h3>
+              <p id="profile-member-since">—</p>
+              <div id="profile-created-edit" class="hidden" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+                <input type="date" id="profile-created-input" style="padding:8px;background:#1e1f22;border:none;border-radius:4px;color:#dbdee1;font-size:13px">
+                <button type="button" id="profile-created-save" style="padding:8px 12px;background:#5865f2;border:none;border-radius:4px;color:white;cursor:pointer;font-size:13px;font-weight:500">Changer la date</button>
+              </div>
             </div>
           </div>
-          <div class="zpc-actions profile-actions" id="profile-actions"></div>
         </div>
+      </div>
+      <div class="zpc-right" id="profile-body">
+        <div class="profile-tabs" id="profile-tabs">
+          <button type="button" class="profile-tab active" data-ptab="about">À propos</button>
+          <button type="button" class="profile-tab" data-ptab="wishlist">Liste de souhaits</button>
+        </div>
+        <div id="profile-tab-about" class="profile-tab-pane active">
+          <div class="profile-right-hint">Infos détaillées à gauche · souhaits ici</div>
+        </div>
+        <div id="profile-tab-wishlist" class="profile-tab-pane"></div>
       </div>
     </div>
   </div>
@@ -724,7 +737,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260921pfinal"></script>
+  <script src="app.js?v=20260921discprof"></script>
 </body>
 </html>
 

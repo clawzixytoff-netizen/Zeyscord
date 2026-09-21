@@ -1980,111 +1980,64 @@ function openProfile(userId) {
   
 
 
-  // Onglets profil : À propos | Liste de souhaits (simple, sans casser le DOM)
+
+  // Onglets + wishlist (structure HTML Discord déjà en place)
   try {
-    const bodyEl = document.getElementById('profile-body');
-    const infoEl = bodyEl && bodyEl.querySelector('.zpc-info');
-    if (!bodyEl || !infoEl) throw new Error('no body');
-
-    // Tabs bar
-    let tabsBar = document.getElementById('profile-tabs');
-    if (!tabsBar) {
-      tabsBar = document.createElement('div');
-      tabsBar.id = 'profile-tabs';
-      tabsBar.className = 'profile-tabs';
-      tabsBar.innerHTML = '<button type="button" class="profile-tab active" data-ptab="about">À propos</button>'
-        + '<button type="button" class="profile-tab" data-ptab="wishlist">Liste de souhaits</button>';
-      infoEl.appendChild(tabsBar);
-    }
-
-    // About pane = existing sections after tabs
-    let aboutPane = document.getElementById('profile-tab-about');
-    if (!aboutPane) {
-      aboutPane = document.createElement('div');
-      aboutPane.id = 'profile-tab-about';
-      aboutPane.className = 'profile-tab-pane active';
-      // move status/section/actions that are still direct children of info into about
-      const keep = new Set(['profile-tabs', 'profile-tab-about', 'profile-tab-wishlist', 'profile-username', 'profile-handle', 'profile-badges']);
-      const toMove = [];
-      Array.from(infoEl.children).forEach(ch => {
-        if (ch === tabsBar) return;
-        if (ch.id && keep.has(ch.id)) return;
-        if (ch.classList && (ch.classList.contains('zpc-name') || ch.classList.contains('zpc-handle') || ch.classList.contains('zpc-badges'))) return;
-        if (ch.id === 'profile-username' || ch.tagName === 'H2') return;
-        toMove.push(ch);
-      });
-      // Only move status, sections, actions
-      toMove.forEach(ch => {
-        if (ch.classList && (ch.classList.contains('zpc-status') || ch.classList.contains('zpc-section') || ch.classList.contains('zpc-actions') || ch.classList.contains('profile-actions'))) {
-          aboutPane.appendChild(ch);
-        } else if (ch.id === 'profile-status' || ch.id === 'profile-member-since-section' || ch.id === 'profile-actions') {
-          aboutPane.appendChild(ch);
-        }
-      });
-      // Also get nested leftovers by id
-      ['profile-status', 'profile-about', 'profile-member-since-section', 'profile-actions'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.parentElement !== aboutPane && !aboutPane.contains(el)) {
-          // if parent is section, move section
-          const sec = el.closest('.zpc-section') || el.closest('.zpc-status') || el;
-          if (sec.parentElement === infoEl || sec.parentElement === bodyEl) aboutPane.appendChild(sec);
-        }
-      });
-      infoEl.appendChild(aboutPane);
-    }
-
-    let wishPane = document.getElementById('profile-tab-wishlist');
-    if (!wishPane) {
-      wishPane = document.createElement('div');
-      wishPane.id = 'profile-tab-wishlist';
-      wishPane.className = 'profile-tab-pane';
-      infoEl.appendChild(wishPane);
-    }
-
+    const tabsBar = document.getElementById('profile-tabs');
+    const aboutPane = document.getElementById('profile-tab-about');
+    const wishPane = document.getElementById('profile-tab-wishlist');
     const wishIds = Array.isArray(user.wishlist) ? user.wishlist : (user.id === currentUser?.id ? getWishlist() : []);
     const allItems = [...(SHOP_DECOS||[]), ...(SHOP_EFFECTS||[]), ...(SHOP_NITRO||[])];
     const isMe = currentUser && user.id === currentUser.id;
     const canGift = currentUser && !isMe;
 
+    if (aboutPane) {
+      aboutPane.innerHTML = '<div class="zpc-section"><h3>À propos</h3><p>' +
+        (user.customStatus ? escapeHtml(user.customStatus) : 'Aucune bio pour le moment.') +
+        '</p></div>';
+    }
+
     let header = '<div class="profile-wish-header"><span class="profile-wish-title">' + wishIds.length + ' article' + (wishIds.length > 1 ? 's' : '') + '</span>';
     if (isMe) header += '<button type="button" class="profile-wish-browse" id="profile-wish-browse">Parcourir la Boutique</button>';
     header += '</div>';
 
-    if (!wishIds.length) {
-      wishPane.innerHTML = header + '<div class="profile-wish-empty">Aucun article souhaité</div>';
-    } else {
-      const cards = wishIds.map(id => {
-        const item = allItems.find(x => x.id === id);
-        if (!item) return '';
-        return '<button type="button" class="profile-wish-tile"'
-          + (canGift ? ' data-gift-item="' + item.id + '"' : '')
-          + ' title="' + String(item.name||'').replace(/"/g,'') + '">'
-          + '<div class="profile-wish-tile-media"><img src="' + (item.img||'') + '" alt=""></div>'
-          + (canGift ? '<span class="profile-wish-tile-gift">Offrir</span>' : '')
-          + '</button>';
-      }).join('');
-      wishPane.innerHTML = header + '<div class="profile-wish-grid">' + cards + '</div>';
-      wishPane.querySelectorAll('[data-gift-item]').forEach(btn => {
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          const item = allItems.find(x => x.id === btn.getAttribute('data-gift-item'));
-          if (!item) return;
-          closeProfile();
-          openGiftModal(item);
-          setTimeout(() => {
-            const toId = document.getElementById('gift-to-id');
-            const toName = document.getElementById('gift-to-name');
-            const sel = document.getElementById('gift-friend-selected');
-            if (toId) toId.value = user.id;
-            if (toName) toName.value = user.username || '';
-            if (sel) {
-              const bg = user.avatarColor || '#5865f2';
-              const av = user.avatarUrl ? '<img src="'+user.avatarUrl+'">' : '<span>'+((user.username||'?')[0].toUpperCase())+'</span>';
-              sel.innerHTML = '<div class="gift-friend-av" style="background:'+bg+'">'+av+'</div><span class="gift-friend-name">'+String(user.username||'').replace(/</g,'')+'</span>';
-            }
-          }, 50);
-        };
-      });
+    if (wishPane) {
+      if (!wishIds.length) {
+        wishPane.innerHTML = header + '<div class="profile-wish-empty">Aucun article souhaité</div>';
+      } else {
+        const cards = wishIds.map(id => {
+          const item = allItems.find(x => x.id === id);
+          if (!item) return '';
+          return '<button type="button" class="profile-wish-tile"'
+            + (canGift ? ' data-gift-item="' + item.id + '"' : '')
+            + ' title="' + String(item.name||'').replace(/"/g,'') + '">'
+            + '<div class="profile-wish-tile-media"><img src="' + (item.img||'') + '" alt=""></div>'
+            + (canGift ? '<span class="profile-wish-tile-gift">Offrir</span>' : '')
+            + '</button>';
+        }).join('');
+        wishPane.innerHTML = header + '<div class="profile-wish-grid">' + cards + '</div>';
+        wishPane.querySelectorAll('[data-gift-item]').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const item = allItems.find(x => x.id === btn.getAttribute('data-gift-item'));
+            if (!item) return;
+            closeProfile();
+            openGiftModal(item);
+            setTimeout(() => {
+              const toId = document.getElementById('gift-to-id');
+              const toName = document.getElementById('gift-to-name');
+              const sel = document.getElementById('gift-friend-selected');
+              if (toId) toId.value = user.id;
+              if (toName) toName.value = user.username || '';
+              if (sel) {
+                const bg = user.avatarColor || '#5865f2';
+                const av = user.avatarUrl ? '<img src="'+user.avatarUrl+'">' : '<span>'+((user.username||'?')[0].toUpperCase())+'</span>';
+                sel.innerHTML = '<div class="gift-friend-av" style="background:'+bg+'">'+av+'</div><span class="gift-friend-name">'+String(user.username||'').replace(/</g,'')+'</span>';
+              }
+            }, 50);
+          };
+        });
+      }
     }
     document.getElementById('profile-wish-browse')?.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2093,79 +2046,33 @@ function openProfile(userId) {
     });
 
     const switchTab = (tab) => {
+      if (!tabsBar) return;
       tabsBar.querySelectorAll('.profile-tab').forEach(b => b.classList.toggle('active', b.dataset.ptab === tab));
-      aboutPane.classList.toggle('active', tab === 'about');
-      wishPane.classList.toggle('active', tab === 'wishlist');
+      if (aboutPane) aboutPane.classList.toggle('active', tab === 'about');
+      if (wishPane) wishPane.classList.toggle('active', tab === 'wishlist');
     };
-    tabsBar.querySelectorAll('.profile-tab').forEach(b => {
-      b.onclick = (e) => { e.stopPropagation(); switchTab(b.dataset.ptab); };
-    });
-    switchTab('about');
-
-    const oldWish = document.getElementById('profile-wishlist');
-    if (oldWish) oldWish.style.display = 'none';
+    if (tabsBar) {
+      tabsBar.querySelectorAll('.profile-tab').forEach(b => {
+        b.onclick = (e) => { e.stopPropagation(); switchTab(b.dataset.ptab); };
+      });
+      switchTab('wishlist'); // ouvrir sur wishlist comme Discord souvent
+    }
+    try { if (typeof applyAvatarDeco === 'function') applyAvatarDeco(document.getElementById('profile-avatar-wrap'), user.avatarDeco || 'none'); } catch(e) {}
   } catch (e) { console.warn('wishlist profile', e); }
 
 
 
 
+
   
 
   
-  // FORCE layout profil large + PP visible
-  try {
-    const card = document.getElementById('profile-card-main');
-    if (card) {
-      card.style.setProperty('width', 'min(720px, 96vw)', 'important');
-      card.style.setProperty('max-width', '96vw', 'important');
-      card.style.setProperty('max-height', '88vh', 'important');
-      card.style.setProperty('overflow', 'visible', 'important');
-      card.style.setProperty('display', 'flex', 'important');
-      card.style.setProperty('flex-direction', 'column', 'important');
-    }
-    const body = document.getElementById('profile-body');
-    if (body) {
-      body.style.setProperty('padding-top', '64px', 'important');
-      body.style.setProperty('padding-left', '24px', 'important');
-      body.style.setProperty('padding-right', '24px', 'important');
-      body.style.setProperty('overflow', 'visible', 'important');
-      body.style.setProperty('position', 'relative', 'important');
-    }
-    const pWrap = document.getElementById('profile-avatar-wrap');
-    if (pWrap) {
-      pWrap.style.setProperty('position', 'absolute', 'important');
-      pWrap.style.setProperty('top', '-56px', 'important');
-      pWrap.style.setProperty('left', '24px', 'important');
-      pWrap.style.setProperty('width', '104px', 'important');
-      pWrap.style.setProperty('height', '104px', 'important');
-      pWrap.style.setProperty('z-index', '100', 'important');
-      pWrap.style.setProperty('overflow', 'visible', 'important');
-      pWrap.style.setProperty('margin', '0', 'important');
-    }
-    const av = document.getElementById('profile-avatar');
-    if (av) {
-      av.style.setProperty('width', '92px', 'important');
-      av.style.setProperty('height', '92px', 'important');
-      av.style.setProperty('border-radius', '50%', 'important');
-      av.style.setProperty('border', '6px solid #111214', 'important');
-      av.style.setProperty('box-sizing', 'content-box', 'important');
-      av.style.setProperty('overflow', 'hidden', 'important');
-      av.style.setProperty('display', 'flex', 'important');
-      av.style.setProperty('align-items', 'center', 'important');
-      av.style.setProperty('justify-content', 'center', 'important');
-      av.style.setProperty('position', 'relative', 'important');
-      av.style.setProperty('z-index', '2', 'important');
-    }
-    if (typeof applyAvatarDeco === 'function') {
-      applyAvatarDeco(pWrap || av, user.avatarDeco || 'none');
-    }
-  } catch (e) { console.warn('profile layout', e); }
-
   modal.classList.remove('hidden');
 }
 
 function closeProfile() { document.getElementById('profile-modal').classList.add('hidden'); }
 document.getElementById('profile-overlay')?.addEventListener('click', closeProfile);
+document.getElementById('profile-close-btn')?.addEventListener('click', closeProfile);
 
 // ===== Upload helpers (avatar / bannière en fichier local) =====
 let pendingEditAvatar = null;   // dataURL or null (null = keep current, '' = clear)
