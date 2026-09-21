@@ -4592,6 +4592,34 @@ function shopSet(kind, list) {
     localStorage.setItem('zeyscord_shop_by_user', JSON.stringify(all));
   } catch (_) {}
 }
+
+function getWishlist() {
+  try {
+    const all = JSON.parse(localStorage.getItem('zeyscord_wishlist_by_user') || '{}');
+    const key = shopUserKey();
+    const list = all[key];
+    return Array.isArray(list) ? list : [];
+  } catch { return []; }
+}
+function setWishlist(list) {
+  try {
+    const all = JSON.parse(localStorage.getItem('zeyscord_wishlist_by_user') || '{}');
+    all[shopUserKey()] = list;
+    localStorage.setItem('zeyscord_wishlist_by_user', JSON.stringify(all));
+  } catch {}
+}
+function isInWishlist(id) {
+  return getWishlist().includes(id);
+}
+function toggleWishlist(id) {
+  const list = getWishlist();
+  const i = list.indexOf(id);
+  if (i >= 0) list.splice(i, 1);
+  else list.push(id);
+  setWishlist(list);
+  return list.includes(id);
+}
+
 function getOwnedDecos() {
   if (currentUser && currentUser.isOwner) return (SHOP_DECOS || []).map(i => i.id);
   return shopGet('decos');
@@ -4943,7 +4971,72 @@ socket.on('giftSent', function(data) {
   }
 });
 
+
+function openWishlist() {
+  const items = getWishlist();
+  let modal = document.getElementById('wishlist-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'wishlist-modal';
+    modal.className = 'picker-modal';
+    document.body.appendChild(modal);
+  }
+  const all = [...(SHOP_DECOS||[]), ...(SHOP_EFFECTS||[]), ...(SHOP_NITRO||[])];
+  const cards = items.map(id => {
+    const item = all.find(x => x.id === id);
+    if (!item) return '';
+    const img = item.img || '';
+    return '<div class="wish-card" data-id="'+item.id+'">'
+      + '<button type="button" class="shop-heart on" data-unwish="'+item.id+'" title="Retirer">♥</button>'
+      + '<div class="wish-card-media"><img src="'+img+'" alt=""></div>'
+      + '<div class="wish-card-name">'+String(item.name||'').replace(/</g,'')+'</div>'
+      + '<div class="wish-card-price">'+(Number(item.price||0).toFixed(2).replace('.',','))+' €</div>'
+      + '</div>';
+  }).join('');
+  modal.classList.remove('hidden');
+  modal.innerHTML = `
+    <div class="picker-overlay" data-close-wish="1"></div>
+    <div class="picker-panel" style="width:min(720px,96vw);max-height:90vh;">
+      <div class="picker-header">
+        <div>
+          <h2>Liste de souhaits</h2>
+          <p class="picker-sub">${items.length} article${items.length>1?'s':''}</p>
+        </div>
+        <button type="button" class="picker-x" data-close-wish="1">×</button>
+      </div>
+      <div class="picker-body" style="display:block;overflow:auto;">
+        <div class="wish-grid">${cards || '<div style="color:#949ba4;padding:24px;text-align:center;">Aucun article — clique le ♡ dans la boutique</div>'}</div>
+      </div>
+    </div>`;
+  modal.querySelectorAll('[data-close-wish]').forEach(el => {
+    el.onclick = () => modal.classList.add('hidden');
+  });
+  modal.querySelectorAll('[data-unwish]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-unwish');
+      toggleWishlist(id);
+      openWishlist();
+    };
+  });
+}
+
 function openShop() {
+
+  // Bouton liste de souhaits dans le header boutique
+  try {
+    const header = document.querySelector('#shop-modal .shop-header, .shop-panel-discord .shop-header, .shop-header');
+    if (header && !document.getElementById('shop-wishlist-btn')) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.id = 'shop-wishlist-btn';
+      b.className = 'shop-wishlist-btn';
+      b.innerHTML = '♥ Liste de souhaits';
+      b.onclick = (e) => { e.stopPropagation(); openWishlist(); };
+      header.appendChild(b);
+    }
+  } catch (e) {}
+
   const grid = document.getElementById('shop-grid');
   if (!grid) return;
   const modal = document.getElementById('shop-modal');
@@ -4982,7 +5075,7 @@ function openShop() {
 
     if (item.type === 'nitro') {
       el.innerHTML = `
-        <div class="shop-card-media">
+        <button type="button" class="shop-heart" data-wish="${item.id}" title="Liste de souhaits">♡</button><div class="shop-card-media">
           <img class="shop-nitro-logo" src="${item.img}" alt="Nitro">
         </div>
         <div class="shop-card-info">
@@ -4995,7 +5088,7 @@ function openShop() {
         </div>`;
     } else if (item.type === 'deco') {
       el.innerHTML = `
-        <div class="shop-card-media">
+        <button type="button" class="shop-heart" data-wish="${item.id}" title="Liste de souhaits">♡</button><div class="shop-card-media">
           <div class="shop-card-avatar-wrap">
             <div class="shop-card-avatar" style="background:${avBg}">${avInner}</div>
             <img class="shop-card-deco" src="${item.img}" alt="">
@@ -5012,7 +5105,7 @@ function openShop() {
     } else {
       // effect
       el.innerHTML = `
-        <div class="shop-card-media shop-card-media-fx">
+        <button type="button" class="shop-heart" data-wish="${item.id}" title="Liste de souhaits">♡</button><div class="shop-card-media shop-card-media-fx">
           <img class="shop-card-effect" src="${item.img}" alt="">
           <div class="shop-card-avatar shop-fx-av" style="background:${avBg}">${avInner}</div>
         </div>
@@ -5024,6 +5117,21 @@ function openShop() {
           <button type="button" class="shop-buy-btn" data-action="buy">${isOwned ? 'Possédé ✓' : buyLabel}</button>
           <button type="button" class="shop-gift-btn" data-action="gift" title="Offrir en cadeau">🎁</button>
         </div>`;
+    }
+
+    
+    // Coeur wishlist
+    const heart = el.querySelector('.shop-heart');
+    if (heart) {
+      const on = isInWishlist(item.id);
+      heart.classList.toggle('on', on);
+      heart.textContent = on ? '♥' : '♡';
+      heart.onclick = (e) => {
+        e.stopPropagation();
+        const now = toggleWishlist(item.id);
+        heart.classList.toggle('on', now);
+        heart.textContent = now ? '♥' : '♡';
+      };
     }
 
     el.querySelector('[data-action="buy"]').addEventListener('click', (e) => {
