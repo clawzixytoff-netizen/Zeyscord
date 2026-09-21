@@ -10195,3 +10195,50 @@ img.avatar-deco-overlay {
   background: #5865f2 !important;
   color: #fff !important;
 }
+
+
+/* PP messages toujours visibles */
+.message-avatar {
+  position: absolute !important;
+  left: 16px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  background: #5865f2 !important;
+}
+.message-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  display: block !important;
+}
+.message.grouped .message-avatar {
+  /* garder l'espace mais cacher visuellement comme Discord */
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Wishlist toujours 3 colonnes */
+.profile-wish-grid,
+#profile-tab-wishlist .profile-wish-grid,
+.wish-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+}
+.profile-wish-tile {
+  aspect-ratio: 1 !important;
+  min-height: 0 !important;
+}
+@media (max-width: 520px) {
+  .profile-wish-grid,
+  #profile-tab-wishlist .profile-wish-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

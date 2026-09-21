@@ -1597,6 +1597,25 @@ socket.on('reactionUpdate', (data) => {
 
 
 function appendMessage(message) {
+  // Enrichir auteur avec PP live (DM / messages stockés)
+  try {
+    const aid = message.author && message.author.id;
+    const live = (aid && (
+      (typeof onlineUsers !== 'undefined' && onlineUsers.find(u => u.id === aid)) ||
+      (typeof friends !== 'undefined' && friends.find(u => u.id === aid)) ||
+      (currentUser && currentUser.id === aid ? currentUser : null)
+    )) || null;
+    if (live) {
+      message.author = Object.assign({}, message.author, {
+        avatarUrl: live.avatarUrl || message.author.avatarUrl || null,
+        avatarColor: live.avatarColor || message.author.avatarColor || '#5865f2',
+        avatarDeco: live.avatarDeco || message.author.avatarDeco || 'none',
+        badges: live.badges || message.author.badges || [],
+        username: live.username || message.author.username
+      });
+    }
+  } catch (e) {}
+
   const isGrouped = lastMessageAuthor === message.author.id;
   lastMessageAuthor = message.author.id;
   const el = document.createElement('div');
@@ -1619,14 +1638,28 @@ function appendMessage(message) {
     </div>
     <button class="msg-react-btn" title="Ajouter une réaction" data-mid="${message.id}">😊</button>`;
   const avEl = el.querySelector('.message-avatar');
-  if (message.author.avatarUrl) {
-    const img = document.createElement('img');
-    img.src = message.author.avatarUrl;
-    img.alt = '';
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block';
-    avEl.appendChild(img);
-  } else {
-    avEl.textContent = (message.author.username || '?')[0].toUpperCase();
+  if (avEl) {
+    avEl.innerHTML = '';
+    avEl.style.overflow = 'hidden';
+    avEl.style.borderRadius = '50%';
+    avEl.style.display = isGrouped ? '' : 'flex';
+    if (message.author.avatarUrl) {
+      avEl.style.background = 'transparent';
+      const img = document.createElement('img');
+      img.src = message.author.avatarUrl;
+      img.alt = '';
+      img.referrerPolicy = 'no-referrer';
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+      img.onerror = () => {
+        avEl.innerHTML = '';
+        avEl.style.background = message.author.avatarColor || '#5865f2';
+        avEl.textContent = (message.author.username || '?')[0].toUpperCase();
+      };
+      avEl.appendChild(img);
+    } else {
+      avEl.style.background = message.author.avatarColor || '#5865f2';
+      avEl.textContent = (message.author.username || '?')[0].toUpperCase();
+    }
   }
   avEl?.addEventListener('click', () => openProfile(message.author.id));
   el.querySelector('.message-author')?.addEventListener('click', () => openProfile(message.author.id));
