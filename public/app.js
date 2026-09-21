@@ -1632,7 +1632,7 @@ function appendMessage(message) {
         <span class="message-badges">${badgesStr}</span>
         <span class="message-timestamp">${time}</span>
       </div>
-      <div class="message-content">${escapeHtml(message.content)}</div>
+      <div class="message-content">${isGiftMessageContent(message.content) ? renderGiftMessageHtml(message.content) : escapeHtml(message.content)}</div>
       <div class="message-reactions" data-mid="${message.id}">${reactionsHtml}</div>
     </div>
     <button class="msg-react-btn" title="Ajouter une réaction" data-mid="${message.id}">😊</button>`;
