@@ -9551,66 +9551,96 @@ img.avatar-deco-overlay {
   .wish-grid { grid-template-columns: 1fr; }
 }
 
-/* Wishlist sur profil */
+
+/* Wishlist sur profil — grille Discord */
 .profile-wishlist {
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1px solid #3f4147;
 }
+.profile-wish-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
 .profile-wish-title {
   color: #b5bac1;
   font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  margin-bottom: 10px;
-}
-.profile-wish-empty {
-  color: #6d6f78;
-  font-size: 13px;
-}
-.profile-wish-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.profile-wish-card {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #2b2d31;
-  border-radius: 10px;
-  padding: 8px 10px;
-}
-.profile-wish-card img {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  border-radius: 8px;
-  background: #1e1f22;
-}
-.profile-wish-meta { flex: 1; min-width: 0; }
-.profile-wish-name {
-  color: #f2f3f5;
   font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-.profile-wish-price {
-  color: #b5bac1;
-  font-size: 12px;
-}
-.profile-wish-gift {
-  background: #5865f2;
-  color: #fff;
+.profile-wish-browse {
+  background: #2b2d31;
   border: 0;
-  border-radius: 8px;
-  padding: 8px 10px;
+  color: #f2f3f5;
+  border-radius: 16px;
+  padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
 }
-.profile-wish-gift:hover { background: #4752c4; }
+.profile-wish-browse:hover { background: #3f4147; }
+.profile-wish-empty {
+  color: #6d6f78;
+  font-size: 13px;
+  padding: 8px 0;
+}
+.profile-wish-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+}
+.profile-wish-tile {
+  position: relative;
+  aspect-ratio: 1;
+  background: #1e1f22;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background 0.15s;
+}
+.profile-wish-tile:hover {
+  background: #2b2d31;
+}
+.profile-wish-tile-media {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-wish-tile-media img {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.profile-wish-tile-gift {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  background: #5865f2;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 4px 0;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.profile-wish-tile:hover .profile-wish-tile-gift {
+  opacity: 1;
+}
+@media (max-width: 420px) {
+  .profile-wish-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

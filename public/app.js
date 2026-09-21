@@ -1988,7 +1988,8 @@ function openProfile(userId) {
     applyAvatarDeco(avatar, user.avatarDeco);
   });
   
-  // Liste de souhaits sur le profil
+  
+  // Liste de souhaits sur le profil (grille style Discord)
   try {
     let wishSec = document.getElementById('profile-wishlist');
     if (!wishSec) {
@@ -2000,32 +2001,40 @@ function openProfile(userId) {
     }
     const wishIds = Array.isArray(user.wishlist) ? user.wishlist : (user.id === currentUser?.id ? getWishlist() : []);
     const allItems = [...(SHOP_DECOS||[]), ...(SHOP_EFFECTS||[]), ...(SHOP_NITRO||[])];
+    const isMe = currentUser && user.id === currentUser.id;
+    const canGift = currentUser && !isMe;
+
+    let header = '<div class="profile-wish-header">'
+      + '<span class="profile-wish-title">' + wishIds.length + ' article' + (wishIds.length > 1 ? 's' : '') + '</span>';
+    if (isMe) {
+      header += '<button type="button" class="profile-wish-browse" id="profile-wish-browse">Parcourir la Boutique</button>';
+    }
+    header += '</div>';
+
     if (!wishIds.length) {
-      wishSec.innerHTML = '<div class="profile-wish-title">Liste de souhaits</div><div class="profile-wish-empty">Aucun article souhaité</div>';
+      wishSec.innerHTML = header + '<div class="profile-wish-empty">Aucun article souhaité</div>';
     } else {
       const cards = wishIds.map(id => {
         const item = allItems.find(x => x.id === id);
         if (!item) return '';
-        const canGift = currentUser && user.id !== currentUser.id;
-        return '<div class="profile-wish-card" data-id="'+item.id+'">'
-          + '<img src="'+(item.img||'')+'" alt="">'
-          + '<div class="profile-wish-meta"><div class="profile-wish-name">'+String(item.name||'').replace(/</g,'')+'</div>'
-          + '<div class="profile-wish-price">'+(Number(item.price||0).toFixed(2).replace('.',','))+' €</div></div>'
-          + (canGift ? '<button type="button" class="profile-wish-gift" data-gift-item="'+item.id+'" data-gift-to="'+user.id+'" data-gift-name="'+String(user.username||'').replace(/"/g,'')+'">Offrir 🎁</button>' : '')
-          + '</div>';
+        const img = item.img || '';
+        return '<button type="button" class="profile-wish-tile" data-id="' + item.id + '"'
+          + (canGift ? ' data-gift-item="' + item.id + '"' : '')
+          + ' title="' + String(item.name || '').replace(/"/g, '') + '">'
+          + '<div class="profile-wish-tile-media"><img src="' + img + '" alt=""></div>'
+          + (canGift ? '<span class="profile-wish-tile-gift">Offrir</span>' : '')
+          + '</button>';
       }).join('');
-      wishSec.innerHTML = '<div class="profile-wish-title">Liste de souhaits · '+wishIds.length+'</div><div class="profile-wish-grid">'+cards+'</div>';
+      wishSec.innerHTML = header + '<div class="profile-wish-grid">' + cards + '</div>';
       wishSec.querySelectorAll('[data-gift-item]').forEach(btn => {
         btn.onclick = (e) => {
           e.stopPropagation();
           const itemId = btn.getAttribute('data-gift-item');
           const item = allItems.find(x => x.id === itemId);
           if (!item) return;
-          // Pré-sélectionner le destinataire
           window.__giftForceTo = { id: user.id, name: user.username };
           closeProfile();
           openGiftModal(item);
-          // Appliquer destinataire après ouverture
           setTimeout(() => {
             const toId = document.getElementById('gift-to-id');
             const toName = document.getElementById('gift-to-name');
@@ -2034,14 +2043,20 @@ function openProfile(userId) {
             if (toName) toName.value = user.username || '';
             if (sel) {
               const bg = user.avatarColor || '#5865f2';
-              const av = user.avatarUrl ? '<img src="'+user.avatarUrl+'">' : '<span>'+((user.username||'?')[0].toUpperCase())+'</span>';
-              sel.innerHTML = '<div class="gift-friend-av" style="background:'+bg+'">'+av+'</div><span class="gift-friend-name">'+String(user.username||'').replace(/</g,'')+'</span>';
+              const av = user.avatarUrl ? '<img src="' + user.avatarUrl + '">' : '<span>' + ((user.username || '?')[0].toUpperCase()) + '</span>';
+              sel.innerHTML = '<div class="gift-friend-av" style="background:' + bg + '">' + av + '</div><span class="gift-friend-name">' + String(user.username || '').replace(/</g, '') + '</span>';
             }
           }, 50);
         };
       });
     }
+    document.getElementById('profile-wish-browse')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeProfile();
+      if (typeof openShop === 'function') openShop();
+    });
   } catch (e) { console.warn('wishlist profile', e); }
+
 
   modal.classList.remove('hidden');
 }
