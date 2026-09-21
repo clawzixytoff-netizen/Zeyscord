@@ -10242,3 +10242,35 @@ img.avatar-deco-overlay {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
+
+
+/* Wishlist 3 colonnes FORCÉ */
+#profile-tab-wishlist .profile-wish-grid,
+.profile-wish-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+#profile-tab-wishlist .profile-wish-tile,
+.profile-wish-tile {
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  max-width: none !important;
+}
+
+/* Message avatar solid */
+.message {
+  position: relative !important;
+  padding-left: 72px !important;
+}
+.message-avatar {
+  position: absolute !important;
+  left: 16px !important;
+  top: 4px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  z-index: 2 !important;
+}

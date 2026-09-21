@@ -1,3 +1,17 @@
+
+function showToast(msg) {
+  let t = document.getElementById('zey-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'zey-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111214;color:#fff;padding:10px 18px;border-radius:8px;font-size:14px;z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._hide);
+  t._hide = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+}
 const socket = io();
 
 let currentUser = null;
@@ -927,11 +941,11 @@ socket.on('userTyping', data => {
 socket.on('friendRequest', req => {
   friendRequests.push(req);
   renderFriends();
-  alert("Nouvelle demande d'ami de " + req.fromUsername);
+  if (typeof showToast === "function") showToast("Nouvelle demande d'ami de " + req.fromUsername);
 });
 
 socket.on('friendRequestSent', data => {
-  alert("Demande d'ami envoyée à " + data.to);
+  if (typeof showToast === 'function') showToast("Demande d'ami envoyée à " + data.to);
 });
 
 socket.on('friendAdded', friend => {
@@ -1596,6 +1610,64 @@ socket.on('reactionUpdate', (data) => {
 });
 
 
+
+function resolveUserAvatar(userId, fallbackAuthor) {
+  const live = (typeof onlineUsers !== 'undefined' && onlineUsers.find(u => u.id === userId))
+    || (typeof friends !== 'undefined' && friends.find(u => u.id === userId))
+    || (currentUser && currentUser.id === userId ? currentUser : null);
+  if (live) {
+    return {
+      avatarUrl: live.avatarUrl || null,
+      avatarColor: live.avatarColor || '#5865f2',
+      avatarDeco: live.avatarDeco || 'none',
+      username: live.username || (fallbackAuthor && fallbackAuthor.username) || '?'
+    };
+  }
+  return {
+    avatarUrl: (fallbackAuthor && fallbackAuthor.avatarUrl) || null,
+    avatarColor: (fallbackAuthor && fallbackAuthor.avatarColor) || '#5865f2',
+    avatarDeco: (fallbackAuthor && fallbackAuthor.avatarDeco) || 'none',
+    username: (fallbackAuthor && fallbackAuthor.username) || '?'
+  };
+}
+function fillMessageAvatar(avEl, author, isGrouped) {
+  if (!avEl) return;
+  avEl.innerHTML = '';
+  avEl.style.overflow = 'hidden';
+  avEl.style.borderRadius = '50%';
+  avEl.style.width = '40px';
+  avEl.style.height = '40px';
+  if (isGrouped) {
+    avEl.style.visibility = 'hidden';
+    return;
+  }
+  avEl.style.visibility = 'visible';
+  avEl.style.display = 'flex';
+  avEl.style.alignItems = 'center';
+  avEl.style.justifyContent = 'center';
+  const info = resolveUserAvatar(author && author.id, author);
+  if (info.avatarUrl) {
+    avEl.style.background = 'transparent';
+    const img = document.createElement('img');
+    img.src = info.avatarUrl;
+    img.alt = '';
+    img.referrerPolicy = 'no-referrer';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
+    img.onerror = () => {
+      avEl.innerHTML = '';
+      avEl.style.background = info.avatarColor;
+      avEl.textContent = (info.username || '?')[0].toUpperCase();
+    };
+    avEl.appendChild(img);
+  } else {
+    avEl.style.background = info.avatarColor;
+    avEl.textContent = (info.username || '?')[0].toUpperCase();
+  }
+  if (typeof applyAvatarDeco === 'function' && info.avatarDeco && info.avatarDeco !== 'none') {
+    try { applyAvatarDeco(avEl, info.avatarDeco); } catch (e) {}
+  }
+}
+
 function appendMessage(message) {
   // Enrichir auteur avec PP live (DM / messages stockés)
   try {
@@ -1638,29 +1710,7 @@ function appendMessage(message) {
     </div>
     <button class="msg-react-btn" title="Ajouter une réaction" data-mid="${message.id}">😊</button>`;
   const avEl = el.querySelector('.message-avatar');
-  if (avEl) {
-    avEl.innerHTML = '';
-    avEl.style.overflow = 'hidden';
-    avEl.style.borderRadius = '50%';
-    avEl.style.display = isGrouped ? '' : 'flex';
-    if (message.author.avatarUrl) {
-      avEl.style.background = 'transparent';
-      const img = document.createElement('img');
-      img.src = message.author.avatarUrl;
-      img.alt = '';
-      img.referrerPolicy = 'no-referrer';
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;';
-      img.onerror = () => {
-        avEl.innerHTML = '';
-        avEl.style.background = message.author.avatarColor || '#5865f2';
-        avEl.textContent = (message.author.username || '?')[0].toUpperCase();
-      };
-      avEl.appendChild(img);
-    } else {
-      avEl.style.background = message.author.avatarColor || '#5865f2';
-      avEl.textContent = (message.author.username || '?')[0].toUpperCase();
-    }
-  }
+  fillMessageAvatar(avEl, message.author, isGrouped);
   avEl?.addEventListener('click', () => openProfile(message.author.id));
   el.querySelector('.message-author')?.addEventListener('click', () => openProfile(message.author.id));
   el.querySelector('.msg-react-btn')?.addEventListener('click', (e) => {
