@@ -67,7 +67,7 @@ body{font-family:"gg sans","Whitney",Helvetica,Arial,sans-serif;background:var(-
 .message{display:flex;padding:2px 16px 2px 72px;position:relative;margin-top:17px}
 .message:hover{background:rgba(0,0,0,.06)}
 .message.grouped{margin-top:0}
-.message.grouped .message-avatar,.message.grouped .message-header{display:none}
+.message.grouped .message-header{display:none}
 .message-avatar{position:absolute;left:16px;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;color:#fff;cursor:pointer}
 .message-header{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
 .message-author{font-weight:500;color:var(--header);cursor:pointer}
@@ -10323,4 +10323,29 @@ img.avatar-deco-overlay {
   object-fit: cover !important;
   border-radius: 50% !important;
   display: block !important;
+}
+
+
+/* === FORCE FINAL wishlist 3 cols + message PP === */
+#profile-modal .profile-wish-grid,
+#profile-tab-wishlist .profile-wish-grid,
+.profile-wish-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+#profile-modal .profile-wish-tile {
+  width: auto !important;
+  min-width: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+.message > .message-avatar {
+  display: flex !important;
+  width: 40px !important;
+  height: 40px !important;
+  position: absolute !important;
+  left: 16px !important;
+  top: 4px !important;
+  z-index: 5 !important;
 }

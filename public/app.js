@@ -1695,12 +1695,20 @@ function appendMessage(message) {
   const time = new Date(message.timestamp).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   const badgesStr = badgesHtml(message.author.badges);
   const reactionsHtml = renderReactionsHtml(message.reactions || {}, message.id);
-  const bg = message.author.avatarUrl ? 'transparent' : (message.author.avatarColor || '#5865f2');
+  const avInfo = resolveUserAvatar(message.author && message.author.id, message.author);
+  const letter = (avInfo.username || message.author.username || '?')[0].toUpperCase();
+  const avInner = avInfo.avatarUrl
+    ? `<img src="${esc(avInfo.avatarUrl)}" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.style.background='${avInfo.avatarColor||'#5865f2'}';this.parentElement.textContent='${letter}';this.remove();">`
+    : letter;
+  const avBg = avInfo.avatarUrl ? 'transparent' : (avInfo.avatarColor || '#5865f2');
+  const avStyle = isGrouped
+    ? 'visibility:hidden;pointer-events:none;position:absolute;left:16px;top:4px;width:40px;height:40px;border-radius:50%;'
+    : `visibility:visible;position:absolute;left:16px;top:4px;width:40px;height:40px;min-width:40px;min-height:40px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:${avBg};color:#fff;font-weight:600;font-size:16px;z-index:3;`;
   el.innerHTML = `
-    <div class="message-avatar" style="background:${bg}" data-uid="${message.author.id}"></div>
+    <div class="message-avatar" style="${avStyle}" data-uid="${message.author.id || ''}">${isGrouped ? '' : avInner}</div>
     <div class="message-body">
       <div class="message-header">
-        <span class="message-author" data-uid="${message.author.id}">${escapeHtml(message.author.username)}</span>
+        <span class="message-author" data-uid="${message.author.id || ''}">${escapeHtml(message.author.username || 'Inconnu')}</span>
         <span class="message-badges">${badgesStr}</span>
         <span class="message-timestamp">${time}</span>
       </div>
@@ -1709,7 +1717,6 @@ function appendMessage(message) {
     </div>
     <button class="msg-react-btn" title="Ajouter une réaction" data-mid="${message.id}">😊</button>`;
   const avEl = el.querySelector('.message-avatar');
-  fillMessageAvatar(avEl, message.author, isGrouped);
   avEl?.addEventListener('click', () => openProfile(message.author.id));
   el.querySelector('.message-author')?.addEventListener('click', () => openProfile(message.author.id));
   el.querySelector('.msg-react-btn')?.addEventListener('click', (e) => {
