@@ -829,6 +829,7 @@ socket.on('init', data => {
   onlineUsers = data.onlineUsers || [];
   availableBadges = data.availableBadges || [];
   friends = data.friends || [];
+  setTimeout(refreshAllMessageAvatars, 100);
   friendRequests = data.friendRequests || [];
   if (data.user && Array.isArray(data.user.wishlist)) {
     setWishlist(data.user.wishlist);
@@ -864,6 +865,8 @@ socket.on('channelMessages', data => {
   currentDM = null;
   lastMessageAuthor = null;
   renderMessages(data.messages || []);
+  setTimeout(refreshAllMessageAvatars, 50);
+  setTimeout(refreshAllMessageAvatars, 300);
   if (typeof updateChannelUI === 'function') updateChannelUI();
 });
 
@@ -872,6 +875,8 @@ socket.on('dmMessages', data => {
   currentChannel = null;
   lastMessageAuthor = null;
   renderMessages(data.messages || []);
+  setTimeout(refreshAllMessageAvatars, 50);
+  setTimeout(refreshAllMessageAvatars, 300);
   const target = onlineUsers.find(u => u.id === data.targetUserId) || friends.find(u => u.id === data.targetUserId);
   if (target) {
     currentChannelName.textContent = '@' + target.username;
@@ -1630,6 +1635,25 @@ function resolveUserAvatar(userId, fallbackAuthor) {
     username: (fallbackAuthor && fallbackAuthor.username) || '?'
   };
 }
+
+function refreshAllMessageAvatars() {
+  try {
+    document.querySelectorAll('.message').forEach(msg => {
+      const av = msg.querySelector('.message-avatar');
+      if (!av) return;
+      const uid = av.getAttribute('data-uid');
+      if (!uid) return;
+      const isGrouped = msg.classList.contains('grouped');
+      if (isGrouped) return;
+      const author = { id: uid };
+      // find username from header if any
+      const nameEl = msg.querySelector('.message-author');
+      if (nameEl) author.username = nameEl.textContent;
+      fillMessageAvatar(av, author, false);
+    });
+  } catch (e) {}
+}
+
 function fillMessageAvatar(avEl, author, isGrouped) {
   if (!avEl) return;
   avEl.innerHTML = '';
@@ -2140,7 +2164,7 @@ function openProfile(userId) {
             + (canGift ? '<span class="profile-wish-tile-gift">Offrir</span>' : '')
             + '</button>';
         }).join('');
-        wishPane.innerHTML = header + '<div class="profile-wish-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;">' + cards + '</div>';
+        wishPane.innerHTML = header + '<div class="profile-wish-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(110px,1fr);gap:12px;width:100%;min-height:360px;">' + cards + '</div>';
         wishPane.querySelectorAll('[data-gift-item]').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -2212,6 +2236,20 @@ function openProfile(userId) {
         el.style.setProperty('padding', '10px 12px', 'important');
       });
     }
+  } catch (e) {}
+
+  
+  // Mettre a jour le cache local pour les PP messages
+  try {
+    const sync = (arr) => {
+      if (!Array.isArray(arr)) return;
+      const idx = arr.findIndex(u => u.id === user.id);
+      if (idx >= 0) arr[idx] = Object.assign({}, arr[idx], user);
+      else arr.push(user);
+    };
+    if (typeof onlineUsers !== 'undefined') sync(onlineUsers);
+    if (typeof friends !== 'undefined') sync(friends);
+    setTimeout(refreshAllMessageAvatars, 30);
   } catch (e) {}
 
   modal.classList.remove('hidden');

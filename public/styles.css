@@ -10349,3 +10349,23 @@ img.avatar-deco-overlay {
   top: 4px !important;
   z-index: 5 !important;
 }
+
+
+/* Wishlist zone 3x3 visible (3 colonnes x 3 rangées) */
+#profile-tab-wishlist.profile-tab-pane,
+#profile-tab-wishlist {
+  min-height: 420px !important;
+  max-height: min(70vh, 560px) !important;
+  overflow-y: auto !important;
+}
+#profile-tab-wishlist .profile-wish-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-auto-rows: minmax(120px, 1fr) !important;
+  gap: 12px !important;
+  min-height: 390px !important;
+}
+#profile-tab-wishlist .profile-wish-tile {
+  min-height: 120px !important;
+  aspect-ratio: 1 / 1 !important;
+}
