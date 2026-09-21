@@ -1898,15 +1898,19 @@ function openProfile(userId) {
   setStatusDot(document.getElementById('profile-status-dot'), user.presenceStatus || 'online');
   const pWrap = document.getElementById('profile-avatar-wrap') || avatar.parentElement;
   if (pWrap) {
-    pWrap.style.position = 'relative';
-    pWrap.style.top = 'auto';
-    pWrap.style.left = 'auto';
-    pWrap.style.marginTop = '-30px';
-    pWrap.style.marginLeft = '4px';
-    pWrap.style.width = '72px';
-    pWrap.style.height = '72px';
-    pWrap.style.overflow = 'visible';
-    pWrap.style.zIndex = '30';
+    pWrap.style.cssText = 'position:absolute;top:-56px;left:24px;width:104px;height:104px;z-index:50;overflow:visible;margin:0;';
+  }
+  if (avatar) {
+    avatar.style.cssText = avatar.style.cssText; // keep bg/img
+    avatar.style.width = '92px';
+    avatar.style.height = '92px';
+    avatar.style.borderRadius = '50%';
+    avatar.style.border = '6px solid #111214';
+    avatar.style.boxSizing = 'content-box';
+    avatar.style.overflow = 'hidden';
+    avatar.style.display = 'flex';
+    avatar.style.alignItems = 'center';
+    avatar.style.justifyContent = 'center';
   }
 
   uname.textContent = user.username;
