@@ -1972,7 +1972,7 @@ function openProfile(userId) {
       avatar.style.borderColor = '#232428';
     }
   }
-  applyProfileEffect(card, user.profileEffect);
+  applyProfileEffect(document.querySelector('#profile-card-main .zpc-left') || document.querySelector('.zpc-left'), user.profileEffect || 'none');
   requestAnimationFrame(() => {
     applyAvatarDeco(avatar, user.avatarDeco);
   });
@@ -1981,20 +1981,28 @@ function openProfile(userId) {
 
 
 
-  // Onglets + wishlist (structure HTML Discord déjà en place)
+
+  // Wishlist droite + effet UNIQUEMENT à gauche
   try {
-    const tabsBar = document.getElementById('profile-tabs');
-    const aboutPane = document.getElementById('profile-tab-about');
+    const leftCol = document.querySelector('#profile-card-main .zpc-left') || document.querySelector('.zpc-left');
     const wishPane = document.getElementById('profile-tab-wishlist');
     const wishIds = Array.isArray(user.wishlist) ? user.wishlist : (user.id === currentUser?.id ? getWishlist() : []);
     const allItems = [...(SHOP_DECOS||[]), ...(SHOP_EFFECTS||[]), ...(SHOP_NITRO||[])];
     const isMe = currentUser && user.id === currentUser.id;
     const canGift = currentUser && !isMe;
 
-    if (aboutPane) {
-      aboutPane.innerHTML = '<div class="zpc-section"><h3>À propos</h3><p>' +
-        (user.customStatus ? escapeHtml(user.customStatus) : 'Aucune bio pour le moment.') +
-        '</p></div>';
+    // Effet de profil collé à la colonne gauche uniquement
+    if (leftCol && typeof applyProfileEffect === 'function') {
+      applyProfileEffect(leftCol, user.profileEffect || 'none');
+    }
+    // Nettoyer effet sur le card entier / droite
+    const card = document.getElementById('profile-card-main');
+    if (card) {
+      card.querySelectorAll(':scope > .profile-effect-layer, :scope > .profile-effect, :scope > img[data-profile-effect]').forEach(el => el.remove());
+    }
+    const right = document.querySelector('.zpc-right');
+    if (right) {
+      right.querySelectorAll('.profile-effect-layer, .profile-effect, img[data-profile-effect]').forEach(el => el.remove());
     }
 
     let header = '<div class="profile-wish-header"><span class="profile-wish-title">' + wishIds.length + ' article' + (wishIds.length > 1 ? 's' : '') + '</span>';
@@ -2002,6 +2010,7 @@ function openProfile(userId) {
     header += '</div>';
 
     if (wishPane) {
+      wishPane.classList.add('active');
       if (!wishIds.length) {
         wishPane.innerHTML = header + '<div class="profile-wish-empty">Aucun article souhaité</div>';
       } else {
@@ -2045,20 +2054,12 @@ function openProfile(userId) {
       if (typeof openShop === 'function') openShop();
     });
 
-    const switchTab = (tab) => {
-      if (!tabsBar) return;
-      tabsBar.querySelectorAll('.profile-tab').forEach(b => b.classList.toggle('active', b.dataset.ptab === tab));
-      if (aboutPane) aboutPane.classList.toggle('active', tab === 'about');
-      if (wishPane) wishPane.classList.toggle('active', tab === 'wishlist');
-    };
-    if (tabsBar) {
-      tabsBar.querySelectorAll('.profile-tab').forEach(b => {
-        b.onclick = (e) => { e.stopPropagation(); switchTab(b.dataset.ptab); };
-      });
-      switchTab('wishlist'); // ouvrir sur wishlist comme Discord souvent
-    }
-    try { if (typeof applyAvatarDeco === 'function') applyAvatarDeco(document.getElementById('profile-avatar-wrap'), user.avatarDeco || 'none'); } catch(e) {}
+    try {
+      const pWrap = document.getElementById('profile-avatar-wrap');
+      if (pWrap && typeof applyAvatarDeco === 'function') applyAvatarDeco(pWrap, user.avatarDeco || 'none');
+    } catch (e) {}
   } catch (e) { console.warn('wishlist profile', e); }
+
 
 
 

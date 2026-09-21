@@ -9954,3 +9954,79 @@ img.avatar-deco-overlay {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
+
+
+/* Effet de profil UNIQUEMENT colonne gauche */
+.zpc-left {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+}
+.zpc-left .profile-effect-layer,
+.zpc-left .profile-effect,
+.zpc-left [class*="profile-effect"],
+.zpc-left .fx-layer,
+.zpc-left .pe-effect,
+.zpc-left img.profile-effect-img,
+.zpc-left .effect-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  border-radius: 0 !important;
+}
+.zpc-left-body,
+.zpc-left .zpc-info,
+.zpc-left .zpc-avatar-wrap {
+  position: relative !important;
+  z-index: 5 !important;
+}
+/* Empêcher l'effet de sortir sur la droite */
+.zpc-right .profile-effect-layer,
+.zpc-right .profile-effect,
+#profile-card-main > .profile-effect-layer,
+#profile-card-main > .profile-effect {
+  display: none !important;
+}
+
+/* PP dans / sur la bannière comme Discord */
+.zpc-left {
+  overflow: visible !important;
+}
+.zpc-left .zpc-banner,
+#profile-banner {
+  height: 120px !important;
+  min-height: 120px !important;
+  position: relative !important;
+  z-index: 0 !important;
+  overflow: hidden !important;
+}
+.zpc-left-body {
+  padding-top: 16px !important;
+}
+.zpc-avatar-wrap,
+#profile-avatar-wrap {
+  position: absolute !important;
+  top: -60px !important;
+  left: 16px !important;
+  width: 100px !important;
+  height: 100px !important;
+  z-index: 20 !important;
+  overflow: visible !important;
+}
+.zpc-avatar,
+#profile-avatar {
+  width: 88px !important;
+  height: 88px !important;
+  border: 6px solid #111214 !important;
+  box-sizing: content-box !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+.zpc-left-body {
+  padding-top: 56px !important;
+}
