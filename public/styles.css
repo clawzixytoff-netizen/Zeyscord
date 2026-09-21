@@ -10716,8 +10716,8 @@ button.primary,
   height: 36px;
   border-radius: 50%;
   border: none;
-  background: #5865f2;
-  color: #fff;
+  background: #ff7a1a !important;
+  color: #fff !important;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -10730,9 +10730,43 @@ button.primary,
   padding: 0;
 }
 .wish-trash-btn:hover {
-  background: #4752c4;
+  background: #e8680f !important;
   transform: scale(1.05);
 }
 .wish-card {
   position: relative;
+}
+
+/* Force custom status visible in account menu */
+#user-account-menu #uam-custom-status {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin: 8px 0 4px !important;
+  min-height: 0;
+  max-width: 100%;
+}
+#user-account-menu #uam-custom-status:empty {
+  display: none !important;
+}
+#user-account-menu .status-bubble--uam,
+#user-account-menu .status-bubble {
+  display: inline-block !important;
+  background: rgba(0,0,0,0.45) !important;
+  color: #f2f3f5 !important;
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  max-width: 260px !important;
+  word-break: break-word !important;
+}
+#user-account-menu .status-bubble::before {
+  background: rgba(0,0,0,0.45) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+.member-info .status-bubble {
+  background: #2b2d31 !important;
+  color: #dbdee1 !important;
 }

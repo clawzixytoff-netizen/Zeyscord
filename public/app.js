@@ -1226,17 +1226,25 @@ function populateAccountMenu() {
     bindBadgeTooltips(badgesEl);
   }
 
-  // Custom status
+  // Custom status (bulle style Discord)
   const cs = document.getElementById('uam-custom-status');
+  const customTxt = (currentUser.customStatus || currentUser.bio || '').trim();
   if (cs) {
-    if (currentUser.customStatus) {
-      cs.className = 'uam-custom-status status-bubble-text';
-      cs.innerHTML = '<span class="status-bubble">'+escapeHtml(currentUser.customStatus)+'</span>';
-      cs.style.display = 'block';
+    if (customTxt) {
+      cs.className = 'uam-custom-status';
+      cs.innerHTML = '<div class="status-bubble status-bubble--uam"><span class="status-bubble-text">'+escapeHtml(customTxt)+'</span></div>';
+      cs.style.cssText = 'display:block!important;visibility:visible!important;opacity:1!important;margin-top:8px;';
     } else {
-      cs.textContent = '';
+      cs.innerHTML = '';
       cs.style.display = 'none';
     }
+  }
+  // Barre du bas
+  const csBar = document.getElementById('user-custom-status');
+  if (csBar) {
+    csBar.textContent = customTxt;
+    csBar.title = customTxt;
+    csBar.style.display = customTxt ? '' : 'none';
   }
 
   // Status — synchronise tous les points / labels
