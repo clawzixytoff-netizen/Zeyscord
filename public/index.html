@@ -778,6 +778,11 @@ window.installZeyscordApp = async function() {
   deferredPrompt = null;
   const btn = document.getElementById('install-app-btn');
   if (btn) btn.classList.add('hidden');
+
+<button type="button" id="install-app-btn" class="install-app-btn hidden" onclick="installZeyscordApp()">
+  ⬇ Installer l’app
+</button>
+
 };
 </script>
 </body>
